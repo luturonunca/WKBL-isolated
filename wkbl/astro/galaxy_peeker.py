@@ -44,19 +44,14 @@ class Galaxy_Hound:
         if (self._dms):
             print "loading Dark matter.."
             self.dm = _dark_matter(file_path, self.p,comov=comov)
-        if (self._gss):
-            print "loading Gas.."
-            self.gs = _gas(file_path, self.p,comov=comov)
         if (self._sts):
             print "loading Stars.."
             self.st = _stars(file_path, self.p, comov=comov)
-            #self.st = _stars(file_path, self.p,center=self.center, comov=comov)
-            #self.center_shift(self.st.center_com)
-        #if (getcen):
-        #    self.center = nbe._get_center(file_path) * self.p.simutokpc
-        #else:
-        #    self.center = np.zeros(3)
- 
+        if (self._gss):
+            print "loading Gas.."
+            self.gs = _gas(file_path, self.p,comov=comov)
+            self.center_shift(self.gs.center_rho_max) 
+
     def r_virial(self, r_max,r_min=0,rotate=True,n=2.5):
         positions = np.array([], dtype=np.int64).reshape(0,3)
         masses = np.array([], dtype=np.int64)

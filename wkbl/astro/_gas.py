@@ -44,7 +44,7 @@ class _gas:
         self.mass = mass * self._p.simutoMsun
         self.hsml = hsml * self._p.simutokpc
         self.pot = pot * self._p.simutokms
-        #self.center_com = nbe.real_center(self.pos3d,self.mass)
+        self.center_rho_max = self.pos3d[np.where(self.rho == self.rho.max())]
 
     def halo_Only(self, center, n, r200):
         in_halo = nbe.all_inside(self.pos3d, center, n*r200)

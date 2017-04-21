@@ -1,0 +1,15 @@
+#!/bin/bash
+
+check0=".installed"
+cd ../
+local0=${PWD}
+cd wkbl
+if [ -e "$check0" ]
+then
+  echo Nothing to do python path already established
+else
+  echo ===== establishing python path =====
+  echo 'export PYTHONPATH=$PYTHONPATH:'$local0>>~/.bashrc
+  touch .installed
+  source ~/.bashrc
+fi 

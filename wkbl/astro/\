@@ -28,6 +28,7 @@ class _gas:
         ok, vel = self.uns.getArrayF("all","vel")
         ok, mass = self.uns.getArrayF("all","mass")
         ok, self.id = self.uns.getArrayI("all","id")
+        #if dens ==True:
         ok, rho = self.uns.getArrayF("gas","rho")
         self.rho =  rho * self._p.simutoMsun * (self._p.simutokpc)**-3
         if hsml ==True:
@@ -40,9 +41,10 @@ class _gas:
             pos = pos * self._p.simutokpc
         
         self.pos3d = pos.reshape(len(pos)/3,3)
-        self.center_rho_max = self.pos3d[np.where(self.rho==self.rho.max())][0]
         self.vel3d = vel.reshape(len(vel)/3,3)
         self.mass = mass * self._p.simutoMsun
+        print self.pos3d[self.rho == self.rho.max()]
+        #self.center_com = nbe.real_center(self.pos3d,self.mass)
 
     def halo_Only(self, center, n, r200):
         in_halo = nbe.all_inside(self.pos3d, center, n*r200)

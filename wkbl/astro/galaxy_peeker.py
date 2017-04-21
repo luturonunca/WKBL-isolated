@@ -17,7 +17,6 @@ from _gas import _gas
  
  
 
-
 class Galaxy_Hound:
     def __init__(self, file_path, component,getcen=True,**kwargs):
         # get them vars !!!!ONLy RAMSES FOR NOW
@@ -46,15 +45,15 @@ class Galaxy_Hound:
         if (self._dms):
             print "loading Dark matter.."
             self.dm = _dark_matter(file_path, self.p,comov=comov)
-        if (self._gss):
-            print "loading Gas.."
-            self.gs = _gas(file_path, self.p,comov=comov)
         if (self._sts):
             print "loading Stars.."
             self.st = _stars(file_path, self.p,center=self.center, comov=comov)
-            self.center_shift(self.st.center_com)
+        if (self._gss):
+            print "loading Gas.."
+            self.gs = _gas(file_path, self.p,comov=comov)
+            self.center_shift(self.gs.center_rho_max)
 
-    def r_virial(self, r_max,r_min=0,rotate=True,n=2.5):
+    def r_virial(self, r_max,r_min=0,rotate=True,n=2.5, bins=512):
         positions = np.array([], dtype=np.int64).reshape(0,3)
         masses = np.array([], dtype=np.int64)
         if (self._dms):
@@ -66,36 +65,22 @@ class Galaxy_Hound:
         if (self._gss):
             positions = np.vstack([positions,self.gs.pos3d])
             masses = np.append(masses,self.gs.mass)
-        try:
-            tree = KDTree(np.squeeze(positions))
-            in_halo = tree.query_radius(self.center,r_max)[0]
-            pos_halo = positions[in_halo]
-            m_in_halo = masses[in_halo]
-        except:
-            sys.exit("ERROR in tree")
 
-        r = np.sqrt((pos_halo[:,0]-self.center[0])**2 +(pos_halo[:,1]-self.center[1])**2 +(pos_halo[:,2]-self.center[2])**2 )
-        r = r[np.argsort(r)]
-        mass_sorted = m_in_halo[np.argsort(r)]
-        rho_local = 2*self.p.rho_crit * 97.
-        i = np.where(r>r_min)[0][0]
-        rnot = True #True until r_200 its founded
-        if r_min==0:
-            msu = 0
-        else:
-            msu = np.sum(mass_sorted[i-1])
-        try:
-            while rho_local >  self.p.rho_crit * 97.: 
-                msu += mass_sorted[i]
-                rho_local =  (3. /4. / np.pi) * msu / (r[i])**3
-                i+=1
-                if rho_local <= self.p.rho_crit * 200. and (rnot):
-                    self.r200, rnot = r[i], False
+        r = np.sqrt((positions[:,0])**2 +(positions[:,1])**2 +(positions[:,2])**2 )
+        
+        #try:
+        for i in range(1):
+            mhist, rhist = np.histogram(r,range=(0.0,r_max),bins=bins, weights=masses )
+            vol_bin = (4./3.)*np.pi*(rhist[:-1]**3)
+            r_bin = rhist[:-1]+ 0.5*(rhist[2]-rhist[1])
+            rho_s = np.cumsum(mhist) / vol_bin
+            self.r200 = r_bin[np.argmin(np.abs(rho_s - (200 * self.p.rho_crit)))]
+            self.r97 = r_bin[np.argmin(np.abs(rho_s - (97 * self.p.rho_crit)))]
+            rnot = False
  
-        except:
-            print "virial radius did not converged "
-            sys.exit()
-        self.r97 = r[i]
+        #except:
+        #    print "virial radius did not converged "
+        #    sys.exit()
         if (rotate)and(self._sts):
             print '| r_200 = {0}'.format(self.r200)
             print '---- taking particles inside {0} * r200'.format(n)
@@ -127,7 +112,6 @@ class Galaxy_Hound:
         if (self._sts):
             self.st.shift(nucenter)
         if (self._gss):
-            print "centering gas"
             self.gs.shift(nucenter)
       
     def redefine(self,n):
@@ -158,9 +142,6 @@ class Galaxy_Hound:
             self.st.rotate(T)        
         if (self._gss):
             self.gs.rotate(T)
-        if((self._dms)and(self._sts)):
-            of_v = self.dm.center_com - self.st.center_com
-            self.offset = np.linalg.norm(of_v)
                 
    
     def save_galaxy(self, name, fltype, component):

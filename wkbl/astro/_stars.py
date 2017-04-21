@@ -43,21 +43,8 @@ class _stars:
             self.pos3d = pos.reshape(len(pos)/3,3) / self._p.aexp
         else:
             self.pos3d = pos.reshape(len(pos)/3,3)
-        print len(self.pos3d)
         self.vel3d = vel.reshape(len(vel)/3,3)
         self.mass = mass * self._p.simutoMsun
-        ## centering to the stars center ##
-        try:
-            if len(self.pos3d):
-                tree = KDTree(np.squeeze(self.pos3d))
-                in_halo = tree.query_radius(center,r_search)[0]
-                pos_around_phew = self.pos3d[in_halo]
-                m_around_phew = self.mass[in_halo]
-                self.center_com = nbe.real_center(pos_around_phew,m_around_phew)
-            else:
-                self.center_com = np.zeros(3)
-        except:
-            sys.exit("ERROR in tree")
  
 
     def halo_Only(self, center, n, r200):

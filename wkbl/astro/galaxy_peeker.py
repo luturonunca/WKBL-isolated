@@ -29,6 +29,8 @@ class Galaxy_Hound:
         self._dms = False
         self._sts = False
         self._gss = False
+        if (getcen):
+            self.center = nbe._get_center(file_path) * self.p.simutokpc
         halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
         #loadDatat
 	if component=="all":
@@ -49,14 +51,9 @@ class Galaxy_Hound:
             self.gs = _gas(file_path, self.p,comov=comov)
         if (self._sts):
             print "loading Stars.."
-            self.st = _stars(file_path, self.p, comov=comov)
-            #self.st = _stars(file_path, self.p,center=self.center, comov=comov)
-            #self.center_shift(self.st.center_com)
-        #if (getcen):
-        #    self.center = nbe._get_center(file_path) * self.p.simutokpc
-        #else:
-        #    self.center = np.zeros(3)
- 
+            self.st = _stars(file_path, self.p,center=self.center, comov=comov)
+            self.center_shift(self.st.center_com)
+
     def r_virial(self, r_max,r_min=0,rotate=True,n=2.5):
         positions = np.array([], dtype=np.int64).reshape(0,3)
         masses = np.array([], dtype=np.int64)
@@ -77,8 +74,7 @@ class Galaxy_Hound:
         except:
             sys.exit("ERROR in tree")
 
-        #r = np.sqrt((pos_halo[:,0]-self.center[0])**2 +(pos_halo[:,1]-self.center[1])**2 +(pos_halo[:,2]-self.center[2])**2 )
-        r = np.sqrt((pos_halo[:,0])**2 +(pos_halo[:,1])**2 +(pos_halo[:,2])**2 )
+        r = np.sqrt((pos_halo[:,0]-self.center[0])**2 +(pos_halo[:,1]-self.center[1])**2 +(pos_halo[:,2]-self.center[2])**2 )
         r = r[np.argsort(r)]
         mass_sorted = m_in_halo[np.argsort(r)]
         rho_local = 2*self.p.rho_crit * 97.
@@ -131,17 +127,15 @@ class Galaxy_Hound:
         if (self._sts):
             self.st.shift(nucenter)
         if (self._gss):
+            print "centering gas"
             self.gs.shift(nucenter)
       
     def redefine(self,n):
         if (self._dms):
-            print "%%flag dm"
             self.dm.halo_Only(self.center, n, self.r200)
         if (self._sts):
-            print "%%flag st"
             self.st.halo_Only(self.center, n, self.r200)
         if (self._gss):
-            print "%%flag gs"
             self.gs.halo_Only(self.center, n, self.r200)
 
     def rotate_galaxy(self,rmin=3,rmax=10):
@@ -164,9 +158,9 @@ class Galaxy_Hound:
             self.st.rotate(T)        
         if (self._gss):
             self.gs.rotate(T)
-        #if((self._dms)and(self._sts)):
-            #of_v = self.dm.center_com - self.st.center_com
-            #self.offset = np.linalg.norm(of_v)
+        if((self._dms)and(self._sts)):
+            of_v = self.dm.center_com - self.st.center_com
+            self.offset = np.linalg.norm(of_v)
                 
    
     def save_galaxy(self, name, fltype, component):

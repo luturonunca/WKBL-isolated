@@ -16,7 +16,6 @@ class _stars:
     def __init__(self, file_path,p, **kwargs):
         self._p = p
         center = kwargs.get('center',[0.,0.,0.])    ##########
-        self._center_history = np.array([0.,0.,0.])
         self.uns = CunsIn(file_path,"stars","all",False)
         hsml = kwargs.get('hsml',False)
         dens = kwargs.get('dens',False)
@@ -44,30 +43,26 @@ class _stars:
             self.pos3d = pos.reshape(len(pos)/3,3) / self._p.aexp
         else:
             self.pos3d = pos.reshape(len(pos)/3,3)
+        print len(self.pos3d)
         self.vel3d = vel.reshape(len(vel)/3,3)
         self.mass = mass * self._p.simutoMsun
         ## centering to the stars center ##
-        #try:
-        #    if len(self.pos3d):
-        #        tree = KDTree(np.squeeze(self.pos3d))
-        #        in_halo = tree.query_radius(center,r_search)[0]
-        #        pos_around_phew = self.pos3d[in_halo]
-        #        m_around_phew = self.mass[in_halo]
-        #        self.center_com = nbe.real_center(pos_around_phew,m_around_phew)
-        #    else:
-        #        self.center_com = np.zeros(3)
-        #except:
-        #    sys.exit("ERROR in tree")
+        try:
+            if len(self.pos3d):
+                tree = KDTree(np.squeeze(self.pos3d))
+                in_halo = tree.query_radius(center,r_search)[0]
+                pos_around_phew = self.pos3d[in_halo]
+                m_around_phew = self.mass[in_halo]
+                self.center_com = nbe.real_center(pos_around_phew,m_around_phew)
+            else:
+                self.center_com = np.zeros(3)
+        except:
+            sys.exit("ERROR in tree")
  
 
     def halo_Only(self, center, n, r200):
-        #in_halo = nbe.all_inside(self.pos3d, center,n*r200)
-
-
-
-        self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
-        in_halo = np.where(self.r <= n*r200)
-        self.pos3d = self.pos3d[in_halo]# - center
+        in_halo = nbe.all_inside(self.pos3d, center,n*r200)
+        self.pos3d = self.pos3d[in_halo] - center
         self.mass = self.mass[in_halo]
         self.age = self.age[in_halo]
         self.vel3d = self.vel3d[in_halo]
@@ -102,11 +97,9 @@ class _stars:
     def rotate(self,T):
         pos = self.pos3d
         self.pos3d = nbe.matrix_vs_vector(T,pos)
-        self.vel3d = nbe.matrix_vs_vector(T,self.vel3d)
 
     def shift(self, center):
         self.pos3d = self.pos3d - center
-        self._center_history = np.vstack((self._center_history,center))
 
     def get_M_virS(self,r200,r97):
 	# total mass inside r200

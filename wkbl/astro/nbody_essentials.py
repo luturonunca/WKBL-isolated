@@ -31,11 +31,10 @@ class Info_sniffer:
         self.msuntokg = 1.99844e30
         self.pctocm = 3.08567758e18
         self.cmtopc = 1/self.pctocm
-        self.unitl=_vars["unit_l"]*self.pctocm /(3.08e18)
+        self.unitl=_vars["unit_l"]/(3.08e18)*self.pctocm
         self.unitd=_vars["unit_d"]/(self.pctocm/(3.08*10**18))**3
         self.unitt=_vars["unit_t"]
-        #self.simutokpc=self.unitl*_vars["H0"]/self.pctocm/1e5
-        self.simutokpc=self.unitl/self.pctocm/1e3
+        self.simutokpc=self.unitl*_vars["H0"]/self.pctocm/1e5
         self.simutoMsun=(self.unitd*self.unitl**3)/1000/self.msuntokg
         self.unitsimutoMsunkpc3=self.unitd*self.pctocm**3/1000/self.msuntokg
         self.simutokms = self.unitl/10**5/self.unitt
@@ -79,7 +78,7 @@ def r(pos):
     return np.sqrt(pos[:,1]**2 + pos[:,1]**2 + pos[:,2]**2)
 
 
-def real_center(pos, m,n=200):
+def real_center(pos, m):
     """
     this method computes the center of mass of a recursively reducing
     sphere center in the previous COM as descrived by Schaller et al. 
@@ -90,7 +89,7 @@ def real_center(pos, m,n=200):
  
     """
     final = np.zeros((1,3))
-    while len(pos) > n:
+    while len(pos) > 200:
         com = get_com(pos,m)
         final += com
         pos -= com

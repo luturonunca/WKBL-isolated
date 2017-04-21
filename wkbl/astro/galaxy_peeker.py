@@ -15,7 +15,7 @@ from _stars import _stars
 from _gas import _gas
 
  
- 
+############### Old Ramses outputs ################# 
 
 
 class Galaxy_Hound:

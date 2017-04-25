@@ -51,10 +51,14 @@ class Galaxy_Hound:
             print "loading Gas.."
             self.gs = _gas(file_path, self.p,comov=comov)
             self.center_shift(self.gs.center_rho_max) 
+        po, ma = np.copy(self.st.pos3d), np.copy(self.st.mass)
+        centro_com_st = nbe.real_center(po,ma,n=7000)
+        self.center_shift(centro_com_st)
 
-    def r_virial(self, r_max,r_min=0,rotate=True,n=2.5):
+    def r_virial(self, r_max,r_min=0,rotate=True,n=2.5,bins=512,quiet=False):
         positions = np.array([], dtype=np.int64).reshape(0,3)
         masses = np.array([], dtype=np.int64)
+        print "starting"
         if (self._dms):
             positions = np.vstack([positions,self.dm.pos3d])
             masses = np.append(masses,self.dm.mass)
@@ -64,59 +68,30 @@ class Galaxy_Hound:
         if (self._gss):
             positions = np.vstack([positions,self.gs.pos3d])
             masses = np.append(masses,self.gs.mass)
-        try:
-            tree = KDTree(np.squeeze(positions))
-            in_halo = tree.query_radius(self.center,r_max)[0]
-            pos_halo = positions[in_halo]
-            m_in_halo = masses[in_halo]
-        except:
-            sys.exit("ERROR in tree")
+        print "stackted"
+        r = np.sqrt((positions[:,0])**2 +(positions[:,1])**2 +(positions[:,2])**2 )
+        print "start histogram"
+        mhist, rhist = np.histogram(r,range=(0.0,r_max),bins=bins, weights=masses )
+        vol_bin = (4./3.)*np.pi*(rhist[:-1]**3)
+        r_bin = rhist[:-1]+ 0.5*(rhist[2]-rhist[1])
+        rho_s = np.cumsum(mhist) / vol_bin
+        self.r200 = r_bin[np.argmin(np.abs(rho_s - (200 * self.p.rho_crit)))]
+        self.r97 = r_bin[np.argmin(np.abs(rho_s - (97 * self.p.rho_crit)))]
+        rnot = False
+        print " done"
 
-        #r = np.sqrt((pos_halo[:,0]-self.center[0])**2 +(pos_halo[:,1]-self.center[1])**2 +(pos_halo[:,2]-self.center[2])**2 )
-        r = np.sqrt((pos_halo[:,0])**2 +(pos_halo[:,1])**2 +(pos_halo[:,2])**2 )
-        r = r[np.argsort(r)]
-        mass_sorted = m_in_halo[np.argsort(r)]
-        rho_local = 2*self.p.rho_crit * 97.
-        i = np.where(r>r_min)[0][0]
-        rnot = True #True until r_200 its founded
-        if r_min==0:
-            msu = 0
-        else:
-            msu = np.sum(mass_sorted[i-1])
-        try:
-            while rho_local >  self.p.rho_crit * 97.: 
-                msu += mass_sorted[i]
-                rho_local =  (3. /4. / np.pi) * msu / (r[i])**3
-                i+=1
-                if rho_local <= self.p.rho_crit * 200. and (rnot):
-                    self.r200, rnot = r[i], False
- 
-        except:
-            print "virial radius did not converged "
-            sys.exit()
-        self.r97 = r[i]
         if (rotate)and(self._sts):
-            print '| r_200 = {0}'.format(self.r200)
-            print '---- taking particles inside {0} * r200'.format(n)
-            self.redefine(n)
-            print '| number of praticles inside {0} * r200 '.format(n)
-            if (self._dms):
-                print '| dm mass       =  {0} M_sun'.format(self.dm.total_m)
-                print '| p_dm_200      =  {0} particles'.format(len(self.dm.pos3d))
-            if (self._sts):
-                print '| stellar mass  =  {0} M_sun'.format(self.st.total_m)
-                print '| p_st_200      =  {0} psrticles'.format(len(self.st.pos3d))
-            if (self._gss):
-                print '| gas mass      =  {0} M_sun'.format(self.gs.total_m)
-                print '| p_gs_200      =  {0} particles'.format(len(self.gs.pos3d))
-            print '---- rotating galaxy '
             self.rotate_galaxy()
+            print "rotated"
+            self.redefine(n)
             D = np.dot(self.matrix_T,np.dot(self.matrix_P,np.transpose(self.matrix_T)))
-            print '| Diagonal matrix computed '
-            print '|    |{0},{1},{2}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2]))
-            print '| D =|{0},{1},{2}|'.format(int(D[1,0]),int(D[1,1]),int(D[1,2]))
-            print '|    |{0},{1},{2}|'.format(int(D[2,0]),int(D[2,1]),int(D[2,2]))
-        elif (rotate):
+            if not (quiet):
+                print '| r_200 = {0}'.format(self.r200)
+                print '| Diagonal matrix computed '
+                print '|    |{0}, {1}, {2}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2]))
+                print '| D =| {0},{1}, {2}|'.format(int(D[1,0]),int(D[1,1]),int(D[1,2]))
+                print '|    | {0}, {1}, {2}|'.format(int(D[2,0]),int(D[2,1]),int(D[2,2]))
+        elif (rotate): 
             self.redefine(n)
     
     def center_shift(self,nucenter):
@@ -130,16 +105,14 @@ class Galaxy_Hound:
       
     def redefine(self,n):
         if (self._dms):
-            print "%%flag dm"
             self.dm.halo_Only(self.center, n, self.r200)
         if (self._sts):
-            print "%%flag st"
             self.st.halo_Only(self.center, n, self.r200)
         if (self._gss):
-            print "%%flag gs"
             self.gs.halo_Only(self.center, n, self.r200)
 
     def rotate_galaxy(self,rmin=3,rmax=10):
+        self.st.r = np.sqrt((self.st.pos3d[:,0])**2 +(self.st.pos3d[:,1])**2 +(self.st.pos3d[:,2])**2 )
         pos_ring = self.st.pos3d[(self.st.r<rmax)&(self.st.r>rmin)]
         P = np.zeros((3,3))
         for i in range(3):
@@ -159,9 +132,6 @@ class Galaxy_Hound:
             self.st.rotate(T)        
         if (self._gss):
             self.gs.rotate(T)
-        #if((self._dms)and(self._sts)):
-            #of_v = self.dm.center_com - self.st.center_com
-            #self.offset = np.linalg.norm(of_v)
                 
    
     def save_galaxy(self, name, fltype, component):

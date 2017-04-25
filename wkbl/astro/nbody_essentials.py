@@ -31,10 +31,11 @@ class Info_sniffer:
         self.msuntokg = 1.99844e30
         self.pctocm = 3.08567758e18
         self.cmtopc = 1/self.pctocm
-        self.unitl=_vars["unit_l"]/(3.08e18)*self.pctocm
+        self.unitl=_vars["unit_l"]*self.pctocm /(3.08e18)
         self.unitd=_vars["unit_d"]/(self.pctocm/(3.08*10**18))**3
         self.unitt=_vars["unit_t"]
-        self.simutokpc=self.unitl*_vars["H0"]/self.pctocm/1e5
+        #self.simutokpc=self.unitl*_vars["H0"]/self.pctocm/1e5
+        self.simutokpc=self.unitl/self.pctocm/1e3
         self.simutoMsun=(self.unitd*self.unitl**3)/1000/self.msuntokg
         self.unitsimutoMsunkpc3=self.unitd*self.pctocm**3/1000/self.msuntokg
         self.simutokms = self.unitl/10**5/self.unitt
@@ -43,6 +44,7 @@ class Info_sniffer:
         self.G = 6.67384e-11 * self.msuntokg / (3.08567758e19**3)
         self.rho_crit = (3 * (self.H0**2) / 3.08567758e19**2)/ (8*np.pi*self.G)
         self.simutoGeVcm3 = (self.simutoMsun*self.msuntokg*self.kgtoGeV) / (self.simutokpc*self.kpctocm)**3
+
 
 def _get_center(output,clumps=False):
         """
@@ -90,7 +92,6 @@ def real_center(pos, mass, n=7000):
     """
     p = np.copy(pos)
     m = np.copy(mass)
-    print "min {0}, max {1}".format(p.min(), p.max())
     final = np.zeros((1,3))
     while len(p) > n:
         com = get_com(p,m)

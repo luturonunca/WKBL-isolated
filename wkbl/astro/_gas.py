@@ -25,7 +25,6 @@ class _gas:
             sys.exit("\n\n\n\n\n\n\nERROR:"+file_path+" is not a valid file !!!!!\n\n\n\n\n")
         ok = self.uns.nextFrame("")
         ok, pos = self.uns.getArrayF("all","pos")
-        ok, pot = self.uns.getArrayF("gas","pot")
         ok, vel = self.uns.getArrayF("all","vel")
         ok, mass = self.uns.getArrayF("all","mass")
         ok, self.id = self.uns.getArrayI("all","id")
@@ -43,14 +42,12 @@ class _gas:
         self.vel3d = vel.reshape(len(vel)/3,3)
         self.mass = mass * self._p.simutoMsun
         self.hsml = hsml * self._p.simutokpc
-        self.pot = pot * self._p.simutokms
         self.center_rho_max = self.pos3d[np.where(self.rho == self.rho.max())]
 
     def halo_Only(self, center, n, r200):
         in_halo = nbe.all_inside(self.pos3d, center, n*r200)
         self.pos3d = self.pos3d[in_halo] - center
         self.mass = self.mass[in_halo]
-        self.pot = self.pot[in_halo]
         self.hsml = self.hsml[in_halo]
         self.vel3d = self.vel3d[in_halo]
         self.id = self.id[in_halo]

@@ -32,11 +32,6 @@ class _stars:
         ok, vel = self.uns.getArrayF("all","vel")
         ok, mass = self.uns.getArrayF("all","mass")
         ok, self.id = self.uns.getArrayI("all","id")
-        if dens ==True:
-            ok, rho = self.uns.getArrayF("all","rho")
-            self.rho =  rho * simutoGeVcm3
-        if hsml ==True:
-            ok, self.hsml = self.uns.getArrayF("all","hsml")
         ### coordinates ###
         pos = pos * self._p.simutokpc
         vel = vel * self._p.simutokms
@@ -49,10 +44,6 @@ class _stars:
  
 
     def halo_Only(self, center, n, r200):
-        #in_halo = nbe.all_inside(self.pos3d, center,n*r200)
-
-
-
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         in_halo = np.where(self.r <= n*r200)
         self.pos3d = self.pos3d[in_halo]# - center

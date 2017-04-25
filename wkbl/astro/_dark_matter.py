@@ -22,7 +22,6 @@ class _dark_matter:
         self._dens = False
         self._center_history = np.array([0.,0.,0.])    ##########
         self.uns = CunsIn(file_path,"halo","all",False)
-        print "is valid ", self.uns.isValid()
         hsml = kwargs.get('hsml',False)
         dens = kwargs.get('dens',False)
         comov = kwargs.get('comov',False)
@@ -59,6 +58,8 @@ class _dark_matter:
         self.pos3d = self.pos3d[in_halo]
         self.mass = self.mass[in_halo]
         self.vel3d = self.vel3d[in_halo]
+        average_v = np.array([np.mean(self.vel3d[:,0]),np.mean(self.vel3d[:,1]),np.mean(self.vel3d[:,2])])
+        self.vel3d = self.vel3d - average_v
         self.id = self.id[in_halo]
         self.R = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2))
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))

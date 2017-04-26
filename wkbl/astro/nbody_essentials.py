@@ -10,6 +10,8 @@ import scipy.special as sp
 from numpy import exp, sqrt
 import scipy.integrate as integrate
 from sklearn.neighbors import KDTree
+import warnings
+warnings.filterwarnings('ignore')
 
 
 class Info_sniffer:

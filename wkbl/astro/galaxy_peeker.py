@@ -22,14 +22,11 @@ class Galaxy_Hound:
         # get them vars !!!!ONLy RAMSES FOR NOW
         self.file = file_path
         self.p = nbe.Info_sniffer(file_path)
-        hsml = kwargs.get('hsml',False)
-        dens = kwargs.get('dens',False)
         comov = kwargs.get('comov',False)
         self._dms = False
         self._sts = False
         self._gss = False
-        if (getcen):
-            self.center = nbe._get_center(file_path) * self.p.simutokpc
+        self.center = nbe._get_center(file_path) * self.p.simutokpc
         halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
         #loadDatat
 	if component=="all":
@@ -47,7 +44,7 @@ class Galaxy_Hound:
             self.dm = _dark_matter(file_path, self.p,comov=comov)
         if (self._sts):
             print "loading Stars.."
-            self.st = _stars(file_path, self.p,center=self.center, comov=comov)
+            self.st = _stars(file_path, self.p, comov=comov)
         if (self._gss):
             print "loading Gas.."
             self.gs = _gas(file_path, self.p,comov=comov)

@@ -50,10 +50,11 @@ class Galaxy_Hound:
         if (self._gss):
             print "loading Gas.."
             self.gs = _gas(file_path, self.p,comov=comov)
-            self.center_shift(self.gs.center_rho_max) 
-        po, ma = np.copy(self.st.pos3d), np.copy(self.st.mass)
-        centro_com_st = nbe.real_center(po,ma,n=7000)
-        self.center_shift(centro_com_st)
+            self.center_shift(self.gs.center_rho_max)
+        if (getcen):
+            po, ma = np.copy(self.st.pos3d), np.copy(self.st.mass)
+            centro_com_st = nbe.real_center(po,ma,n=7000)
+            self.center_shift(centro_com_st)
 
     def r_virial(self, r_max,r_min=0,rotate=True,n=2.5,bins=512,quiet=False):
         positions = np.array([], dtype=np.int64).reshape(0,3)

@@ -27,10 +27,10 @@ class _stars:
         if self.uns.isValid()!=True:
             sys.exit("\n\n\n\n\n\n\nERROR:"+file_path+" is not a valid file !!!!!\n\n\n\n\n")
         ok = self.uns.nextFrame("")
-        ok, pos = self.uns.getArrayF("all","pos")
+        ok, pos = self.uns.getArrayF("stars","pos")
         ok, self.age = self.uns.getArrayF("stars","age")
-        ok, vel = self.uns.getArrayF("all","vel")
-        ok, mass = self.uns.getArrayF("all","mass")
+        ok, vel = self.uns.getArrayF("stars","vel")
+        ok, mass = self.uns.getArrayF("stars","mass")
         ok, self.id = self.uns.getArrayI("all","id")
         ### coordinates ###
         pos = pos * self._p.simutokpc

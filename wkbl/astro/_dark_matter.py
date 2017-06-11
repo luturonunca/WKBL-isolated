@@ -62,6 +62,8 @@ class _dark_matter:
         self.R = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2))
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         ### velocities ###
+        average_v = np.array([np.mean(self.vel3d[:,0]),np.mean(self.vel3d[:,1]),np.mean(self.vel3d[:,2])])
+        self.vel3d = self.vel3d - average_v
         self.v = np.sqrt((self.vel3d[:,0]**2) + (self.vel3d[:,1]**2) + (self.vel3d[:,2]**2))
         self.vR = (self.vel3d[:,0]*self.pos3d[:,0] + self.vel3d[:,1]*self.pos3d[:,1])/ self.R
         self.vr = (self.vel3d[:,0]*self.pos3d[:,0] + self.vel3d[:,1]*self.pos3d[:,1] + self.vel3d[:,2]*self.pos3d[:,2])/ self.r

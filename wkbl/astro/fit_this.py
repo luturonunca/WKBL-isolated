@@ -3,7 +3,7 @@
 """
 
 fit class to fit velocity distribution funcitons
-on nbody data from ramses
+on n-body data from ramses
 f(u)/u
 for dark halos
 author : arturonunez25@gmail.com

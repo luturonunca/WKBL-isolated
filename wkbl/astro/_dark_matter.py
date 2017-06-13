@@ -18,8 +18,8 @@ from _clumps import Clumps
 class _dark_matter:
     def __init__(self, file_path,p, **kwargs):
         self._p = p
-        self.file = file_path
         self._dens = False
+        self.file = file_path
         self._center_history = np.array([0.,0.,0.])    ##########
         self.uns = CunsIn(file_path,"halo","all",False)
         hsml = kwargs.get('hsml',False)

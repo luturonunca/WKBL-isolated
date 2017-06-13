@@ -141,29 +141,28 @@ class Galaxy_Hound:
             self.gs.rotate(T)
                 
    
-    def save_galaxy(self, name, fltype, component):
+    def save_galaxy(self, name, fltype):
         unsout=CunsOut(name,fltype)
         ages = False
-        if component == "stars":
+        if (self._dms):
+            length = len(self.dm.pos3d)
+            pos_out = self.dm.pos3d.reshape(length*3).astype(np.float32, copy=False)
+            mass_out = self.dm.mass.astype(np.float32, copy=False)
+            unsout.setArrayF("halo","mass",mass_out) # save mass
+            unsout.setArrayF("halo","pos",pos_out)
+        if (self._sts):
             length = len(self.st.pos3d)
             pos_out = self.st.pos3d.reshape(length*3).astype(np.float32, copy=False)
             mass_out = self.st.mass.astype(np.float32, copy=False)
             age_out = self.st.age.astype(np.float32, copy=False)
             ages = True
-        if component == "halo":
-            length = len(self.dm.pos3d)
-            pos_out = self.dm.pos3d.reshape(length*3).astype(np.float32, copy=False)
-            mass_out = self.dm.mass.astype(np.float32, copy=False)
-        if component == "gas":
+            unsout.setArrayF("stars","pos",pos_out)
+            unsout.setArrayF("stars","mass",mass_out)
+            unsout.setArrayF("stars","age",mass_out)
+        if (self._gss):
             length = len(self.gs.pos3d)
             pos_out = self.gs.pos3d.reshape(length*3).astype(np.float32, copy=False)
             mass_out = self.gs.mass.astype(np.float32, copy=False)
-        ok=unsout.setArrayF(component,"pos",pos_out)
-        print ok
-        ok=unsout.setArrayF(component,"mass",mass_out)
-        print ok
-        if (ages):
-            ok=unsout.setArrayF(component,"age",age_out)
         unsout.save()
    
     def get_shell(self,lim_min,lim_max):

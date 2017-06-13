@@ -189,8 +189,8 @@ class Galaxy_Hound:
 
     def get_ring_yz(self,lim_min,lim_max, thickness):
         ringYZ_cond = (self.r<=lim_max)&(self.r>=lim_min)&(abs(self.x)<=thickness)
-        self.v_ringYZ = self.v[ringYZ_cond]
         self.vr_ringYZ = self.vr[ringYZ_cond]
+        self.v_ringYZ = self.v[ringYZ_cond]
         self.vR_ringYZ = self.vR[ringYZ_cond]
         self.vphi_ringYZ = self.vphi[ringYZ_cond]
         self.vz_ringYZ = self.vz[ringYZ_cond]

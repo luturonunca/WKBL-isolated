@@ -26,6 +26,7 @@ class Clumps:
 
         self.mass = self.data[:,10] * p.simutoMsun
         self.cell = self.data[:,3]
+        self.id = self.data[:,0]
 
     def halo_Only(self, center, n, r):
         in_halo = nbe.all_inside(self.pos3d, center, r)

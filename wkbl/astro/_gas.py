@@ -16,7 +16,6 @@ class _gas:
         self._p = p
         self._center_history = np.array([0.,0.,0.]) 
         self.uns = CunsIn(file_path,"gas","all",False)
-        hsml = kwargs.get('hsml',False)
         dens = kwargs.get('dens',False)
         comov = kwargs.get('comov',False)
         self.halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
@@ -30,8 +29,7 @@ class _gas:
         ok, self.id = self.uns.getArrayI("all","id")
         ok, rho = self.uns.getArrayF("gas","rho")
         self.rho =  rho * self._p.simutoMsun * (self._p.simutokpc)**-3
-        if hsml ==True:
-            ok, self.hsml = self.uns.getArrayF("all","hsml")
+        ok, self.hsml = self.uns.getArrayF("gas","hsml")
         ### coordinates ###
         vel = vel * self._p.simutokms
         if (comov):

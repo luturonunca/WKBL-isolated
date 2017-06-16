@@ -14,7 +14,6 @@ import sys
 import math
 import glob
 import cmath
-import emcee
 import subprocess
 import numpy as np
 from py_unsio import *

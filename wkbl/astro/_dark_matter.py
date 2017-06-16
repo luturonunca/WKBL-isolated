@@ -10,7 +10,6 @@ import scipy.special as sp
 from numpy import exp, sqrt
 import nbody_essentials as nbe
 import scipy.integrate as integrate
-from sklearn.neighbors import KDTree
 #CF =cfalcon.CFalcon()
 #from _clumps import Clumps
 

@@ -25,7 +25,13 @@ class _dark_matter:
         hsml = kwargs.get('hsml',False)
         dens = kwargs.get('dens',False)
         comov = kwargs.get('comov',False)
-        self.Clumps = Clumps(file_path,p,comov=comov) 
+        try:
+            self.Clumps = Clumps(file_path,p,comov=comov) 
+            self.gotclumps = True
+             
+        except:
+            self.gotclumps = False
+            print "beware no clump info:\nmaybe is a very early snapshot or an old Ramses simulation"
         self.halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
 
         if self.uns.isValid()!=True:
@@ -52,7 +58,8 @@ class _dark_matter:
 
     def halo_Only(self, center,n , r200):
         #### clumps ###
-        self.Clumps.halo_Only(center, n, r200)
+        if (self.gotclumps):
+            self.Clumps.halo_Only(center, n, r200)
         ### dm particles ##
         in_halo = nbe.all_inside(self.pos3d, center,n*r200)
         self.pos3d = self.pos3d[in_halo] - center
@@ -75,7 +82,8 @@ class _dark_matter:
         self.center_com = nbe.real_center(self.pos3d,self.mass)
 
     def rotate(self,T):
-        self.Clumps.rotate(T)
+        if (self.gotclumps):
+            self.Clumps.rotate(T)
 	pos = self.pos3d
         self.pos3d = nbe.matrix_vs_vector(T,pos)
         
@@ -83,7 +91,8 @@ class _dark_matter:
     def shift(self,center):
         self.pos3d = self.pos3d - center
         self._center_history = np.vstack((self._center_history,center))
-        self.Clumps.shift(center)    
+        if (self.gotclumps):
+            self.Clumps.shift(center)    
 
     def density_profile(self, bin_num, r200,  quiet=False):
         """

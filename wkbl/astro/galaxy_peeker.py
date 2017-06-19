@@ -26,7 +26,7 @@ class Galaxy_Hound:
         self._dms = False
         self._sts = False
         self._gss = False
-        self.center = nbe._get_center(file_path) * self.p.simutokpc
+        #self.center = nbe._get_center(file_path) * self.p.simutokpc
         halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
         #loadDatat
 	if component=="all":

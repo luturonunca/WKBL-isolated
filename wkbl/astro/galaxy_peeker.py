@@ -163,10 +163,8 @@ class Galaxy_Hound:
             length = len(self.gs.pos3d)
             pos_out = self.gs.pos3d.reshape(length*3).astype(np.float32, copy=False)
             mass_out = self.gs.mass.astype(np.float32, copy=False)
-            hsml_out = self.gs.hslm.astype(np.float32, copy=False)
             unsout.setArrayF("gas","pos",pos_out)
             unsout.setArrayF("gas","mass",mass_out)
-            unsout.setArrayF("gas","hsml",hsml_out)
         unsout.save()
    
     def get_shell(self,lim_min,lim_max):

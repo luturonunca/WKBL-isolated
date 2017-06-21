@@ -29,7 +29,7 @@ class _gas:
         ok, self.id = self.uns.getArrayI("all","id")
         ok, rho = self.uns.getArrayF("gas","rho")
         self.rho =  rho * self._p.simutoMsun * (self._p.simutokpc)**-3
-        ok, self.hsml = self.uns.getArrayF("gas","hsml")
+        ok, hsml =  self.uns.getArrayF("gas","hsml")
         ### coordinates ###
         vel = vel * self._p.simutokms
         if (comov):
@@ -41,6 +41,7 @@ class _gas:
         self.center_rho_max = self.pos3d[np.where(self.rho==self.rho.max())][0]
         self.vel3d = vel.reshape(len(vel)/3,3)
         self.mass = mass * self._p.simutoMsun
+        self.hsml = hsml * self._p.simutokpc
 
     def halo_Only(self, center, n, r200):
         in_halo = nbe.all_inside(self.pos3d, center, n*r200)

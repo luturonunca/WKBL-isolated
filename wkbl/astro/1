@@ -91,7 +91,7 @@ class Galaxy_Hound:
                 print '|    |{0}, {1}, {2}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2]))
                 print '| D =| {0},{1}, {2}|'.format(int(D[1,0]),int(D[1,1]),int(D[1,2]))
                 print '|    | {0}, {1}, {2}|'.format(int(D[2,0]),int(D[2,1]),int(D[2,2]))
-        elif not (rotate): 
+        elif (rotate): 
             self.redefine(n)
     
     def center_shift(self,nucenter):

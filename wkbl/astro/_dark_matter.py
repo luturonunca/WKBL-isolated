@@ -56,6 +56,7 @@ class _dark_matter:
         in_halo = np.where(self.r <= n*r200)
         self.pos3d = self.pos3d[in_halo]
         self.mass = self.mass[in_halo]
+        # substract average velocities
         self.vel3d = self.vel3d[in_halo]
         average_v = np.array([np.mean(self.vel3d[:,0]),np.mean(self.vel3d[:,1]),np.mean(self.vel3d[:,2])])
         self.vel3d = self.vel3d - average_v

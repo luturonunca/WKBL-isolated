@@ -44,8 +44,8 @@ class Info_sniffer:
         self.G = 6.67384e-11 * self.msuntokg * (3.08567758e-20**3)
         self.rho_crit = (3 * (self.H0**2) / 3.08567758e19**2)/ (8*np.pi*self.G)
         self.simutoGeVcm3 = (self.simutoMsun*self.msuntokg*self.kgtoGeV) / (self.simutokpc*self.kpctocm)**3
-
-
+        self.kB = 1.3806503e-25 * (self.cmtopc)**2 / self.msuntokg
+        self.mu = 1.67262158e-27 / self.msuntokg
 def _get_center(output,clumps=False):
         """
         gets center of more resolved halo

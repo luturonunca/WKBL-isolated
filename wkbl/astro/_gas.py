@@ -27,6 +27,7 @@ class _gas:
         ok, pos = self.uns.getArrayF("all","pos")
         ok, vel = self.uns.getArrayF("all","vel")
         ok, mass = self.uns.getArrayF("all","mass")
+        ok, temp = self.uns.getArrayF("gas","temp")
         ok, self.id = self.uns.getArrayI("all","id")
         ok, rho = self.uns.getArrayF("gas","rho")
         self.rho =  rho * self._p.simutoMsun / (self._p.simutokpc**3)
@@ -42,12 +43,15 @@ class _gas:
         self.mass = mass * self._p.simutoMsun
         self.hsml = hsml * self._p.simutokpc
         self.center_rho_max = self.pos3d[np.where(self.rho == self.rho.max())]
+        tokelvin =  self._p.mu * (self._p.simutokms**2) * self._p.cmtopc * 1e4 / self._p.kB # the 1e4 is to have km/s into kpc/s
+        self.temp = temp * tokelvin 
 
     def halo_Only(self, center, n, r200):
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         in_halo = np.where(self.r <= n*r200)
         self.pos3d = self.pos3d[in_halo]
         self.mass = self.mass[in_halo]
+        self.temp = self.temp[in_halo]
         self.hsml = self.hsml[in_halo]
         self.vel3d = self.vel3d[in_halo]
         self.id = self.id[in_halo]

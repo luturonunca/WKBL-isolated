@@ -92,7 +92,6 @@ def real_center(pos, mass, n=7000):
     """
     p = np.copy(pos)
     m = np.copy(mass)
-    print "min {0}, max {1}".format(p.min(), p.max())
     final = np.zeros((1,3))
     while len(p) > n:
         com = get_com(p,m)

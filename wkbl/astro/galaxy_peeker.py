@@ -84,21 +84,21 @@ class Galaxy_Hound:
             self.redefine(n)
             print '| number of praticles inside {0} * r200 '.format(n)
             if (self._dms):
-                print '| dm mass       =  {0} M_sun'.format(self.dm.total_m)
-                print '| p_dm_200      =  {0} particles'.format(len(self.dm.pos3d))
+                print '| dm mass       =  {0:1.3e} M_sun'.format(self.dm.total_m)
+                print '| p_dm_200      =  {0:1.3e} particles'.format(len(self.dm.pos3d))
             if (self._sts):
-                print '| stellar mass  =  {0} M_sun'.format(self.st.total_m)
-                print '| p_st_200      =  {0} psrticles'.format(len(self.st.pos3d))
+                print '| stellar mass  =  {0:1.3e} M_sun'.format(self.st.total_m)
+                print '| p_st_200      =  {0:1.3e} psrticles'.format(len(self.st.pos3d))
             if (self._gss):
-                print '| gas mass      =  {0} M_sun'.format(self.gs.total_m)
-                print '| p_gs_200      =  {0} particles'.format(len(self.gs.pos3d))
+                print '| gas mass      =  {0:1.3e} M_sun'.format(self.gs.total_m)
+                print '| p_gs_200      =  {0:1.3e} particles'.format(len(self.gs.pos3d))
             print '---- rotating galaxy '
             self.rotate_galaxy()
             D = np.dot(self.matrix_T,np.dot(self.matrix_P,np.transpose(self.matrix_T)))
             print '| Diagonal matrix computed '
-            print '|    |{0},{1},{2}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2]))
-            print '| D =|{0},{1},{2}|'.format(int(D[1,0]),int(D[1,1]),int(D[1,2]))
-            print '|    |{0},{1},{2}|'.format(int(D[2,0]),int(D[2,1]),int(D[2,2]))
+            print '|    |{0:2f},{1:2f},{2:2f}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2]))
+            print '| D =|{0:2f},{1:2f},{2:2f}|'.format(int(D[1,0]),int(D[1,1]),int(D[1,2]))
+            print '|    |{0:2f},{1:2f},{2:2f}|'.format(int(D[2,0]),int(D[2,1]),int(D[2,2]))
         elif (rotate):
             self.redefine(n)
     

@@ -96,9 +96,9 @@ class Galaxy_Hound:
             self.rotate_galaxy()
             D = np.dot(self.matrix_T,np.dot(self.matrix_P,np.transpose(self.matrix_T)))
             print '| Diagonal matrix computed '
-            print '|    |{0:2f},{1:2f},{2:2f}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2]))
-            print '| D =|{0:2f},{1:2f},{2:2f}|'.format(int(D[1,0]),int(D[1,1]),int(D[1,2]))
-            print '|    |{0:2f},{1:2f},{2:2f}|'.format(int(D[2,0]),int(D[2,1]),int(D[2,2]))
+            print '|    |{0:2d},{1:2d},{2:2d}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2]))
+            print '| D =|{0:2d},{1:2d},{2:2d}|'.format(int(D[1,0]),int(D[1,1]),int(D[1,2]))
+            print '|    |{0:2d},{1:2d},{2:2d}|'.format(int(D[2,0]),int(D[2,1]),int(D[2,2]))
         elif (rotate):
             self.redefine(n)
     
@@ -169,53 +169,3 @@ class Galaxy_Hound:
             unsout.setArrayF("gas","rho",rho_out)
         unsout.save()
    
-    def get_shell(self,lim_min,lim_max):
-        shell_cond = (self.r<=lim_max)&(self.r>=lim_min)
-        self.v_shell = self.v[shell_cond]
-        self.vr_shell = self.vr[shell_cond]
-        self.vR_shell = self.vR[shell_cond]
-        self.vphi_shell = self.vphi[shell_cond]
-        self.vz_shell = self.vz[shell_cond]
-
-    def get_ring_xy(self,lim_min,lim_max, thickness):
-        ringXY_cond = (self.r<=lim_max)&(self.r>=lim_min)&(abs(self.z)<=thickness)
-        self.v_ringXY = self.v[ringXY_cond]
-        self.vr_ringXY = self.vr[ringXY_cond]
-        self.vR_ringXY = self.vR[ringXY_cond]
-        self.vphi_ringXY = self.vphi[ringXY_cond]
-        self.vz_ringXY = self.vz[ringXY_cond]
-        self.x_ringXY = self.x[ringXY_cond]
-        self.y_ringXY = self.y[ringXY_cond]
-        self.z_ringXY = self.z[ringXY_cond]
-        self.vx_ringXY = self.vx[ringXY_cond]
-        self.vy_ringXY = self.vy[ringXY_cond]
-
-    def get_ring_yz(self,lim_min,lim_max, thickness):
-        ringYZ_cond = (self.r<=lim_max)&(self.r>=lim_min)&(abs(self.x)<=thickness)
-        self.vr_ringYZ = self.vr[ringYZ_cond]
-        self.v_ringYZ = self.v[ringYZ_cond]
-        self.vR_ringYZ = self.vR[ringYZ_cond]
-        self.vphi_ringYZ = self.vphi[ringYZ_cond]
-        self.vz_ringYZ = self.vz[ringYZ_cond]
-
-    def get_ring_zx(self,lim_min,lim_max, thickness):
-        ringZX_cond = (self.r<=lim_max)&(self.r>=lim_min)&(abs(self.y)<=thickness)
-        self.v_ringZX = self.v[ringZX_cond]
-        self.vr_ringZX = self.vr[ringZX_cond]
-        self.vR_ringZX = self.vR[ringZX_cond]
-        self.vphi_ringZX = self.vphi[ringZX_cond]
-        self.vz_ringZX = self.vz[ringZX_cond]
-
-    def get_dens(self,lim_min,lim_max, thickness,plane="x"):
-        shell_cond = (self.r<=lim_max)&(self.r>=lim_min)
-        if plane == "x":
-            plane_cond = (abs(self.z)<=thickness)
-        elif plane == "y":
-            plane_cond = (abs(self.x)<=thickness)
-        elif plane == "z":
-            plane_cond = (abs(self.y)<=thickness)
-        else:
-            plane_cond = (True)
-        condition = shell_cond & plane_cond
-        self.rho_ring = self.rho[condition]
-        self.rho_shell = self.rho[shell_cond]

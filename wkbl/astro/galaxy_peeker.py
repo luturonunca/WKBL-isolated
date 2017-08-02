@@ -141,7 +141,7 @@ class Galaxy_Hound:
             self.gs.rotate(T)
                 
    
-    def save_galaxy(self, name, fltype):
+    def save_galaxy(self, name, fltype,density=False):
         unsout=CunsOut(name,fltype)
         ages = False
         if (self._dms):
@@ -150,6 +150,13 @@ class Galaxy_Hound:
             mass_out = self.dm.mass.astype(np.float32, copy=False)
             unsout.setArrayF("halo","mass",mass_out) # save mass
             unsout.setArrayF("halo","pos",pos_out)
+            if (density):
+                ok,rho_dm,_= CF.getDensity(np.array(self.dm.pos3d.reshape(len(self.dm.pos3d)*3),
+                                           dtype=np.float32), self.dm.mass)
+                if (ok):
+                    rho_out_dm = rho_dm.astype(np.float32, copy=False)
+                    unsout.setArrayF("halo","rho",rho_out_dm)
+                    
         if (self._sts):
             length = len(self.st.pos3d)
             pos_out = self.st.pos3d.reshape(length*3).astype(np.float32, copy=False)
@@ -159,6 +166,12 @@ class Galaxy_Hound:
             unsout.setArrayF("stars","pos",pos_out)
             unsout.setArrayF("stars","mass",mass_out)
             unsout.setArrayF("stars","age",mass_out)
+            if (density):
+                ok,rho_st,_= CF.getDensity(np.array(self.st.pos3d.reshape(len(self.st.pos3d)*3),
+                                           dtype=np.float32), self.st.mass)
+                if (ok):
+                    rho_out_st = rho_st.astype(np.float32, copy=False)
+                    unsout.setArrayF("stars","rho",rho_out_st)
         if (self._gss):
             length = len(self.gs.pos3d)
             pos_out = self.gs.pos3d.reshape(length*3).astype(np.float32, copy=False)

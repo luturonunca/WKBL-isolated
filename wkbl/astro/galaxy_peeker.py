@@ -78,7 +78,7 @@ class Galaxy_Hound:
         #except:
         #    print "virial radius did not converged "
         #    sys.exit()
-        if (rotate)and(self._sts):
+        if (rotate)and((self._sts)or(self._gss)):
             print '| r_200 = {0}'.format(self.r200)
             print '---- taking particles inside {0} * r200'.format(n)
             self.redefine(n)
@@ -120,7 +120,10 @@ class Galaxy_Hound:
             self.gs.halo_Only(self.center, n, self.r200)
 
     def rotate_galaxy(self,rmin=3,rmax=10):
-        pos_ring = self.st.pos3d[(self.st.r<rmax)&(self.st.r>rmin)]
+        if (self._sts):
+            pos_ring = self.st.pos3d[(self.st.r<rmax)&(self.st.r>rmin)]
+        else:
+            pos_ring = self.gs.pos3d[(self.gs.r<rmax)&(self.gs.r>rmin)]
         P = np.zeros((3,3))
         for i in range(3):
             for j in range(3):

@@ -1,3 +1,7 @@
+"""
+Dark Matter object
+"""
+
 import sys
 import math
 import glob

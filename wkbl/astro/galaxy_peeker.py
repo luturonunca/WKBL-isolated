@@ -19,7 +19,7 @@ from _gas import _gas
 
 class Galaxy_Hound:
     def __init__(self, file_path, component,getcen=True,**kwargs):
-        # get them vars !!!!ONLy RAMSES FOR NOW
+        # get them vars !!!!ONLY RAMSES FOR NOW
         self.file = file_path
         self.p = nbe.Info_sniffer(file_path)
         comov = kwargs.get('comov',False)

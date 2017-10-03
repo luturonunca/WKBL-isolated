@@ -27,7 +27,7 @@ class _stars:
             sys.exit("\n\n\n\n\n\n\nERROR:"+file_path+" is not a valid file !!!!!\n\n\n\n\n")
         ok = self.uns.nextFrame("")
         ok, pos = self.uns.getArrayF("all","pos")
-        ok, self.age = self.uns.getArrayF("stars","age")
+        ok, age = self.uns.getArrayF("stars","age")
         ok, vel = self.uns.getArrayF("all","vel")
         ok, mass = self.uns.getArrayF("all","mass")
         ok, self.id = self.uns.getArrayI("all","id")
@@ -45,6 +45,7 @@ class _stars:
             self.pos3d = pos.reshape(len(pos)/3,3)
         self.vel3d = vel.reshape(len(vel)/3,3)
         self.mass = mass * self._p.simutoMsun
+        self.age = age *self._p.unitt / (3600.*24.*365*1e9) # stars age to Gyrs
  
 
     def halo_Only(self, center, n, r200):

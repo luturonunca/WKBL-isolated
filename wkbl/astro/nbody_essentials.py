@@ -26,8 +26,9 @@ class Info_sniffer:
                 _vars[var_name] = number
                 if var_name == "unit_t":
                     break
-        self.H0=_vars["H0"]
-        self.aexp=_vars["aexp"]
+        self.H0 = _vars["H0"]
+        self.aexp = _vars["aexp"]
+        self.Z = -1. + (1./ self.aexp)
         self.msuntokg = 1.99844e30
         self.pctocm = 3.08567758e18
         self.cmtopc = 1/self.pctocm

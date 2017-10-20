@@ -115,7 +115,7 @@ class Galaxy_Hound:
         if (self._dms):
             self.dm.halo_Only(self.center, n, self.r200)
         if (self._sts):
-            self.st.halo_Only(self.center, n, self.r200)
+            self.st.halo_Only(self.center, n, self.r200, self.r97)
         if (self._gss):
             self.gs.halo_Only(self.center, n, self.r200)
 

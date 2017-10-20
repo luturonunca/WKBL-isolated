@@ -48,7 +48,7 @@ class _stars:
         self.age = age *self._p.unitt / (3600.*24.*365*1e9) # stars age to Gyrs
  
 
-    def halo_Only(self, center, n, r200):
+    def halo_Only(self, center, n, r200,r97):
         in_halo = nbe.all_inside(self.pos3d, center,n*r200)
         self.pos3d = self.pos3d[in_halo] - center
         self.mass = self.mass[in_halo]
@@ -68,6 +68,7 @@ class _stars:
         self.vtheta = (self.vR*self.pos3d[:,2] - vz*self.R) / self.r
         #### other params ###
         self.total_m =  np.sum(self.mass)
+        self.fire_m , self.fire_r= nbe.FIRE_st_mass(self.mass,self.r,r97)
 
     def Age_cut(self, age_cut):
         in_gal = (self.age < age_cut)

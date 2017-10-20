@@ -127,10 +127,33 @@ def all_inside(pos3d, center, r_search):
     return in_halo
 
 def half_mass(mass,r):
+    """
+    returns half mass radius
+    i.e the radius at which the half of the total 
+    mass is contained
+    input:
+    mass = array of particles mass
+    r =  array of particles distance from center 
+    """
     m_tot, m_sort = mass.sum() / 2., mass[np.argsort(r)]
     aux,counter = 0,-1
     while aux < m_tot:
         counter += 1
         aux += m_sort[counter]
     return r[counter]
+
+
+def FIRE_st_mass(mass,r,r97):
+    """
+    from arxiv:1702.06148v1 footnote 9
+    returns the mass defined there as M_st
+    and the radius they define
+    to plot on top of the Moster band
+    """
+    R15 = 0.15*r97
+    R_half = half_mass(mass[r< R15],r[r< R15])
+    R_FIRE = half_mass(mass[r< 3*R_half],r[r< 3*R_half])
+    return mass[r < R_FIRE].sum(), R_FIRE
+    
+
 

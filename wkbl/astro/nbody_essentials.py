@@ -42,6 +42,7 @@ class Info_sniffer:
         self.simutokms = self.unitl/10**5/self.unitt
         self.kgtoGeV = 1/1.783e-27
         self.kpctocm = 3.086e21
+        self.Z = (1./self.aexp) - 1.
         self.kpctokm = self.kpctocm / 1e5
         self.G = 6.67384e-11 * self.msuntokg / (3.08567758e19**3)
         self.rho_crit = (3 * (self.H0**2) / 3.08567758e19**2)/ (8*np.pi*self.G)

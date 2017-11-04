@@ -10,7 +10,7 @@ import scipy.special as sp
 from numpy import exp, sqrt
 import scipy.integrate as integrate
 from sklearn.neighbors import KDTree
-
+from _sf_info import SF_info
 
 class _stars:
     def __init__(self, file_path,p, **kwargs):
@@ -22,7 +22,12 @@ class _stars:
         comov = kwargs.get('comov',False)
         r_search = kwargs.get('r_search',200.)
         self.halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
-         
+        try:
+            self.sf_info = SF_info(file_path,p,comov=comov)
+            self.gotsfInfo = True
+        except:
+            self.gotsfInfo = False
+ 
         if self.uns.isValid()!=True:
             sys.exit("\n\n\n\n\n\n\nERROR:"+file_path+" is not a valid file !!!!!\n\n\n\n\n")
         ok = self.uns.nextFrame("")
@@ -49,6 +54,9 @@ class _stars:
  
 
     def halo_Only(self, center, n, r200,r97):
+        #### sf history ###
+        if (self.gotsfInfo):
+            self.sf_info.halo_Only(center, n, r200)
         in_halo = nbe.all_inside(self.pos3d, center,n*r200)
         self.pos3d = self.pos3d[in_halo] - center
         self.mass = self.mass[in_halo]
@@ -88,11 +96,14 @@ class _stars:
         self.age = self.age[in_gal]
         
     def rotate(self,T):
+        if (self.gotsfInfo):
+            self.sf_info.rotate(T)
         pos = self.pos3d
         self.pos3d = nbe.matrix_vs_vector(T,pos)
 
     def shift(self, center):
         self.pos3d = self.pos3d - center
+        self.sf_info.shift(center)
 
     def get_M_virS(self,r200,r97):
 	# total mass inside r200

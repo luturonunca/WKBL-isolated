@@ -48,14 +48,17 @@ class Info_sniffer:
         self.rho_crit = (3 * (self.H0**2) / 3.08567758e19**2)/ (8*np.pi*self.G)
         self.simutoGeVcm3 = (self.simutoMsun*self.msuntokg*self.kgtoGeV) / (self.simutokpc*self.kpctocm)**3
 
-def _get_center(output,clumps=False):
+def _get_center(output,clumps=False, sf_hist=False):
         """
         gets center of more resolved halo
         taken from hast library witten by V.perret
         https://bitbucket.org/vperret/hast 
         """
         p = Info_sniffer(output)
-        list = glob.glob(output+'/clump_?????.txt?????')
+        if (sf_hist):
+            list = glob.glob(output+'/stars_?????.out?????')
+        else:
+            list = glob.glob(output+'/clump_?????.txt?????')
         i=0
         for file in list:
                 data = np.loadtxt(file,skiprows=1,dtype=None)
@@ -69,7 +72,9 @@ def _get_center(output,clumps=False):
         array=(1e4*data_all[:,3]/np.max(data_all[:,3]))*(data_all[:,8]/np.max(data_all[:,8])).astype(int, copy=False)
         data_sorted = data_all[array.argsort()]
         data_sorted = data_sorted[::-1]
-        if not (clumps):
+        if (sf_hist):
+            return data_all
+        elif not (clumps):
             return data_sorted[0,4:7]
         else:
             return data_all[array.argsort()]

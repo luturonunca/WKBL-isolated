@@ -22,6 +22,7 @@ class Galaxy_Hound:
     def __init__(self, file_path, component,getcen=True,**kwargs):
         # get them vars !!!!ONLY RAMSES FOR NOW
         self.file = file_path
+        self._center_history = np.array([0.,0.,0.])
         self.p = nbe.Info_sniffer(file_path)
         comov = kwargs.get('comov',False)
         self._dms = False
@@ -117,6 +118,7 @@ class Galaxy_Hound:
     
     def center_shift(self,nucenter):
         self.center = np.zeros(3)
+        self._center_history = np.vstack((self._center_history,nucenter))
         if (self._dms):
             self.dm.shift(nucenter)
         if (self._sts):

@@ -24,7 +24,6 @@ class _dark_matter:
         self._p = p
         self._dens = False
         self.file = file_path
-        self._center_history = np.array([0.,0.,0.])    ##########
         self.uns = CunsIn(file_path,"halo","all",False)
         hsml = kwargs.get('hsml',False)
         dens = kwargs.get('dens',False)
@@ -94,7 +93,6 @@ class _dark_matter:
  
     def shift(self,center):
         self.pos3d = self.pos3d - center
-        self._center_history = np.vstack((self._center_history,center))
         if (self.gotclumps):
             self.Clumps.shift(center)    
 

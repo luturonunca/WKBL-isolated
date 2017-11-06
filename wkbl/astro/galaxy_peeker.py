@@ -14,6 +14,7 @@ from _dark_matter import _dark_matter
 from _stars import _stars
 from _gas import _gas
 
+#### master branch ####
  
  
 
@@ -42,14 +43,26 @@ class Galaxy_Hound:
         if (self._dms):
             print "loading Dark matter.."
             self.dm = _dark_matter(file_path, self.p,comov=comov)
+            if component=="halo":
+                # if only DM is loaded computes center of zoom region               
+                zoom_reg = self.dm.mass==self.dm.mass.min()
+                dmcenter = nbe.real_center(self.dm.pos3d[zoom_reg],self.dm.mass[zoom_reg])
+                self.center_shift(dmcenter)
+                self.cen_done = True
         if (self._sts):
             print "loading Stars.."
             self.st = _stars(file_path, self.p, comov=comov)
         if (self._gss):
             print "loading Gas.."
             self.gs = _gas(file_path, self.p,comov=comov)
-            self.center_shift(self.gs.center_rho_max)
-
+        if (getcen) and not (self.cen_done):
+            try:
+                # computes center with higher resolved clump
+                cen = self.dm.Clumps.pos3d[self.dm.Clumps.cell==self.dm.Clumps.cell.max()]
+                self.center_shift(cen)
+            except:
+                print "No center cuz No clumps.. \nDo it yourself"    
+           
     def r_virial(self, r_max,r_min=0,rotate=True,n=2.5, bins=512):
         positions = np.array([], dtype=np.int64).reshape(0,3)
         masses = np.array([], dtype=np.int64)

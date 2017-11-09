@@ -25,12 +25,10 @@ class Galaxy_Hound:
         self._center_history = np.array([0.,0.,0.])
         self.p = nbe.Info_sniffer(file_path)
         comov = kwargs.get('comov',False)
-        self._dms = False
-        self._sts = False
-        self._gss = False
-        #self.center = nbe._get_center(file_path) * self.p.simutokpc
+        self._dms, self._sts, self._gss  = False, False, False
+        self.cen_done = False
         halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
-        #loadDatat
+        # Load Data from Simulation
 	if component=="all":
             sys.exit('we do not play with that card (component=all), be specific')
         self.comp = component.split(',')

@@ -103,7 +103,8 @@ class _stars:
 
     def shift(self, center):
         self.pos3d = self.pos3d - center
-        self.sf_info.shift(center)
+        if (self.gotsfInfo):
+            self.sf_info.shift(center)
 
     def get_M_virS(self,r200,r97):
 	# total mass inside r200

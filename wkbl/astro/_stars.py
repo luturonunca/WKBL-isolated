@@ -35,6 +35,7 @@ class _stars:
         ok, age = self.uns.getArrayF("stars","age")
         ok, vel = self.uns.getArrayF("all","vel")
         ok, mass = self.uns.getArrayF("all","mass")
+        ok, self.metal = self.uns.getArrayF("all","metal")
         ok, self.id = self.uns.getArrayI("all","id")
         if dens ==True:
             ok, rho = self.uns.getArrayF("all","rho")

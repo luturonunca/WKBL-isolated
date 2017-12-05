@@ -162,4 +162,26 @@ def FIRE_st_mass(mass,r,r97):
     return mass[r < R_FIRE].sum(), R_FIRE
     
 
+def check_particles(path):
+    """
+    this routine check the particle number in  the simulation
+    by reading the header file in the snapshot file and using
+    as input the path to the stapshot.
+    """
+    list = glob.glob(path+"/header_?????.txt")
+    linum = n = 0
+    part_arrays = fi = np.array([])
+    for f in list:
+        fi = np.append(fi,f)
+        n+=1
+    myfi = open(fi[0])
 
+    for l in myfi:
+        linum += 1
+        if linum%2==0 and linum<=8:
+            row = l.split(' ')
+            part_arrays = np.append(part_arrays,np.float(row[-1]))
+    n_tot = part_arrays[0]
+    n_dm = part_arrays[1]
+    n_st = part_arrays[2]
+    return n_tot, n_dm, n_st

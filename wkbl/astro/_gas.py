@@ -1,5 +1,5 @@
 """
-gas routine
+gas  and AMR routine
 """
 import sys
 import math

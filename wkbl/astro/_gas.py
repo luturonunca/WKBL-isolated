@@ -26,10 +26,12 @@ class _gas:
         if self.uns.isValid()!=True:
             sys.exit("\n\n\n\n\n\n\nERROR:"+file_path+" is not a valid file !!!!!\n\n\n\n\n")
         ok = self.uns.nextFrame("")
-        ok, pos = self.uns.getArrayF("all","pos")
-        ok, vel = self.uns.getArrayF("all","vel")
-        ok, mass = self.uns.getArrayF("all","mass")
-        ok, self.id = self.uns.getArrayI("all","id")
+        ok, pos = self.uns.getArrayF("gas","pos")
+        ok, vel = self.uns.getArrayF("gas","vel")
+        ok, mass = self.uns.getArrayF("gas","mass")
+        ok, temp = self.uns.getArrayF("gas","temp")
+        ok, pot = self.uns.getArrayF("gas","pot")
+        ok, self.id = self.uns.getArrayI("gas","id")
         ok, rho = self.uns.getArrayF("gas","rho")
         self.rho =  rho * self._p.simutoMsun * (self._p.simutokpc)**-3
         ok, hsml =  self.uns.getArrayF("gas","hsml")
@@ -39,7 +41,8 @@ class _gas:
             pos = pos * self._p.simutokpc / self._p.aexp
         else:
             pos = pos * self._p.simutokpc
-        
+        self.temp = temp *np.float(self._p.simutokms**2 * self._p.m_p / self._p.k_boltz) # Kelvin
+        self.pot = pot * self._p.simutokms**2 
         self.pos3d = pos.reshape(len(pos)/3,3)
         self.center_rho_max = self.pos3d[np.where(self.rho==self.rho.max())][0]
         self.vel3d = vel.reshape(len(vel)/3,3)
@@ -50,6 +53,7 @@ class _gas:
         in_halo = nbe.all_inside(self.pos3d, center, n*r200)
         self.pos3d = self.pos3d[in_halo] - center
         self.mass = self.mass[in_halo]
+        self.temp = self.temp[in_halo]
         self.rho = self.rho[in_halo]
         self.vel3d = self.vel3d[in_halo]
         self.id = self.id[in_halo]

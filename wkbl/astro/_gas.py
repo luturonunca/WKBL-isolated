@@ -41,8 +41,8 @@ class _gas:
             pos = pos * self._p.simutokpc / self._p.aexp
         else:
             pos = pos * self._p.simutokpc
-        self.temp = temp *np.float(self._p.simutokms**2 * self._p.m_p / self._p.k_boltz) # Kelvin
-        self.pot = pot * self._p.simutokms**2 
+        self.temp = temp# *np.float(self._p.simutokms**2 * self._p.m_p / self._p.k_boltz) # Kelvin
+        self.pot = pot #* self._p.simutokms**2 
         self.pos3d = pos.reshape(len(pos)/3,3)
         self.center_rho_max = self.pos3d[np.where(self.rho==self.rho.max())][0]
         self.vel3d = vel.reshape(len(vel)/3,3)
@@ -54,6 +54,7 @@ class _gas:
         self.pos3d = self.pos3d[in_halo] - center
         self.mass = self.mass[in_halo]
         self.temp = self.temp[in_halo]
+        self.pot = self.pot[in_halo]
         self.rho = self.rho[in_halo]
         self.vel3d = self.vel3d[in_halo]
         self.id = self.id[in_halo]

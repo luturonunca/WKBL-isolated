@@ -61,7 +61,8 @@ class _stars:
         in_halo = nbe.all_inside(self.pos3d, center,n*r200)
         self.pos3d = self.pos3d[in_halo] - center
         self.mass = self.mass[in_halo]
-        self.age = self.age[in_halo]
+	self.age = self.age[in_halo]
+        self.metal = self.metal[in_halo]
         self.vel3d = self.vel3d[in_halo]
         self.id = self.id[in_halo]
         self.R = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2))

@@ -29,6 +29,7 @@ class _gas:
         ok, pos = self.uns.getArrayF("gas","pos")
         ok, vel = self.uns.getArrayF("gas","vel")
         ok, mass = self.uns.getArrayF("gas","mass")
+        ok, self.metal = self.uns.getArrayF("gas","metal")
         ok, temp = self.uns.getArrayF("gas","temp")
         ok, pot = self.uns.getArrayF("gas","pot")
         ok, self.id = self.uns.getArrayI("gas","id")
@@ -53,6 +54,7 @@ class _gas:
         in_halo = nbe.all_inside(self.pos3d, center, n*r200)
         self.pos3d = self.pos3d[in_halo] - center
         self.mass = self.mass[in_halo]
+        self.metal = self.metal[in_halo]
         self.temp = self.temp[in_halo]
         self.pot = self.pot[in_halo]
         self.rho = self.rho[in_halo]

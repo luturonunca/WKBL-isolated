@@ -49,6 +49,9 @@ class Info_sniffer:
         self.G = 6.67384e-11 * self.msuntokg / (3.08567758e19**3)
         self.rho_crit = (3 * (self.H0**2) / 3.08567758e19**2)/ (8*np.pi*self.G)
         self.simutoGeVcm3 = (self.simutoMsun*self.msuntokg*self.kgtoGeV) / (self.simutokpc*self.kpctocm)**3
+        self.mH = 1.6600000e-24
+        self.kB = 1.3806200e-16
+        self.simutoKelvin =  self.mH/self.kB * (self.simutokms*1e5)**2
 
 def _get_center(output,clumps=False, sf_hist=False):
         """

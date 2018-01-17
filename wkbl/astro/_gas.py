@@ -42,7 +42,8 @@ class _gas:
             pos = pos * self._p.simutokpc / self._p.aexp
         else:
             pos = pos * self._p.simutokpc
-        self.temp = (gamma-1.0) * temp * self.p.simutoKelvin #Kelvin
+        gamma = 1.666
+        self.temp = (gamma-1.0) * temp * self._p.simutoKelvin #Kelvin
         self.pot = pot #* self._p.simutokms**2 
         self.pos3d = pos.reshape(len(pos)/3,3)
         self.center_rho_max = self.pos3d[np.where(self.rho==self.rho.max())][0]
@@ -54,6 +55,7 @@ class _gas:
         in_halo = nbe.all_inside(self.pos3d, center, n*r200)
         self.pos3d = self.pos3d[in_halo] - center
         self.mass = self.mass[in_halo]
+        self.hsml = self.hsml[in_halo]
         self.metal = self.metal[in_halo]
         self.temp = self.temp[in_halo]
         self.pot = self.pot[in_halo]

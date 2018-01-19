@@ -20,6 +20,7 @@ class _gas:
         self._center_history = np.array([0.,0.,0.]) 
         self.uns = CunsIn(file_path,"gas","all",False)
         dens = kwargs.get('dens',False)
+        self.get_sigma = kwargs.get('virial',False)
         comov = kwargs.get('comov',False)
         self.halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
 
@@ -31,11 +32,15 @@ class _gas:
         ok, mass = self.uns.getArrayF("gas","mass")
         ok, self.metal = self.uns.getArrayF("gas","metal")
         ok, temp = self.uns.getArrayF("gas","temp")
+        ok, temp2 = self.uns.getArrayF("hydro","4")
         ok, pot = self.uns.getArrayF("gas","pot")
         ok, self.id = self.uns.getArrayI("gas","id")
         ok, rho = self.uns.getArrayF("gas","rho")
-        self.rho =  rho * self._p.simutoMsun * (self._p.simutokpc)**-3
         ok, hsml =  self.uns.getArrayF("gas","hsml")
+        if (self.get_sigma):
+            ok, sigma = self.uns.getArrayF("hydro","7")
+            self.sigma = sigma*self._p.simutokpc 
+        
         ### coordinates ###
         vel = vel * self._p.simutokms
         if (comov):
@@ -44,6 +49,8 @@ class _gas:
             pos = pos * self._p.simutokpc
         gamma = 1.666
         self.temp = (gamma-1.0) * temp * self._p.simutoKelvin #Kelvin
+        self.rho =  rho * self._p.simutoMsun * (self._p.simutokpc)**-3
+        self.temp2 = temp2 * self._p.simutoKelvin #Kelvin
         self.pot = pot #* self._p.simutokms**2 
         self.pos3d = pos.reshape(len(pos)/3,3)
         self.center_rho_max = self.pos3d[np.where(self.rho==self.rho.max())][0]
@@ -55,6 +62,8 @@ class _gas:
         in_halo = nbe.all_inside(self.pos3d, center, n*r200)
         self.pos3d = self.pos3d[in_halo] - center
         self.mass = self.mass[in_halo]
+        if (self.get_sigma):
+            self.sigma = self.sigma[in_halo]
         self.hsml = self.hsml[in_halo]
         self.metal = self.metal[in_halo]
         self.temp = self.temp[in_halo]

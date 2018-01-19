@@ -33,10 +33,12 @@ class Info_sniffer:
         self.msuntokg = 1.99844e30
         self.pctocm = 3.08567758e18
         self.cmtopc = 1/self.pctocm
-        self.unitl=_vars["unit_l"]/(3.08e18)*self.pctocm
+        
+        self.unitl=_vars["unit_l"]#/(3.08e18)*self.pctocm
         self.unitd=_vars["unit_d"]/(self.pctocm/(3.08*10**18))**3
         self.unitt=_vars["unit_t"]
         self.simutokpc=self.unitl*_vars["H0"]/self.pctocm/1e5
+        self.simutocm=self.unitl*_vars["H0"]/1e5
         self.simutoMsun=(self.unitd*self.unitl**3)/1000/self.msuntokg
         self.unitsimutoMsunkpc3=self.unitd*self.pctocm**3/1000/self.msuntokg
         self.simutokms = self.unitl/10**5/self.unitt
@@ -51,7 +53,7 @@ class Info_sniffer:
         self.simutoGeVcm3 = (self.simutoMsun*self.msuntokg*self.kgtoGeV) / (self.simutokpc*self.kpctocm)**3
         self.mH = 1.6600000e-24
         self.kB = 1.3806200e-16
-        self.simutoKelvin =  self.mH/self.kB * (self.simutokms*1e5)**2
+        self.simutoKelvin =  self.mH/self.kB * (self.simutocm/self.unitt)**2
 
 def _get_center(output,clumps=False, sf_hist=False):
         """
@@ -66,7 +68,10 @@ def _get_center(output,clumps=False, sf_hist=False):
             list = glob.glob(output+'/clump_?????.txt?????')
         i=0
         for file in list:
-                data = np.loadtxt(file,skiprows=1,dtype=None)
+                try:
+                    data = np.loadtxt(file,skiprows=1,dtype=None)
+                except:
+                    continue
                 if(np.size(data)==0):
                         continue
                 if(i>0):

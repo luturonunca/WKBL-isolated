@@ -15,6 +15,8 @@ from sklearn.neighbors import KDTree
 
 class SF_info: 
     def __init__(self, file_path,p, **kwargs):
+        # load st_info where the current stars where formed
+        file_path = file_path[:-2]+str(int(file_path[-2:])-1)
         self.p = p 
         comov= kwargs.get('comov',False)
         self._center_history = np.array([[0,0,0]])
@@ -24,12 +26,20 @@ class SF_info:
         else:
             self.pos3d = self.data[:,4:7] * p.simutokpc
         self.mass = self.data[:,3] * p.simutoMsun
-        self.id = self.data[:,2]
+        self.id = self.data[:,1]
+        self.rho = self.data[:,10] * self.p.simutoMsun * (self.p.simutokpc)**-3
+        self.temp = self.data[:,14]* p.simutoKelvin
+        self.met = self.data[:,15] 
+        self.sigmas = self.data[:,17] * p.simutokms 
 
     def halo_Only(self, center, n, r):
         in_halo = nbe.all_inside(self.pos3d, center, r)
         self.pos3d = self.pos3d[in_halo] - center
-        self.mass = self.mass[in_halo]
+        self.id = self.id[in_halo]
+        self.rho = self.rho[in_halo]
+        self.temp = self.temp[in_halo]
+        self.met = self.met[in_halo]
+        self.sigmas = self.sigmas[in_halo]
     
     def rotate(self,T):
         pos = self.pos3d

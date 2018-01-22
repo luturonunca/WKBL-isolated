@@ -39,7 +39,7 @@ class _gas:
         ok, hsml =  self.uns.getArrayF("gas","hsml")
         if (self.get_sigma):
             ok, sigma = self.uns.getArrayF("hydro","7")
-            self.sigma = sigma*self._p.simutokpc 
+            self.sigma2 = sigma*self._p.simutokpc 
         
         ### coordinates ###
         vel = vel * self._p.simutokms
@@ -63,10 +63,11 @@ class _gas:
         self.pos3d = self.pos3d[in_halo] - center
         self.mass = self.mass[in_halo]
         if (self.get_sigma):
-            self.sigma = self.sigma[in_halo]
+            self.sigma2 = self.sigma2[in_halo]
         self.hsml = self.hsml[in_halo]
         self.metal = self.metal[in_halo]
         self.temp = self.temp[in_halo]
+        self.temp2 = self.temp2[in_halo]
         self.pot = self.pot[in_halo]
         self.rho = self.rho[in_halo]
         self.vel3d = self.vel3d[in_halo]

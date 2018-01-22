@@ -24,6 +24,7 @@ class Galaxy_Hound:
         self.file = file_path
         self._center_history = np.array([0.,0.,0.])
         self.p = nbe.Info_sniffer(file_path)
+        virial = kwargs.get('virial',False)
         comov = kwargs.get('comov',False)
         self._dms, self._sts, self._gss  = False, False, False
         self.cen_done = False
@@ -39,7 +40,7 @@ class Galaxy_Hound:
             self.st = _stars(file_path, self.p, comov=comov)
             self._sts = True
             print "loading Gas.."
-            self.gs = _gas(file_path, self.p,comov=comov)
+            self.gs = _gas(file_path, self.p,comov=comov,virial=virial)
             self._gss = True
         else:    
                 # if only DM is loaded computes center of zoom region 

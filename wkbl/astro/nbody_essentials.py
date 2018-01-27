@@ -194,4 +194,18 @@ def check_particles(path):
     n_tot = part_arrays[0]
     n_dm = part_arrays[1]
     n_st = part_arrays[2]
-    return n_tot, n_dm, n_st
+    if (n_tot>0):
+        return n_tot, n_dm, n_st
+    else:
+        myfi, linum = open(fi[0]), -1
+        for l in myfi:
+            linum += 1
+            row = l.split('  ')
+            if linum==7:
+                n_dm = float(row[-1])
+            if linum==8:
+                n_t = float(row[-1])
+        n_tot = n_st + n_dm
+        print n_tot, n_dm, n_st
+        return int(n_tot), int(n_dm), int(n_st)
+

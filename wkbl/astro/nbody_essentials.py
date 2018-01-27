@@ -204,7 +204,7 @@ def check_particles(path):
             if linum==7:
                 n_dm = float(row[-1])
             if linum==8:
-                n_t = float(row[-1])
+                n_st = float(row[-1])
         n_tot = n_st + n_dm
         print n_tot, n_dm, n_st
         return int(n_tot), int(n_dm), int(n_st)

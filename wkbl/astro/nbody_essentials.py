@@ -38,7 +38,7 @@ class Info_sniffer:
         self.unitd=_vars["unit_d"]/(self.pctocm/(3.08*10**18))**3
         self.unitt=_vars["unit_t"]
         self.simutokpc=self.unitl*_vars["H0"]/self.pctocm/1e5
-        self.simutocm=self.unitl*_vars["H0"]/1e5
+        self.simutocm=self.unitl*_vars["H0"]/1e2
         self.simutoMsun=(self.unitd*self.unitl**3)/1000/self.msuntokg
         self.unitsimutoMsunkpc3=self.unitd*self.pctocm**3/1000/self.msuntokg
         self.simutokms = self.unitl/10**5/self.unitt
@@ -53,7 +53,9 @@ class Info_sniffer:
         self.simutoGeVcm3 = (self.simutoMsun*self.msuntokg*self.kgtoGeV) / (self.simutokpc*self.kpctocm)**3
         self.mH = 1.6600000e-24
         self.kB = 1.3806200e-16
-        self.simutoKelvin =  self.mH/self.kB * (self.simutocm/self.unitt)**2
+        self.scale_T2 =  self.mH/self.kB * (self.simutocm/self.unitt)**2
+        self.scale_d = self.simutoMsun * (self.simutokpc)**-3
+        self.scale_nH = 0.76 * self.scale_d / self.mH
 
 def _get_center(output,clumps=False, sf_hist=False):
         """

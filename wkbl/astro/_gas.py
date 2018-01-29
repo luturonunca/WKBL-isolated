@@ -48,9 +48,9 @@ class _gas:
         else:
             pos = pos * self._p.simutokpc
         gamma = 1.666
-        self.temp = (gamma-1.0) * temp * self._p.simutoKelvin #Kelvin
+        self.temp = (gamma-1.0) * temp #* self._p.simutoKelvin #Kelvin
+        self.temp2 = temp2 * self._p.scale_T2 / rho #Kelvin
         self.rho =  rho * self._p.simutoMsun * (self._p.simutokpc)**-3
-        self.temp2 = temp2 * self._p.simutoKelvin #Kelvin
         self.pot = pot #* self._p.simutokms**2 
         self.pos3d = pos.reshape(len(pos)/3,3)
         self.center_rho_max = self.pos3d[np.where(self.rho==self.rho.max())][0]

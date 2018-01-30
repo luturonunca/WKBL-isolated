@@ -79,6 +79,7 @@ class Galaxy_Hound:
             rho_s = np.cumsum(mhist) / vol_bin
             self.r200 = r_bin[np.argmin(np.abs(rho_s - (200 * self.p.rho_crit)))]
             self.r97 = r_bin[np.argmin(np.abs(rho_s - (97 * self.p.rho_crit)))]
+            self.r500 = r_bin[np.argmin(np.abs(rho_s - (500 * self.p.rho_crit)))]
             rnot = False
  
         #except:

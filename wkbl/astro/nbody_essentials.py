@@ -138,3 +138,18 @@ def half_mass(mass,r):
         aux += m_sort[counter]
     return r[counter]
 
+def get_T_matrix(sim,rmin=3,rmax=10):
+        sim.dm.r = np.sqrt((sim.dm.pos3d[:,0])**2 +(sim.dm.pos3d[:,1])**2 +(sim.dm.pos3d[:,2])**2 )
+        pos_selection = sim.dm.pos3d[(sim.dm.r<rmax)&(sim.dm.r>rmin)]
+        mass_selection = sim.dm.mass[(sim.dm.r<rmax)&(sim.dm.r>rmin)]
+        P = np.zeros((3,3))
+        for i in range(3):
+            for j in range(3):
+               P[i][j] = np.sum(mass_selection*pos_selection[:,i]*pos_selection[:,j])
+        eigen_values,evecs = np.linalg.eig(P)
+        order = np.argsort(abs(eigen_values))
+        T = np.zeros((3,3))
+        T[0],T[1],T[2] = evecs[:,order[2]],evecs[:,order[1]],evecs[:,order[0]]
+        D = np.dot(T,np.dot(P,np.transpose(T)))
+        return D
+

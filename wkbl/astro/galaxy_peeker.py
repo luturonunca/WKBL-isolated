@@ -56,7 +56,7 @@ class Galaxy_Hound:
             except:
                 print "No center cuz No clumps.. \nDo it yourself"    
            
-    def r_virial(self, r_max,r_min=0,rotate=True,n=2.5, bins=512):
+    def r_virial(self, r_max,r_min=0,rotate=True,n=2.5, bins=5012):
         positions = np.array([], dtype=np.int64).reshape(0,3)
         masses = np.array([], dtype=np.int64)
         if (self._dms):

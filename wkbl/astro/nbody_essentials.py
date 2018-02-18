@@ -53,7 +53,7 @@ class Info_sniffer:
         self.simutoGeVcm3 = (self.simutoMsun*self.msuntokg*self.kgtoGeV) / (self.simutokpc*self.kpctocm)**3
         self.mH = 1.6600000e-24
         self.kB = 1.3806200e-16
-        self.scale_T2 =  self.mH/self.kB * (self.simutocm/self.unitt)**2
+        self.scale_T2 =  self.mH/self.kB * (self.simutocm/self.unitt)**2 #simutokelvin
         self.scale_d = self.simutoMsun * (self.simutokpc)**-3
         self.scale_nH = 0.76 * self.scale_d / self.mH
 

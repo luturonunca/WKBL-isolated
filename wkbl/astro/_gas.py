@@ -39,7 +39,7 @@ class _gas:
         ok, hsml =  self.uns.getArrayF("gas","hsml")
         if (self.get_sigma):
             ok, sigma = self.uns.getArrayF("hydro","7")
-            self.sigma2 = sigma*self._p.simutokpc 
+            self.sigma2 = sigma*(self._p.simutokms**2) 
         
         ### coordinates ###
         vel = vel * self._p.simutokms

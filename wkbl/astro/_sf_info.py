@@ -28,7 +28,7 @@ class SF_info:
         self.mass = self.data[:,3] * p.simutoMsun
         self.id = self.data[:,1]
         self.rho = self.data[:,10] * self.p.simutoMsun * (self.p.simutokpc)**-3
-        self.temp = self.data[:,14]* p.simutoKelvin
+        self.temp = self.data[:,14]* p.scale_T2
         self.met = self.data[:,15] 
         self.sigmas = self.data[:,17] * p.simutokms 
 

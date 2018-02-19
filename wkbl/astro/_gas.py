@@ -20,7 +20,7 @@ class _gas:
         self._center_history = np.array([0.,0.,0.]) 
         self.uns = CunsIn(file_path,"gas","all",False)
         dens = kwargs.get('dens',False)
-        self.get_sigma = kwargs.get('virial',False)
+        self.get_sigma = kwargs.get('virial',True)
         comov = kwargs.get('comov',False)
         self.halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
 
@@ -48,8 +48,8 @@ class _gas:
         else:
             pos = pos * self._p.simutokpc
         gamma = 1.666
-        self.temp = (gamma-1.0) * temp #* self._p.simutoKelvin #Kelvin
-        self.temp2 = temp2 * self._p.scale_T2 / rho #Kelvin
+        self.temp = (gamma-1.0) * temp * self._p.scale_T2 #Kelvin
+        self.temp2 = temp2 * self._p.scale_T2# Kelvin/mu
         self.rho =  rho * self._p.simutoMsun * (self._p.simutokpc)**-3
         self.pot = pot #* self._p.simutokms**2 
         self.pos3d = pos.reshape(len(pos)/3,3)

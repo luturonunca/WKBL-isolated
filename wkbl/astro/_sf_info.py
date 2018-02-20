@@ -38,13 +38,15 @@ class SF_info:
         self.M2 = self.sigma2 / self.cs2
         factG = 3. / 4. / 2. / np.pi * 0.3089 * self.p.aexp 
         self.alpha0 = 0.5 * self.sigma2 / np.pi / factG / self.rho / (self.hsml)**2
-        
-
+        phi_x = 0.19
+        self.rho_crit = ((np.pi**2)/5.) * (phi_x**2) * self.alpha0 * self.M2
+         
     def halo_Only(self, center, n, r):
         in_halo = nbe.all_inside(self.pos3d, center, r)
         self.pos3d = self.pos3d[in_halo] - center
         self.id = self.id[in_halo]
         self.rho = self.rho[in_halo]
+        self.rho_crit = self.rho_crit[in_halo]
         self.temp2 = self.temp2[in_halo]
         self.met = self.met[in_halo]
         self.alpha0= self.alpha0[in_halo]
@@ -56,7 +58,21 @@ class SF_info:
     def rotate(self,T):
         pos = self.pos3d
         self.pos3d = nbe.matrix_vs_vector(T,pos) 
+   
+    def id_sort(self):
+        sorted_by_id = np.argsort(self.id)
+        self.pos3d = self.pos3d[sorted_by_id]
+        self.id = self.id[sorted_by_id]
+        self.rho = self.rho[sorted_by_id]
+        self.rho_crit = self.rho_crit[sorted_by_id]
+        self.temp2 = self.temp2[sorted_by_id]
+        self.met = self.met[sorted_by_id]
+        self.alpha0= self.alpha0[sorted_by_id]
+        self.sigma2 = self.sigma2[sorted_by_id]
+        self.cs2 = self.cs2[sorted_by_id]
+        self.M2 = self.M2[sorted_by_id]    
     
+  
     def shift(self, center):
         self.pos3d = self.pos3d - center
         self._center_history = np.vstack((self._center_history,center))

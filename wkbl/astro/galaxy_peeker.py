@@ -57,6 +57,16 @@ class Galaxy_Hound:
                 print "No center cuz No clumps.. \nDo it yourself"    
            
     def r_virial(self, r_max,r_min=0,rotate=True,n=2.5, bins=5012):
+        """
+        The Function: main function of this story, calculates the three more commun
+        virial radii: R200,R97 and R500. Also if rotate=True then it calculates the
+        principal axes of the de stars structures and alines the hole box acordingly
+        r_max: float, the maximal radius to prove in the search of the virial radii
+        r_min: float, the minimal radius to prove in the search of the virial radii
+        rotate: bool, if true rotates stars structure
+        n: float, all particles with r>n*r200 will be ignore from now own.
+        bins: int, number of bins for the coarse calculation
+        """
         positions = np.array([], dtype=np.int64).reshape(0,3)
         masses = np.array([], dtype=np.int64)
         if (self._dms):
@@ -71,22 +81,48 @@ class Galaxy_Hound:
 
         r = np.sqrt((positions[:,0])**2 +(positions[:,1])**2 +(positions[:,2])**2 )
         
-        #try:
-        for i in range(1):
+        try:
+            # calculating r200
             mhist, rhist = np.histogram(r,range=(0.0,r_max),bins=bins, weights=masses )
             vol_bin = (4./3.)*np.pi*(rhist[:-1]**3)
             r_bin = rhist[:-1]+ 0.5*(rhist[2]-rhist[1])
             rho_s = np.cumsum(mhist) / vol_bin
-            self.r200 = r_bin[np.argmin(np.abs(rho_s - (200 * self.p.rho_crit)))]
-            self.r97 = r_bin[np.argmin(np.abs(rho_s - (97 * self.p.rho_crit)))]
-            self.r500 = r_bin[np.argmin(np.abs(rho_s - (500 * self.p.rho_crit)))]
+            # coarse calculation
+            bin200 = np.argmin(np.abs(rho_s - (200 * self.p.rho_crit)))
+            bin97 = np.argmin(np.abs(rho_s - (97 * self.p.rho_crit)))
+            bin500 = np.argmin(np.abs(rho_s - (500 * self.p.rho_crit)))
+            # fine calculation R200
+            m_in = np.sum(masses[np.where(r<r_bin[bin200-1])])
+            msum = np.cumsum(masses[np.where((r>=r_bin[bin200-1])&(r<r_bin[bin200+1]))])
+            msum += m_in
+            r_slice = r[np.where((r>=r_bin[bin200-1])&(r<r_bin[bin200+1]))] 
+            vol_slice =  (4./3.)*np.pi*(r_slice**3)
+            rho_slice =  msum / vol_slice
+            self.r200= r_slice[np.argmin(np.abs(rho_slice-(200.*self.p.rho_crit)))]
+            # fine calculation R97
+            m_in = np.sum(masses[np.where(r<r_bin[bin97-1])])
+            msum = np.cumsum(masses[np.where((r>=r_bin[bin97-1])&(r<r_bin[bin97+1]))])
+            msum += m_in
+            r_slice = r[np.where((r>=r_bin[bin97-1])&(r<r_bin[bin97+1]))] 
+            vol_slice =  (4./3.)*np.pi*(r_slice**3)
+            rho_slice =  msum / vol_slice
+            self.r97= r_slice[np.argmin(np.abs(rho_slice-(97.*self.p.rho_crit)))]
+            # fine calculation R500
+            m_in = np.sum(masses[np.where(r<r_bin[bin500-1])])
+            msum = np.cumsum(masses[np.where((r>=r_bin[bin500-1])&(r<r_bin[bin500+1]))])
+            msum += m_in
+            r_slice = r[np.where((r>=r_bin[bin500-1])&(r<r_bin[bin500+1]))] 
+            vol_slice =  (4./3.)*np.pi*(r_slice**3)
+            rho_slice =  msum / vol_slice
+            self.r500= r_slice[np.argmin(np.abs(rho_slice-(500.*self.p.rho_crit)))]
+            # marker 
             rnot = False
  
-        #except:
-        #    print "virial radius did not converged "
-        #    sys.exit()
+        except:
+            sys.exit( "virial radius did not converged ")
+        
         if (rotate)and((self._sts)or(self._gss)):
-            print '| r_200 = {0}'.format(self.r200)
+            print '| r_200 = {0:.3f}'.format(self.r200)
             print '---- taking particles inside {0} * r200'.format(n)
             self.redefine(n)
             print '| number of praticles inside {0} * r200 '.format(n)
@@ -110,6 +146,10 @@ class Galaxy_Hound:
             self.redefine(n)
     
     def center_shift(self,nucenter):
+        """
+        shifts the center of the whole box
+        nucenter: [x,y,z] cordinates of the new center
+        """
         self.center = np.zeros(3)
         self._center_history = np.vstack((self._center_history,nucenter))
         if (self._dms):
@@ -120,6 +160,10 @@ class Galaxy_Hound:
             self.gs.shift(nucenter)
       
     def redefine(self,n):
+        """
+        cuts inside n*r200
+        n: times r200 will be outer limit of the data after
+        """
         if (self._dms):
             self.dm.halo_Only(self.center, n, self.r200)
         if (self._sts):
@@ -128,6 +172,10 @@ class Galaxy_Hound:
             self.gs.halo_Only(self.center, n, self.r200)
 
     def rotate_galaxy(self,rmin=3,rmax=10):
+        """
+        rotates whole box according to the principal
+        axes of the baryonic structure
+        """
         if (self._sts):
             pos_ring = self.st.pos3d[(self.st.r<rmax)&(self.st.r>rmin)]
         else:

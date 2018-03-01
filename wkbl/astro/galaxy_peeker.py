@@ -26,6 +26,7 @@ class Galaxy_Hound:
         self.p = nbe.Info_sniffer(file_path)
         virial = kwargs.get('virial',False)
         comov = kwargs.get('comov',False)
+        clumps = kwargs.get('clumps',False)
         self._dms, self._sts, self._gss  = False, False, False
         self.cen_done = False
         halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
@@ -50,9 +51,14 @@ class Galaxy_Hound:
                 self.cen_done = True
         if (getcen) and not (self.cen_done):
             try:
-                # computes center with higher resolved clump
-                cen = self.dm.Clumps.pos3d[self.dm.Clumps.cell==self.dm.Clumps.cell.max()]
+                if (clumps):
+                    # computes center with higher resolved clump
+                    cen = self.dm.Clumps.pos3d[self.dm.Clumps.cell==self.dm.Clumps.cell.max()]
+                else:
+                    cen = nbe.real_center(self.st.pos3d,self.st.mass)
                 self.center_shift(cen)
+                self.cen_done = True
+             
             except:
                 print "No center cuz No clumps.. \nDo it yourself"    
            

@@ -128,7 +128,7 @@ class Galaxy_Hound:
             sys.exit( "virial radius did not converged ")
         
         if (rotate)and((self._sts)or(self._gss)):
-            print '| r_200 = {0:.3f}'.format(self.r200)
+            print '| r_200 = {0:.3f} kpc'.format(self.r200)
             print '---- taking particles inside {0} * r200'.format(n)
             self.redefine(n)
             print '| number of praticles inside {0} * r200 '.format(n)

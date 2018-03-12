@@ -56,6 +56,11 @@ class Info_sniffer:
         self.scale_T2 =  self.mH/self.kB * (self.simutocm/self.unitt)**2 #simutokelvin
         self.scale_d = self.simutoMsun * (self.simutokpc)**-3
         self.scale_nH = 0.76 * self.scale_d / self.mH
+        self.omegaM = 0.0489
+        self.scale_d_gas = self.omegaM*self.rho_crit*((80./100)**2)/(self.aexp**3)
+    def rho_crit_SF(self, n_star):
+        self.rhoc_SF = n_star * (self.mH * 1e-3)/(self.msuntokg) / ((self.cmtopc/1e3)**3) #Msun /kpc^3
+
 
 def _get_center(output,clumps=False, sf_hist=False):
         """
@@ -209,4 +214,3 @@ def check_particles(path):
                 n_st = float(row[-1])
         n_tot = n_st + n_dm
         return int(n_tot), int(n_dm), int(n_st)
-

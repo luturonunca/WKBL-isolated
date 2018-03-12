@@ -50,7 +50,7 @@ class _gas:
         gamma = 1.666
         self.temp = (gamma-1.0) * temp * self._p.scale_T2 #Kelvin
         self.temp2 = temp2 * self._p.scale_T2# Kelvin/mu
-        self.rho =  rho * self._p.simutoMsun * (self._p.simutokpc)**-3
+        self.rho =  rho * self._p.scale_d / self._p.scale_d_gas
         self.pot = pot #* self._p.simutokms**2 
         self.pos3d = pos.reshape(len(pos)/3,3)
         self.center_rho_max = self.pos3d[np.where(self.rho==self.rho.max())][0]

@@ -29,7 +29,7 @@ class SF_info:
         self.mass = self.data[stars,3] * p.simutoMsun
         self.id = self.data[stars,1]
         self.hsml = 25000./(2.**(self.data[stars,2]))
-        self.rho = self.data[stars,10]*self.p.simutoMsun*(self.p.simutokpc)**-3
+        self.rho = self.data[stars,10]*self.p.scale_d / self.p.scale_d_gas
         self.temp2 = self.data[stars,15]* self.p.scale_T2
         self.met = self.data[stars,16] 
         self.sigma2 = self.data[stars,17] * (self.p.simutokms**2)

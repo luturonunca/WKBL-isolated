@@ -16,7 +16,11 @@ from sklearn.neighbors import KDTree
 class SF_info: 
     def __init__(self, file_path,p, **kwargs):
         # load st_info where the current stars where formed
-        file_path = file_path[:-2]+str(int(file_path[-2:])-1)
+        num = float(file_path[-5:])
+        if num<100:
+            file_path = file_path[:-2]+str(int(file_path[-2:])-1)
+        else:
+            file_path = file_path[:-3]+str(int(file_path[-3:])-1)
         self.p = p 
         comov= kwargs.get('comov',False)
         self._center_history = np.array([[0,0,0]])

@@ -32,7 +32,6 @@ class _stars:
         ok, vel = self.uns.getArrayF("stars","vel")
         ok, mass = self.uns.getArrayF("stars","mass")
         ok, self.id = self.uns.getArrayI("all","id")
-        ok, self.metal = self.uns.getArrayF("stars","metal")
         ### coordinates ###
         pos = pos * self._p.simutokpc
         vel = vel * self._p.simutokms
@@ -52,7 +51,6 @@ class _stars:
         self.age = self.age[in_halo]
         self.vel3d = self.vel3d[in_halo]
         self.id = self.id[in_halo]
-        self.metal = self.metal[in_halo]
         self.R = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2))
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         ### velocities ###

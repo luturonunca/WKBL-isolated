@@ -32,6 +32,7 @@ class _stars:
         ok, vel = self.uns.getArrayF("stars","vel")
         ok, mass = self.uns.getArrayF("stars","mass")
         ok, self.id = self.uns.getArrayI("all","id")
+        ok, self.metal = self.uns.getArrayF("stars","metal")
         ### coordinates ###
         pos = pos * self._p.simutokpc
         vel = vel * self._p.simutokms

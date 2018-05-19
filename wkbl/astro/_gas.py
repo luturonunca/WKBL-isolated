@@ -74,6 +74,8 @@ class _gas:
         self.id = self.id[in_halo]
         self.R = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2))
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
+        self.phi = np.arctan2(np.copy(self.pos3d[:,1]),np.copy(self.pos3d[:,0]))
+        self.theta = np.arccos(np.copy(self.pos3d[:,0]),np.copy(self.r))
         ### velocities ###
         average_v = np.array([np.mean(self.vel3d[:,0]),np.mean(self.vel3d[:,1]),np.mean(self.vel3d[:,2])])
         self.vel3d = self.vel3d - average_v

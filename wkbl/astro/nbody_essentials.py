@@ -50,6 +50,21 @@ class Info_sniffer:
         self.k_boltz = 1.3806488e-23 * 1e-6 / self.msuntokg # Msun * km**2 / s**2
         self.mu = 1.67262158e-27 / self.msuntokg
 
+def FIRE_st_mass(mass,r,r97):
+    """
+    from arxiv:1702.06148v1 footnote 9
+    returns the mass defined there as M_st
+    and the radius they define
+    to plot on top of the Moster band
+    """
+    R15 = 0.15*r97
+    R_half = half_mass(mass[r< R15],r[r< R15])
+    R_FIRE = half_mass(mass[r< 3*R_half],r[r< 3*R_half])
+    return mass[r < R_FIRE].sum(), R_FIRE
+    
+
+
+
 
 def _get_center(output,clumps=False):
         """

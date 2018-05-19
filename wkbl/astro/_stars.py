@@ -42,6 +42,7 @@ class _stars:
             self.pos3d = pos.reshape(len(pos)/3,3)
         self.vel3d = vel.reshape(len(vel)/3,3)
         self.mass = mass * self._p.simutoMsun
+        self.fire_m , self.fire_r= nbe.FIRE_st_mass(self.mass,self.r,r97)
  
 
     def halo_Only(self, center, n, r200):

@@ -44,7 +44,7 @@ class _stars:
         self.mass = mass * self._p.simutoMsun
  
 
-    def halo_Only(self, center, n, r200):
+    def halo_Only(self, center, n, r200, r97):
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         in_halo = np.where(self.r <= n*r200)
         self.pos3d = self.pos3d[in_halo]# - center

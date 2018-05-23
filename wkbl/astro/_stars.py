@@ -104,7 +104,9 @@ class _stars:
         if (self.gotsfInfo):
             self.sf_info.rotate(T)
         pos = self.pos3d
+        vel = self.vel3d
         self.pos3d = nbe.matrix_vs_vector(T,pos)
+        self.vel3d = nbe.matrix_vs_vector(T,vel)
 
     def shift(self, center):
         self.pos3d = self.pos3d - center

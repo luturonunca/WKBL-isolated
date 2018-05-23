@@ -31,11 +31,11 @@ class _stars:
         if self.uns.isValid()!=True:
             sys.exit("\n\n\n\n\n\n\nERROR:"+file_path+" is not a valid file !!!!!\n\n\n\n\n")
         ok = self.uns.nextFrame("")
-        ok, pos = self.uns.getArrayF("all","pos")
+        ok, pos = self.uns.getArrayF("stars","pos")
         ok, age = self.uns.getArrayF("stars","age")
-        ok, vel = self.uns.getArrayF("all","vel")
-        ok, mass = self.uns.getArrayF("all","mass")
-        ok, self.metal = self.uns.getArrayF("all","metal")
+        ok, vel = self.uns.getArrayF("stars","vel")
+        ok, mass = self.uns.getArrayF("stars","mass")
+        ok, self.metal = self.uns.getArrayF("stars","metal")
         ok, self.id = self.uns.getArrayI("all","id")
         if dens ==True:
             ok, rho = self.uns.getArrayF("all","rho")

@@ -77,8 +77,8 @@ class _stars:
 
         self.vR = (vx*self.pos3d[:,0] + vy*self.pos3d[:,1])/ self.R
         self.vr = (vx*self.pos3d[:,0] + vy*self.pos3d[:,1] + vz*self.pos3d[:,2])/ self.r
-        self.vphi =(-vx*self.pos3d[:,1] + vy*self.pos3d[:,0] )/ self.R
-        self.vtheta =(self.vR*self.pos3d[:,2] - vz*self.R) / self.r
+        self.vphi = (-vx*self.pos3d[:,1] + vy*self.pos3d[:,0] )/ self.R
+        self.vtheta = (self.vR*self.pos3d[:,2] - vz*self.R) / self.r
         #### other params ###
         self.total_m =  np.sum(self.mass)
         self.fire_m , self.fire_r= nbe.FIRE_st_mass(self.mass,self.r,r97)

@@ -47,7 +47,7 @@ class _stars:
     def halo_Only(self, center, n, r200, r97):
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         in_halo = np.where(self.r <= n*r200)
-        self.pos3d = self.pos3d[in_halo]# - center
+        self.pos3d = self.pos3d[in_halo ]
         self.mass = self.mass[in_halo]
         self.age = self.age[in_halo]
         self.vel3d = self.vel3d[in_halo]

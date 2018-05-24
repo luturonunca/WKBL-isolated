@@ -58,8 +58,8 @@ class _stars:
         #### sf history ###
         if (self.gotsfInfo):
             self.sf_info.halo_Only(center, n, r200)
-        in_halo = nbe.all_inside(self.pos3d, center,n*r200)
-        self.pos3d = self.pos3d[in_halo] - center
+        in_halo = np.where(self.r <= n*r200) 
+        self.pos3d = self.pos3d[in_halo]
         self.mass = self.mass[in_halo]
 	self.age = self.age[in_halo]
         self.metal = self.metal[in_halo]

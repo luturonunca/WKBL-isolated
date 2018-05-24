@@ -58,6 +58,7 @@ class _stars:
         #### sf history ###
         if (self.gotsfInfo):
             self.sf_info.halo_Only(center, n, r200)
+        self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         in_halo = np.where(self.r <= n*r200) 
         self.pos3d = self.pos3d[in_halo]
         self.mass = self.mass[in_halo]
@@ -66,15 +67,15 @@ class _stars:
         self.vel3d = self.vel3d[in_halo]
         self.id = self.id[in_halo]
         self.R = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2))
-        self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
+        self.r = self.r[in_halo]
         self.phi = np.arctan2(np.copy(self.pos3d[:,1]),np.copy(self.pos3d[:,0]))
         self.theta = np.arccos(np.copy(self.pos3d[:,0]),np.copy(self.r))
         ## velocities ###
-        average_v = np.array([np.mean(self.vel3d[:,0]),np.mean(self.vel3d[:,1]),np.mean(self.vel3d[:,2])])
+        in_gal = np.where(self.r <= r200/12.)#absolutly arbitrary 
+        average_v = np.array([np.mean(self.vel3d[in_gal,0]),np.mean(self.vel3d[in_gal,1]),np.mean(self.vel3d[in_gal,2])])
         self.vel3d = self.vel3d - average_v
         vx,vy,vz = self.vel3d[:,0],self.vel3d[:,1],self.vel3d[:,2]
         self.v = np.sqrt((vx**2) + (vy**2) + (vz**2))
-
         self.vR = (vx*self.pos3d[:,0] + vy*self.pos3d[:,1])/ self.R
         self.vr = (vx*self.pos3d[:,0] + vy*self.pos3d[:,1] + vz*self.pos3d[:,2])/ self.r
         self.vphi = (-vx*self.pos3d[:,1] + vy*self.pos3d[:,0] )/ self.R

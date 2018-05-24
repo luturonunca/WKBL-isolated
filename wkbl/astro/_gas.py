@@ -91,6 +91,9 @@ class _gas:
     def rotate(self,T):
         pos = self.pos3d
         self.pos3d = nbe.matrix_vs_vector(T,pos)
+        vel = self.vel3d
+        self.pos3d = nbe.matrix_vs_vector(T,pos)
+        self.vel3d = nbe.matrix_vs_vector(T,vel)
 
     def shift(self,center):
         self.pos3d = self.pos3d - center

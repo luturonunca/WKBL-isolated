@@ -73,6 +73,7 @@ class _dark_matter:
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         self.phi = np.arctan2(np.copy(self.pos3d[:,1]),np.copy(self.pos3d[:,0]))
         self.theta = np.arccos(np.copy(self.pos3d[:,0]),np.copy(self.r))
+
         ### velocities ###
         average_v = np.array([np.mean(self.vel3d[:,0]),np.mean(self.vel3d[:,1]),np.mean(self.vel3d[:,2])])
         self.vel3d = self.vel3d - average_v
@@ -128,4 +129,4 @@ class _dark_matter:
         self.M200 = np.sum(self.mass[(self.r<=r200)])
         # total mass inside r97
         print " M_{r_97}.."
-        self.M97 = np.sum(self.mass[(self.r<=r97)])
+        sielf.M97 = np.sum(self.mass[(self.r<=r97)])

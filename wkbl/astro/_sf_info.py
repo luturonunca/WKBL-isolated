@@ -47,7 +47,8 @@ class SF_info:
         self.rho_crit = ((np.pi**2)/5.) * (phi_x**2) * self.alpha0 * self.M2
          
     def halo_Only(self, center, n, r):
-        in_halo = nbe.all_inside(self.pos3d, center, r)
+        self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
+        in_halo = np.where(self.r <= n*r)
         self.pos3d = self.pos3d[in_halo] - center
         self.id = self.id[in_halo]
         self.rho = self.rho[in_halo]
@@ -58,6 +59,7 @@ class SF_info:
         self.sigma2 = self.sigma2[in_halo]
         self.cs2 = self.cs2[in_halo]
         self.M2 = self.M2[in_halo]
+        self.r = self.r[in_halo]
 
     
     def rotate(self,T):

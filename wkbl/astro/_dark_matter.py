@@ -64,13 +64,14 @@ class _dark_matter:
         if (self.gotclumps):
             self.Clumps.halo_Only(center, n, r200)
         ### dm particles ##
-        in_halo = nbe.all_inside(self.pos3d, center,n*r200)
+        self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
+        in_halo = np.where(self.r <= n*r200)
         self.pos3d = self.pos3d[in_halo] - center
         self.mass = self.mass[in_halo]
         self.vel3d = self.vel3d[in_halo]
         self.id = self.id[in_halo]
+	self.r = self.r[in_halo]
         self.R = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2))
-        self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         self.phi = np.arctan2(np.copy(self.pos3d[:,1]),np.copy(self.pos3d[:,0]))
         self.theta = np.arccos(np.copy(self.pos3d[:,0]),np.copy(self.r))
 
@@ -90,9 +91,10 @@ class _dark_matter:
     def rotate(self,T):
         if (self.gotclumps):
             self.Clumps.rotate(T)
-	pos = self.pos3d
+        pos = self.pos3d
+        vel = self.vel3d
         self.pos3d = nbe.matrix_vs_vector(T,pos)
-        
+        self.vel3d = nbe.matrix_vs_vector(T,vel)    
  
     def shift(self,center):
         self.pos3d = self.pos3d - center

@@ -29,7 +29,8 @@ class Clumps:
         self.id = self.data[:,0]
 
     def halo_Only(self, center, n, r):
-        in_halo = nbe.all_inside(self.pos3d, center, r)
+        self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
+        in_halo = np.where(self.r <= n*r)
         self.pos3d = self.pos3d[in_halo] - center
         self.mass = self.mass[in_halo]
     

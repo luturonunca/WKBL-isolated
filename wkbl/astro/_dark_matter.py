@@ -51,7 +51,6 @@ class _dark_matter:
         #### clumps ###
         #self.Clumps.halo_Only(center, n, r200)
         ### dm particles ##
-        in_halo = nbe.all_inside(self.pos3d, center,n*r200)
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         in_halo = np.where(self.r <= n*r200)
         self.pos3d = self.pos3d[in_halo]
@@ -63,7 +62,7 @@ class _dark_matter:
         self.id = self.id[in_halo]
         # spherical/cylindrical coordinates
         self.R = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2))
-        self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
+        self.r = self.r[in_halo]
         self.phi = np.arctan2(np.copy(self.pos3d[:,1]),np.copy(self.pos3d[:,0]))
         self.theta = np.arccos(np.copy(self.pos3d[:,0]),np.copy(self.r))
         ### velocities ###

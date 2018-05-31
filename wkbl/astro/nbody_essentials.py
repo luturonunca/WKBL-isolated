@@ -184,3 +184,52 @@ def m_matrix_for_r(halo,comp,r):
         D = mass_distribution_tensor(mass_selection,pos_selection)
         return D
 
+#### Ploting rutines ####
+
+def face_on_dm(sim,lims,points):
+    edges = np.linspace(lims[0],lims[1],points)
+    H, xedges, yedges = np.histogram2d(sim.dm.pos3d[:,0], 
+                                       sim.dm.pos3d[:,1],
+                                       bins=(edges, edges),
+                                       weights=sim.dm.mass)
+    result = H.T
+    return result, edges
+
+def face_on_st(sim,lims,points,thikness=.5):
+    disk = (np.abs(sim.st.pos3d[:,2])<thikness)
+    edges = np.linspace(lims[0],lims[1],points)
+    H, xedges, yedges = np.histogram2d(sim.st.pos3d[disk,0], 
+                                       sim.st.pos3d[disk,1],
+                                       bins=(edges, edges),
+                                       weights=sim.st.mass[disk])
+    result = H.T
+    return result, edges
+
+def face_on_gs(sim,lims,points,thikness=.9):
+    disk = (np.abs(sim.gs.pos3d[:,2])<thikness)
+    edges = np.linspace(lims[0],lims[1],points)
+    H, xedges, yedges = np.histogram2d(sim.gs.pos3d[disk,0], 
+                                       sim.gs.pos3d[disk,1],
+                                       bins=(edges, edges),
+                                       weights=sim.gs.mass[disk])
+    result = H.T
+    return result, edges
+
+def edge_on_st(sim,lims,points):
+    #disk = sim.st.pos3d[:,2]
+    edges = np.linspace(lims[0],lims[1],points)
+    H, xedges, yedges = np.histogram2d(sim.st.pos3d[:,0], 
+                                       sim.st.pos3d[:,2],
+                                       bins=(edges, edges),
+                                       weights=sim.st.mass)
+    result = H.T
+    return result, edges
+    
+def edge_on_gs(sim,lims,points):
+    edges = np.linspace(lims[0],lims[1],points)
+    H, xedges, yedges = np.histogram2d(sim.gs.pos3d[:,0], 
+                                       sim.gs.pos3d[:,2],
+                                       bins=(edges, edges),
+                                       weights=sim.gs.mass)
+    result = H.T
+    return result, edges

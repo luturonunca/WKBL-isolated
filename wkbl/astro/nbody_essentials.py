@@ -148,12 +148,59 @@ def all_inside(pos3d, center, r_search):
     return in_halo
 
 def half_mass(mass,r):
+    """
+    returns half mass radius
+    i.e the radius at which the half of the total 
+    mass is contained
+    input:
+    mass = array of particles mass
+    r =  array of particles distance from center 
+    """
     m_tot, m_sort = mass.sum() / 2., mass[np.argsort(r)]
     aux,counter = 0,-1
     while aux < m_tot:
         counter += 1
         aux += m_sort[counter]
     return r[counter]
+
+def check_particles(path):
+    """
+    this routine check the particle number in  the simulation
+    by reading the header file in the snapshot file and using
+    as input the path to the stapshot.
+    """
+    list = glob.glob(path+"/header_?????.txt")
+    linum = n = 0
+    part_arrays = fi = np.array([])
+    for f in list:
+        fi = np.append(fi,f)
+        n+=1
+    myfi = open(fi[0])
+    for l in myfi:
+        linum += 1
+        if linum%2==0 and linum<=8:
+            row = l.split(' ')
+            part_arrays = np.append(part_arrays,np.float(row[-1]))
+    n_tot = part_arrays[0]
+    n_dm = part_arrays[1]
+    n_st = part_arrays[2]
+    if (n_tot>0):
+        return n_tot, n_dm, n_st
+    else:
+        myfi, linum = open(fi[0]), -1
+        for l in myfi:
+            linum += 1
+            row = l.split('  ')
+            if linum==7:
+                n_dm = float(row[-1])
+            if linum==8:
+                n_st = float(row[-1])
+        n_tot = n_st + n_dm
+        return int(n_tot), int(n_dm), int(n_st)
+
+
+
+
 
 def mass_distribution_tensor(mass,pos):
         """

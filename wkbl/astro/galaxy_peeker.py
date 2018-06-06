@@ -15,11 +15,11 @@ from _stars import _stars
 from _gas import _gas
 
  
-############### Old Ramses outputs ################# 
+############### Unified  ################# 
 
 
 class Galaxy_Hound:
-    def __init__(self, file_path, component,getcen=True,**kwargs):
+    def __init__(self, file_path,getcen=True,**kwargs):
         # get them vars !!!!ONLy RAMSES FOR NOW
         self.file = file_path
         newage = kwargs.get('newage',False)
@@ -27,30 +27,28 @@ class Galaxy_Hound:
         hsml = kwargs.get('hsml',False)
         dens = kwargs.get('dens',False)
         comov = kwargs.get('comov',False)
-        self._dms = False
-        self._sts = False
-        self._gss = False
+        self._dms, self._sts, self._gss  = False, False, False
         halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
         #loadDatat
-	if component=="all":
-            sys.exit('we do not play with that card (component=all), be specific')
-        self.comp = component.split(',')
-        if "halo" in  component:
-            self._dms = True
-        if "gas" in  component:
-            self._gss = True
-        if "stars" in  component:
-            self._sts = True
-
-        if (self._dms):
+        self.n_tot, self.n_dm, self.n_st = nbe.check_particles(file_path)
+        if self.n_dm > 0:
             print "loading Dark matter.."
             self.dm = _dark_matter(file_path, self.p,comov=comov)
-        if (self._sts):
+            self._dms = True
+        if self.n_st > 0:
             print "loading Stars.."
             self.st = _stars(file_path, self.p, comov=comov)
-        if (self._gss):
+            self._sts = True
             print "loading Gas.."
             self.gs = _gas(file_path, self.p,comov=comov)
+            self._gss = True
+        else:
+            # if only DM is loaded computes center of zoom region
+            zoom_reg = self.dm.mass==self.dm.mass.min()
+            dmcenter = nbe.real_center(self.dm.pos3d[zoom_reg],self.dm.mass[zoom_reg])
+            self.center_shift(dmcenter)
+            self.cen_done = True
+
         if (getcen):
             po, ma = np.copy(self.st.pos3d), np.copy(self.st.mass)
             centro_com_st = nbe.real_center(po,ma,n=7000)

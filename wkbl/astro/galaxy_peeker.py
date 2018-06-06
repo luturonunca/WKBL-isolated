@@ -22,7 +22,8 @@ class Galaxy_Hound:
     def __init__(self, file_path, component,getcen=True,**kwargs):
         # get them vars !!!!ONLy RAMSES FOR NOW
         self.file = file_path
-        self.p = nbe.Info_sniffer(file_path)
+        newage = kwargs.get('newage',False)
+        self.p = nbe.Info_sniffer(file_path, newage=newage)
         hsml = kwargs.get('hsml',False)
         dens = kwargs.get('dens',False)
         comov = kwargs.get('comov',False)

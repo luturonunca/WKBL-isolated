@@ -13,7 +13,7 @@ from sklearn.neighbors import KDTree
 
 
 class Info_sniffer:
-    def __init__(self, file_path):
+    def __init__(self, file_path,newage=False):
         _vars=dict()
         file = glob.glob(file_path+"/info_?????.txt")[0]
         with open(file) as outinfo:
@@ -35,8 +35,10 @@ class Info_sniffer:
         self.unitl=_vars["unit_l"]*self.pctocm /(3.08e18)
         self.unitd=_vars["unit_d"]/(self.pctocm/(3.08*10**18))**3
         self.unitt=_vars["unit_t"]
-        #self.simutokpc=self.unitl*_vars["H0"]/self.pctocm/1e5
-        self.simutokpc=self.unitl/self.pctocm/1e3
+        if (newage):
+            self.simutokpc=self.unitl*_vars["H0"]/self.pctocm/1e5
+        else:
+            self.simutokpc=self.unitl/self.pctocm/1e3
         self.simutoMsun=(self.unitd*self.unitl**3)/1000/self.msuntokg
         self.unitsimutoMsunkpc3=self.unitd*self.pctocm**3/1000/self.msuntokg
         self.simutokms = self.unitl/10**5/self.unitt

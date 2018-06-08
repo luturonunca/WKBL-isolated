@@ -23,6 +23,7 @@ class Galaxy_Hound:
         # get them vars !!!!ONLy RAMSES FOR NOW
         self.file = file_path
         newage = kwargs.get('newage',False)
+        self.quiet = kwargs.get('quiet',False)
         self.p = nbe.Info_sniffer(file_path, newage=newage)
         hsml = kwargs.get('hsml',False)
         dens = kwargs.get('dens',False)
@@ -32,14 +33,15 @@ class Galaxy_Hound:
         #loadDatat
         self.n_tot, self.n_dm, self.n_st = nbe.check_particles(file_path)
         if self.n_dm > 0:
-            print "loading Dark matter.."
+            print "quiet  ",self.quiet
+            if not self.quiet:print "loading Dark matter.."
             self.dm = _dark_matter(file_path, self.p,comov=comov)
             self._dms = True
         if self.n_st > 0:
-            print "loading Stars.."
+            if not self.quiet:print "loading Stars.."
             self.st = _stars(file_path, self.p, comov=comov)
             self._sts = True
-            print "loading Gas.."
+            if not self.quiet:print "loading Gas.."
             self.gs = _gas(file_path, self.p,comov=comov)
             self._gss = True
         else:
@@ -57,7 +59,6 @@ class Galaxy_Hound:
     def r_virial(self, r_max,r_min=0,rotate=True,n=2.5,bins=512,quiet=False):
         positions = np.array([], dtype=np.int64).reshape(0,3)
         masses = np.array([], dtype=np.int64)
-        print "starting"
         if (self._dms):
             positions = np.vstack([positions,self.dm.pos3d])
             masses = np.append(masses,self.dm.mass)
@@ -67,9 +68,7 @@ class Galaxy_Hound:
         if (self._gss):
             positions = np.vstack([positions,self.gs.pos3d])
             masses = np.append(masses,self.gs.mass)
-        print "stackted"
         r = np.sqrt((positions[:,0])**2 +(positions[:,1])**2 +(positions[:,2])**2 )
-        print "start histogram"
         mhist, rhist = np.histogram(r,range=(0.0,r_max),bins=bins, weights=masses )
         vol_bin = (4./3.)*np.pi*(rhist[:-1]**3)
         r_bin = rhist[:-1]+ 0.5*(rhist[2]-rhist[1])
@@ -77,14 +76,12 @@ class Galaxy_Hound:
         self.r200 = r_bin[np.argmin(np.abs(rho_s - (200 * self.p.rho_crit)))]
         self.r97 = r_bin[np.argmin(np.abs(rho_s - (97 * self.p.rho_crit)))]
         rnot = False
-        print " done"
 
         if (rotate)and(self._sts):
             self.rotate_galaxy()
-            print "rotated"
             self.redefine(n)
             D = np.dot(self.matrix_T,np.dot(self.matrix_P,np.transpose(self.matrix_T)))
-            if not (quiet):
+            if not self.quiet:
                 print '| r_200 = {0}'.format(self.r200)
                 print '| Diagonal matrix computed '
                 print '|    |{0}, {1}, {2}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2]))
@@ -151,9 +148,7 @@ class Galaxy_Hound:
             pos_out = self.gs.pos3d.reshape(length*3).astype(np.float32, copy=False)
             mass_out = self.gs.mass.astype(np.float32, copy=False)
         ok=unsout.setArrayF(component,"pos",pos_out)
-        print ok
         ok=unsout.setArrayF(component,"mass",mass_out)
-        print ok
         if (ages):
             ok=unsout.setArrayF(component,"age",age_out)
         unsout.save()

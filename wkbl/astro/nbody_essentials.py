@@ -27,26 +27,29 @@ class Info_sniffer:
                 if var_name == "unit_t":
                     break
         self.H0 = _vars["H0"]
-        self.aexp = _vars["aexp"]
-        self.Z = -1. + (1./ self.aexp)
-        self.msuntokg = 1.99844e30
+        self._vars = _vars
+        self.h = _vars["H0"]/1e2       # hubble expansion rate
+        self.aexp = _vars["aexp"]      # expantion parameter
+        self.Z = -1. + (1./ self.aexp) # redshift 
+        self.msuntokg = 1.99844e30   
         self.pctocm = 3.08567758e18
-        self.cmtopc = 1/self.pctocm
-        self.unitl=_vars["unit_l"]*self.pctocm /(3.08e18)
-        self.unitd=_vars["unit_d"]/(self.pctocm/(3.08*10**18))**3
+        self.G = 6.67384e-11 * self.msuntokg / (3.08567758e19**3)
+        self.rho_crit = (3 * (self.H0**2) / 3.08567758e19**2)/ (8*np.pi*self.G)
+        self.cmtopc = 1./self.pctocm
+        self.unitl=_vars["unit_l"]
+        self.unitd=_vars["unit_d"]
         self.unitt=_vars["unit_t"]
+        self.boxlen = self.unitl*self.h/self.pctocm/1e6 #Mpc
         if (newage):
-            self.simutokpc=self.unitl*_vars["H0"]/self.pctocm/1e5
+            self.simutokpc = self.unitl *  self.h / self.pctocm / 1e3 
         else:
-            self.simutokpc=self.unitl/self.pctocm/1e3
-        self.simutoMsun=(self.unitd*self.unitl**3)/1000/self.msuntokg
+            self.simutokpc = self.unitl/self.pctocm/1e3
+        self.simutokms = self.unitl/1e5/self.unitt
+        self.simutoMsun=(self.unitd*self.unitl**3)/1e3/self.msuntokg
         self.unitsimutoMsunkpc3=self.unitd*self.pctocm**3/1000/self.msuntokg
-        self.simutokms = self.unitl/10**5/self.unitt
         self.kgtoGeV = 1/1.783e-27
         self.kpctocm = 3.086e21
         self.kpctokm = self.kpctocm / 1e5
-        self.G = 6.67384e-11 * self.msuntokg / (3.08567758e19**3)
-        self.rho_crit = (3 * (self.H0**2) / 3.08567758e19**2)/ (8*np.pi*self.G)
         self.simutoGeVcm3 = (self.simutoMsun*self.msuntokg*self.kgtoGeV) / (self.simutokpc*self.kpctocm)**3
         self.kB = 1.3806503e-23 * 1e4 * (self.cmtopc)**2 / self.msuntokg
         self.k_boltz = 1.3806488e-23 * 1e-6 / self.msuntokg # Msun * km**2 / s**2

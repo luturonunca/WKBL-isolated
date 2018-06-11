@@ -33,15 +33,14 @@ class Galaxy_Hound:
         #loadDatat
         self.n_tot, self.n_dm, self.n_st = nbe.check_particles(file_path)
         if self.n_dm > 0:
-            print "quiet  ",self.quiet
-            if not self.quiet:print "loading Dark matter.."
+            if not self.quiet: print "loading Dark matter.."
             self.dm = _dark_matter(file_path, self.p,comov=comov)
             self._dms = True
         if self.n_st > 0:
-            if not self.quiet:print "loading Stars.."
+            if not self.quiet: print "loading Stars.."
             self.st = _stars(file_path, self.p, comov=comov)
             self._sts = True
-            if not self.quiet:print "loading Gas.."
+            if not self.quiet: print "loading Gas.."
             self.gs = _gas(file_path, self.p,comov=comov)
             self._gss = True
         else:

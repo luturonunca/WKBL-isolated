@@ -33,7 +33,7 @@ class Info_sniffer:
         self.Z = -1. + (1./ self.aexp) # redshift 
         self.msuntokg = 1.99844e30   
         self.pctocm = 3.08567758e18
-        self.G = 6.67384e-11 * self.msuntokg / (3.08567758e19**3)
+        self.G = 6.67384e-11 * self.msuntokg / ((self.pctocm*10)**3)
         self.rho_crit = (3 * (self.H0**2) / 3.08567758e19**2)/ (8*np.pi*self.G)
         self.cmtopc = 1./self.pctocm
         self.unitl=_vars["unit_l"]

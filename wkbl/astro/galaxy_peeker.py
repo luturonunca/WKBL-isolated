@@ -81,10 +81,10 @@ class Galaxy_Hound:
             self.redefine(n)
             D = np.dot(self.matrix_T,np.dot(self.matrix_P,np.transpose(self.matrix_T)))
             if not self.quiet:
-                print '| r_200 = {0}'.format(self.r200)
+                print '| r_200 = {0:.2f}'.format(self.r200)
                 print '| Diagonal matrix computed '
-                print '|    |{0}, {1}, {2}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2]))
-                print '| D =| {0},{1}, {2}|'.format(int(D[1,0]),int(D[1,1]),int(D[1,2]))
+                print '|    | {0}, {1}, {2}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2]))
+                print '| D =| {0}, {1}, {2}|'.format(int(D[1,0]),int(D[1,1]),int(D[1,2]))
                 print '|    | {0}, {1}, {2}|'.format(int(D[2,0]),int(D[2,1]),int(D[2,2]))
         elif not (rotate): 
             self.redefine(n)

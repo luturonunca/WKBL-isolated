@@ -22,6 +22,7 @@ class Galaxy_Hound:
     def __init__(self, file_path,getcen=False,**kwargs):
         # get them vars !!!!ONLy RAMSES FOR NOW
         self.file = file_path
+        self.dmo = False
         newage = kwargs.get('newage',False)
         self.quiet = kwargs.get('quiet',False)
         self.p = nbe.Info_sniffer(file_path, newage=newage)
@@ -44,11 +45,7 @@ class Galaxy_Hound:
             self.gs = _gas(file_path, self.p,comov=comov)
             self._gss = True
         else:
-            # if only DM is loaded computes center of zoom region
-            zoom_reg = self.dm.mass==self.dm.mass.min()
-            dmcenter = nbe.real_center(self.dm.pos3d[zoom_reg],self.dm.mass[zoom_reg])
-            self.center_shift(dmcenter)
-            self.cen_done = True
+            self.dmo = True
 
         if (getcen):
             po, ma = np.copy(self.st.pos3d), np.copy(self.st.mass)
@@ -86,7 +83,7 @@ class Galaxy_Hound:
                 print '|    | {0}, {1}, {2}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2]))
                 print '| D =| {0}, {1}, {2}|'.format(int(D[1,0]),int(D[1,1]),int(D[1,2]))
                 print '|    | {0}, {1}, {2}|'.format(int(D[2,0]),int(D[2,1]),int(D[2,2]))
-        elif not (self._sts): 
+        elif (self.dmo): 
             self.redefine(n)
     
     def center_shift(self,nucenter):
@@ -107,8 +104,8 @@ class Galaxy_Hound:
             self.gs.halo_Only(self.center, n, self.r200)
 
     def rotate_galaxy(self,rmin=3,rmax=10):
-        self.st.r = np.sqrt((self.st.pos3d[:,0])**2 +(self.st.pos3d[:,1])**2 +(self.st.pos3d[:,2])**2 )
-        pos_ring = self.st.pos3d[(self.st.r<rmax)&(self.st.r>rmin)]
+        r2 = (self.st.pos3d[:,0])**2 +(self.st.pos3d[:,1])**2 +(self.st.pos3d[:,2])**2
+        pos_ring = self.st.pos3d[(r2<rmax**2)&(r2>rmin**2)]
         P = np.zeros((3,3))
         for i in range(3):
             for j in range(3):

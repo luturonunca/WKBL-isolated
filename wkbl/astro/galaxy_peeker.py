@@ -19,7 +19,7 @@ from _gas import _gas
 
 
 class Galaxy_Hound:
-    def __init__(self, file_path,getcen=True,**kwargs):
+    def __init__(self, file_path,getcen=False,**kwargs):
         # get them vars !!!!ONLy RAMSES FOR NOW
         self.file = file_path
         newage = kwargs.get('newage',False)
@@ -86,7 +86,7 @@ class Galaxy_Hound:
                 print '|    | {0}, {1}, {2}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2]))
                 print '| D =| {0}, {1}, {2}|'.format(int(D[1,0]),int(D[1,1]),int(D[1,2]))
                 print '|    | {0}, {1}, {2}|'.format(int(D[2,0]),int(D[2,1]),int(D[2,2]))
-        elif not (rotate): 
+        elif not (self._sts): 
             self.redefine(n)
     
     def center_shift(self,nucenter):

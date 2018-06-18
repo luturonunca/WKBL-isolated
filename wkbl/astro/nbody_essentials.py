@@ -236,6 +236,20 @@ def m_matrix_for_r(halo,comp,r):
         D = mass_distribution_tensor(mass_selection,pos_selection)
         return D
 
+
+def read_arguments():
+    for i in range(len(sys.argv)):
+        if sys.argv[i]=='-h':
+            if sys.argv[i+1]=='halo_B':
+                h = halo_info.HALOB()
+            elif sys.argv[i+1]=='halo_A':
+                h = halo_info.HALOA()
+            elif sys.argv[i+1]=='mochima':
+                h = halo_info.MOCHIMA()
+            else:
+                sys.exit(">> no halo have been defined")
+    return h
+
 #### Ploting rutines ####
 
 def face_on_dm(sim,lims,points):

@@ -68,6 +68,7 @@ class _dark_matter:
         ### velocities ###
         vx,vy,vz = self.vel3d[:,0],self.vel3d[:,1],self.vel3d[:,2]
         self.v = np.sqrt((vx**2) + (vy**2) + (vz**2))
+        print "here" 
         self.vR = (vx*self.pos3d[:,0] + vy*self.pos3d[:,1])/ self.R
         self.vr = (vx*self.pos3d[:,0] + vy*self.pos3d[:,1] + vz*self.pos3d[:,2])/ self.r
         self.vphi = (-vx*self.pos3d[:,1] + vy*self.pos3d[:,0] )/ self.R

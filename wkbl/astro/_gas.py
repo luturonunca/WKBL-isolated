@@ -10,12 +10,13 @@ from numpy import exp, sqrt
 import nbody_essentials as nbe
 import scipy.integrate as integrate
 from sklearn.neighbors import KDTree
+import datetime
 
 class _gas:
     def __init__(self, file_path,p,dens=True, **kwargs):
         self._p = p
         self._center_history = np.array([0.,0.,0.]) 
-        self.uns = CunsIn(file_path,"gas","all",False)
+        self.uns = CunsIn(file_path,"gas","gas",False)
         hsml = kwargs.get('hsml',False)
         dens = kwargs.get('dens',False)
         comov = kwargs.get('comov',False)
@@ -24,6 +25,7 @@ class _gas:
         if self.uns.isValid()!=True:
             sys.exit("\n\n\n\n\n\n\nERROR:"+file_path+" is not a valid file !!!!!\n\n\n\n\n")
         ok = self.uns.nextFrame("")
+        
         ok, pos = self.uns.getArrayF("all","pos")
         ok, vel = self.uns.getArrayF("all","vel")
         ok, mass = self.uns.getArrayF("all","mass")

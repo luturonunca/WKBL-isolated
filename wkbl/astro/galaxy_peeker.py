@@ -42,10 +42,10 @@ class Galaxy_Hound:
             if not self.quiet: print "loading Stars.."
             self.st = _stars(file_path, self.p, comov=comov)
             self._sts = True
-        if  gas==True:    
-            if not self.quiet: print "loading Gas.."
-            self.gs = _gas(file_path, self.p,comov=comov)
-            self._gss = True
+            if  gas==True:    
+                if not self.quiet: print "loading Gas.."
+                self.gs = _gas(file_path, self.p,comov=comov)
+                self._gss = True
         else:
             self.dmo = True
 
@@ -71,7 +71,7 @@ class Galaxy_Hound:
         mhist, rhist = np.histogram(r,range=(0.0,r_max),bins=bins, weights=masses )
         vol_bin = (4./3.)*np.pi*(rhist[:-1]**3)
         r_bin = rhist[:-1]+ 0.5*(rhist[2]-rhist[1])
-        rho_s = np.cumsum(mhist[np.where(vol_bin<0)]) / vol_bin[np.where(vol_bin<0)]
+        rho_s = np.cumsum(mhist) / vol_bin
         self.r200 = r_bin[np.argmin(np.abs(rho_s - (200 * self.p.rho_crit)))]
         self.r97 = r_bin[np.argmin(np.abs(rho_s - (97 * self.p.rho_crit)))]
         rnot = False

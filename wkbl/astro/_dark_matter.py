@@ -53,11 +53,12 @@ class _dark_matter:
         ### dm particles ##
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         in_halo = np.where(self.r <= n*r200)
+        in_r200= np.where(self.r <= r200)
         self.pos3d = self.pos3d[in_halo]
         self.mass = self.mass[in_halo]
         # substract average velocities
+        average_v = np.array([np.mean(self.vel3d[in_r200,0]),np.mean(self.vel3d[in_r200,1]),np.mean(self.vel3d[in_r200,2])])
         self.vel3d = self.vel3d[in_halo]
-        average_v = np.array([np.mean(self.vel3d[:,0]),np.mean(self.vel3d[:,1]),np.mean(self.vel3d[:,2])])
         self.vel3d = self.vel3d - average_v
         self.id = self.id[in_halo]
         # spherical/cylindrical coordinates

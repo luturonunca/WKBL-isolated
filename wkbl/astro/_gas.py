@@ -70,7 +70,7 @@ class _gas:
         self.vtheta = (self.vR*self.pos3d[:,2] - vz*self.R) / self.r
 
         #### other params ###
-        self.total_m =  np.sum(self.mass)
+        self.total_m =  np.sum(self.mass[self.r<r200])
 
     def rotate(self,T):
         pos = self.pos3d

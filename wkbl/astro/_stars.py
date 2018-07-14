@@ -23,12 +23,11 @@ class _stars:
         comov = kwargs.get('comov',False)
         r_search = kwargs.get('r_search',200.)
         self.halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
-         
         if self.uns.isValid()!=True:
             sys.exit("\n\n\n\n\n\n\nERROR:"+file_path+" is not a valid file !!!!!\n\n\n\n\n")
         ok = self.uns.nextFrame("")
         ok, pos = self.uns.getArrayF("stars","pos")
-        ok, self.age = self.uns.getArrayF("stars","age")
+        ok, age = self.uns.getArrayF("stars","age")
         ok, vel = self.uns.getArrayF("stars","vel")
         ok, mass = self.uns.getArrayF("stars","mass")
         ok, self.metal = self.uns.getArrayF("stars","metal")
@@ -42,6 +41,7 @@ class _stars:
             self.pos3d = pos.reshape(len(pos)/3,3)
         self.vel3d = vel.reshape(len(vel)/3,3)
         self.mass = mass * self._p.simutoMsun
+        self.age = age *self._p.unitt / (3600.*24.*365*1e9) # stars age to Gyrs
  
 
     def halo_Only(self, center, n, r200, r97):
@@ -65,7 +65,7 @@ class _stars:
         self.vphi = (-vx*self.pos3d[:,1] + vy*self.pos3d[:,0] )/ self.R
         self.vtheta = (self.vR*self.pos3d[:,2] - vz*self.R) / self.r
         #### other params ###
-        self.total_m =  np.sum(self.mass)
+        self.total_m =  np.sum(self.mass[self.r<r200])
         self.fire_m , self.fire_r= nbe.FIRE_st_mass(self.mass,self.r,r97)
 
 

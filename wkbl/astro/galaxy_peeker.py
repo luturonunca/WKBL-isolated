@@ -23,7 +23,11 @@ class Galaxy_Hound:
         # get them vars !!!!ONLy RAMSES FOR NOW
         self.file = file_path
         self.dmo = False
-        newage = kwargs.get('newage',False)
+        halonu = len(glob.glob(file_path+"/halo*"))
+        if halonu==0:
+            newage = False
+        else:
+            newage = True
         gas = kwargs.get('gas',True)
         self.quiet = kwargs.get('quiet',False)
         self.p = nbe.Info_sniffer(file_path, newage=newage)

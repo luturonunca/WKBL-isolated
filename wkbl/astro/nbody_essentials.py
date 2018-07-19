@@ -54,7 +54,7 @@ class Info_sniffer:
         self.kpctokm = self.kpctocm / 1e5
         self.simutoGeVcm3 = (self.simutoMsun*self.msuntokg*self.kgtoGeV) / (self.simutokpc*self.kpctocm)**3
         self.kB = 1.3806503e-23 * (self.cmtopc/ 10)**2 / self.msuntokg # kpc**2 Msun /s**2 / K
-        self.k_boltz = 1.3806488e-23 * 1e-6 / self.msuntokg # Msun * km**2 / s**2
+        self.k_boltz = 1.3806488e-23 * 1e-6 / self.msuntokg # Msun * km**2 /s**2 / K
         self.mu = 1.67262158e-27 / self.msuntokg
 
 def FIRE_st_mass(mass,r,r97):

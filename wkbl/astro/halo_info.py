@@ -26,3 +26,14 @@ class HALOBdmo:
         self.pot_max = -28064.58 #pc km^2 M_sun s^-2
         self.potfile = "/home/anunez/WKBL_candidates/Catalog/potentials/Psi_halo_B_DMO_Rmax=805.0kpc_dimensionful.txt" 
 
+
+class HALOCHydro:
+    def __init__(self,where="home", **kargs):
+        self.name = "Halo C"
+        self.version = "hydro"
+        if where=="manu":
+            self.path = "/net/direct/backup/pol/Box20Mpc-Zoom-MWGalax-MUSIC-bis/Halo19/Zoom4-Halo19-refmap128-Hydro/output_00440"
+        else:
+            self.path = "/data/POL/HALOC/hydro/output_00417"
+
+

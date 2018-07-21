@@ -12,6 +12,8 @@ class HALOBHydro:
             self.path = "/data/POL/HALOB/hydro/output_00417"
         self.c_dm_com = np.array([ 9667.68750, 9866.01957, 9801.56035])# kpc
         self.rmax = 794.76 #kpc
+        self.r200 = 177.54 #kpc
+        self.dm_part_mass = 2.30812e5 #Msun
         self.pot_max = -29559.54 #pc km^2 M_sun s^-2
         self.potfile = "/home/anunez/WKBL_candidates/Catalog/potentials/Psi_halo_B_DM_baryons_Rmax=805.0kpc_dimensionful.txt"
         self.q = -0.11878
@@ -44,6 +46,8 @@ class HALOBdmo:
             self.path = '/data/POL/HALOB/DMO/output_00041'
         self.c_dm_com = np.array([ 9693.93650, 9871.29969, 9805.710 ])# kpc
         self.rmax = 787.79 #kpc
+        self.r200 = 163.28 #kpc
+        self.dm_part_mass = 2.75776e5 #Msun
         self.pot_max = -28066.64 #pc km^2 M_sun s^-2
         self.potfile = "/home/anunez/WKBL_candidates/Catalog/potentials/Psi_halo_B_DMO_Rmax=805.0kpc_dimensionful.txt" 
         self.q = -0.18997 
@@ -71,6 +75,7 @@ class HALOCHydro:
         self.pot_max  = -21926.61  #pc km^2 M_sun s^-2
         self.c_dm_com = np.array([ 9868.14825,  9745.19211,  9766.90090 ])# kpc
         self.q        = 0.057
+        self.r200     = 182.23 #kpc
         self.M200_dm  = 5.50e+11 #Msun
         self.M200_st = 9.56e+10 #Msun
         self.M10_st   = 8.91017e+10 #Msun
@@ -208,9 +213,9 @@ class Adicoradmo:
         if where=="manu":
             self.path = " "
         else:
-            self.path = "/data/OWN/DMO/mochima2_Z5/output_00041"
+            self.path = "/data/OWN/DMO/Adicora/output_00041"
         self.pot_max  = -23323.76  #pc km^2 M_sun s^-2
-        self.c_dm_com = np.array([20438.06143, 17580.66710, 17120.75325])# kpc
+        self.c_dm_com = np.array([14308.07419, 15223.16481, 15686.17544]) #kpc
         self.q = -0.15649
         self.M200_dm = 9.16783366144e+11 #Msun
         self.dm_fit  = rho = [7.1813,11.2881,1.0000,2.7440,0.9748]

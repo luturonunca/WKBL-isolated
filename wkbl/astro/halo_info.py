@@ -224,7 +224,7 @@ class Adicoradmo:
         self.v_esc_sph       = np.array([427.74, 426.13, 391.99, 329.54, 250.96 ])
         self.v_esc_sigma_sph = np.array([14.88, 9.06, 6.05, 3.95, 3.76])
         # Isopotential
-        self.v_esc_iso       = np.array([486.36, 475.25, 452.81, 404.40, 337.74  ])
+        self.v_esc_iso       = np.array([475.25, 452.81, 404.40, 337.74, 235.6  ])
         self.v_esc_sigma_iso = np.array([8.33, 5.23, 3.91, 3.12, 3.69])
 
 

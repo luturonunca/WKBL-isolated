@@ -221,7 +221,7 @@ def mass_distribution_tensor(mass,pos):
         T = np.zeros((3,3))
         T[0],T[1],T[2] = evecs[:,order[2]],evecs[:,order[1]],evecs[:,order[0]]
         D = np.dot(T,np.dot(P,np.transpose(T)))
-        return D
+        return D,T
 
 
 

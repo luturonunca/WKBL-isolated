@@ -184,7 +184,7 @@ class AdicoraHydro:
         if where=="manu":
             self.path = " "
         else:
-            self.path = "/data/OWN/SF1test/SF0/mstar1_T3600/output_00041"
+            self.path = "/data/OWN/Adicora/SF0/Stable/output_00041"
         self.pot_max  = -24166.87  #pc km^2 M_sun s^-2
         self.c_dm_com = np.array([20418.88714, 17567.72033, 17124.40448 ])# kpc
         self.q = -0.19522

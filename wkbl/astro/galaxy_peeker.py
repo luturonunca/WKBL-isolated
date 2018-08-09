@@ -33,7 +33,7 @@ class Galaxy_Hound:
         self.p = nbe.Info_sniffer(file_path, newage=newage)
         hsml = kwargs.get('hsml',False)
         dens = kwargs.get('dens',False)
-        comov = kwargs.get('comov',False)
+        comov = kwargs.get('comov',True)
         self._dms, self._sts, self._gss  = False, False, False
         halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
         #loadDatat

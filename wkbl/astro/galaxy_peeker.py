@@ -14,7 +14,9 @@ from _dark_matter import _dark_matter
 from _stars import _stars
 from _gas import _gas
 import datetime
- 
+import warnings
+warnings.filterwarnings('ignore')
+
 ############### Unified  ################# 
 
 

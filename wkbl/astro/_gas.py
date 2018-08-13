@@ -32,6 +32,7 @@ class _gas:
         ok, temp = self.uns.getArrayF("gas","temp")
         ok, self.id = self.uns.getArrayI("all","id")
         ok, rho = self.uns.getArrayF("gas","rho")
+     
         self.rho =  rho * self._p.simutoMsun / (self._p.simutokpc**3)
         ok, hsml = self.uns.getArrayF("gas","hsml")
         ### coordinates ###
@@ -47,7 +48,7 @@ class _gas:
         self.center_rho_max = self.pos3d[np.where(self.rho == self.rho.max())]
         tokelvin =  self._p.mu * (self._p.simutokms**2) * self._p.cmtopc * 1e4 / self._p.kB # the 1e4 is to have km/s into kpc/s
         tokelvin = 1.66e-24 / (1.3806200e-16) * (self._p.unitl / self._p.unitt)**2
-        self.temp = temp * tokelvin 
+        self.temp = temp*rho## * tokelvin 
 
     def halo_Only(self, center, n, r200):
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))

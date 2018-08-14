@@ -44,29 +44,32 @@ class _stars:
         self.age = age *self._p.unitt / (3600.*24.*365*1e9) # stars age to Gyrs
  
 
-    def halo_Only(self, center, n, r200, r97):
+    def halo_Only(self, center, n, r200, r97,simple=False):
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
-        in_halo = np.where(self.r <= n*r200)
+        in_halo ,in_r200 = np.where(self.r <= n*r200),np.where(self.r <= r200)
+        average_v = np.array([np.mean(self.vel3d[in_r200,0]),np.mean(self.vel3d[in_r200,1]),np.mean(self.vel3d[in_r200,2])])
+             
         self.pos3d = self.pos3d[in_halo ]
         self.mass = self.mass[in_halo]
         self.age = self.age[in_halo]
-        self.vel3d = self.vel3d[in_halo]
+        self.vel3d = self.vel3d[in_halo]- average_v
         self.id = self.id[in_halo]
         self.metal = self.metal[in_halo]
-        self.R = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2))
-        self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
-        self.phi = np.arctan2(np.copy(self.pos3d[:,1]),np.copy(self.pos3d[:,0]))
-        self.theta = np.arccos(np.copy(self.pos3d[:,0]),np.copy(self.r))
-        ## velocities ###
-        vx,vy,vz = self.vel3d[:,0],self.vel3d[:,1],self.vel3d[:,2]
-        self.v = np.sqrt((vx**2) + (vy**2) + (vz**2))
-        self.vR = (vx*self.pos3d[:,0] + vy*self.pos3d[:,1])/ self.R
-        self.vr = (vx*self.pos3d[:,0] + vy*self.pos3d[:,1] + vz*self.pos3d[:,2])/ self.r
-        self.vphi = (-vx*self.pos3d[:,1] + vy*self.pos3d[:,0] )/ self.R
-        self.vtheta = (self.vR*self.pos3d[:,2] - vz*self.R) / self.r
-        #### other params ###
-        self.total_m =  np.sum(self.mass[self.r<r200])
-        self.fire_m , self.fire_r= nbe.FIRE_st_mass(self.mass,self.r,r97)
+        if not simple:
+            self.R = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2))
+            self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
+            self.phi = np.arctan2(np.copy(self.pos3d[:,1]),np.copy(self.pos3d[:,0]))
+            self.theta = np.arccos(np.copy(self.pos3d[:,0]),np.copy(self.r))
+            ## velocities ###
+            vx,vy,vz = self.vel3d[:,0],self.vel3d[:,1],self.vel3d[:,2]
+            self.v = np.sqrt((vx**2) + (vy**2) + (vz**2))
+            self.vR = (vx*self.pos3d[:,0] + vy*self.pos3d[:,1])/ self.R
+            self.vr = (vx*self.pos3d[:,0] + vy*self.pos3d[:,1] + vz*self.pos3d[:,2])/ self.r
+            self.vphi = (-vx*self.pos3d[:,1] + vy*self.pos3d[:,0] )/ self.R
+            self.vtheta = (self.vR*self.pos3d[:,2] - vz*self.R) / self.r
+            #### other params ###
+            self.total_m =  np.sum(self.mass[self.r<r200])
+            self.fire_m , self.fire_r= nbe.FIRE_st_mass(self.mass,self.r,r97)
 
 
     def Age_cut(self, age_cut):

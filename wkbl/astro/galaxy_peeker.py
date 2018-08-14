@@ -34,6 +34,7 @@ class Galaxy_Hound:
         self.quiet = kwargs.get('quiet',False)
         self.p = nbe.Info_sniffer(file_path, newage=newage)
         hsml = kwargs.get('hsml',False)
+        self.flush = kwargs.get('flush',False)
         dens = kwargs.get('dens',False)
         comov = kwargs.get('comov',True)
         self._dms, self._sts, self._gss  = False, False, False
@@ -83,6 +84,7 @@ class Galaxy_Hound:
         rnot = False
 
         if (rotate)and(self._sts):
+            if (self.flush):self.redefine(n,simple=True)
             self.rotate_galaxy()
             self.redefine(n)
             D = np.dot(self.matrix_T,np.dot(self.matrix_P,np.transpose(self.matrix_T)))
@@ -104,13 +106,13 @@ class Galaxy_Hound:
         if (self._gss):
             self.gs.shift(nucenter)
       
-    def redefine(self,n):
+    def redefine(self,n,simple=False):
         if (self._dms):
-            self.dm.halo_Only(self.center, n, self.r200)
+            self.dm.halo_Only(self.center, n, self.r200,simple=simple)
         if (self._sts):
-            self.st.halo_Only(self.center, n, self.r200, self.r97)
+            self.st.halo_Only(self.center, n, self.r200, self.r97,simple=simple)
         if (self._gss):
-            self.gs.halo_Only(self.center, n, self.r200)
+            self.gs.halo_Only(self.center, n, self.r200,simple=simple)
 
     def rotate_galaxy(self,rmin=3,rmax=10):
         r2 = (self.st.pos3d[:,0])**2 +(self.st.pos3d[:,1])**2 +(self.st.pos3d[:,2])**2

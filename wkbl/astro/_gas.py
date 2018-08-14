@@ -47,32 +47,34 @@ class _gas:
         self.hsml = hsml * self._p.simutokpc
         self.center_rho_max = self.pos3d[np.where(self.rho == self.rho.max())]
         tokelvin =  self._p.mu * (self._p.simutokms**2) * self._p.cmtopc * 1e4 / self._p.kB # the 1e4 is to have km/s into kpc/s
-        tokelvin = 1.66e-24 / (1.3806200e-16) * (self._p.unitl / self._p.unitt)**2
-        self.temp = temp*rho## * tokelvin 
+        tokelvin = 1.66e-27 / (1.3806200e-16) * (self._p.unitl / self._p.unitt)**2
+        self.temp = temp * tokelvin 
 
-    def halo_Only(self, center, n, r200):
+    def halo_Only(self, center, n, r200, simple=False):
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
-        in_halo = np.where(self.r <= n*r200)
+        in_halo,in_r200 = np.where(self.r <= n*r200),np.where(self.r <= r200) 
+        average_v = np.array([np.mean(self.vel3d[in_r200,0]),np.mean(self.vel3d[in_r200,1]),np.mean(self.vel3d[in_r200,2])])
         self.pos3d = self.pos3d[in_halo]
         self.mass = self.mass[in_halo]
         self.temp = self.temp[in_halo]
         self.hsml = self.hsml[in_halo]
-        self.vel3d = self.vel3d[in_halo]
+        self.vel3d = self.vel3d[in_halo]- average_v
         self.id = self.id[in_halo]
         self.rho = self.rho[in_halo]
-        self.R = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2))
-        self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
-        self.phi = np.arctan2(np.copy(self.pos3d[:,1]),np.copy(self.pos3d[:,0]))
-        ### velocities ###
-        vx,vy,vz = self.vel3d[:,0],self.vel3d[:,1],self.vel3d[:,0]*self.pos3d[:,2]
-        self.v = np.sqrt((vx**2) + (vy**2) + (vz**2))
-        self.vR = (vx*self.pos3d[:,0] + vy*self.pos3d[:,1])/ self.R
-        self.vr = (vx*self.pos3d[:,0] + vy*self.pos3d[:,1] + vz*self.pos3d[:,2])/ self.r
-        self.vphi = (-vx*self.pos3d[:,1] + vy*self.pos3d[:,0] )/ self.R
-        self.vtheta = (self.vR*self.pos3d[:,2] - vz*self.R) / self.r
+        if not simple:
+            self.R = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2))
+            self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
+            self.phi = np.arctan2(np.copy(self.pos3d[:,1]),np.copy(self.pos3d[:,0]))
+            ### velocities ###
+            vx,vy,vz = self.vel3d[:,0],self.vel3d[:,1],self.vel3d[:,0]*self.pos3d[:,2]
+            self.v = np.sqrt((vx**2) + (vy**2) + (vz**2))
+            self.vR = (vx*self.pos3d[:,0] + vy*self.pos3d[:,1])/ self.R
+            self.vr = (vx*self.pos3d[:,0] + vy*self.pos3d[:,1] + vz*self.pos3d[:,2])/ self.r
+            self.vphi = (-vx*self.pos3d[:,1] + vy*self.pos3d[:,0] )/ self.R
+            self.vtheta = (self.vR*self.pos3d[:,2] - vz*self.R) / self.r
 
-        #### other params ###
-        self.total_m =  np.sum(self.mass[self.r<r200])
+            #### other params ###
+            self.total_m =  np.sum(self.mass[self.r<r200])
 
     def rotate(self,T):
         pos = self.pos3d

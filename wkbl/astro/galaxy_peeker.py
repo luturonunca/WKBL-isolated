@@ -85,7 +85,10 @@ class Galaxy_Hound:
 
         if (rotate)and(self._sts):
             if (self.flush):self.redefine(n,simple=True)
-            self.rotate_galaxy()
+            if self.p.Z>2:
+                self.rotate_galaxy(rmin=0.5)
+            else:
+                self.rotate_galaxy()
             self.redefine(n)
             D = np.dot(self.matrix_T,np.dot(self.matrix_P,np.transpose(self.matrix_T)))
             if not self.quiet:

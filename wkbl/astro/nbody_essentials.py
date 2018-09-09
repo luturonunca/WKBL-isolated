@@ -273,6 +273,16 @@ def face_on_st(sim,lims,points,thikness=.5):
     result = H.T
     return result, edges
 
+def face_on_gs_temp(sim,lims,points,thikness=.9):
+    disk = (np.abs(sim.gs.pos3d[:,2])<thikness)
+    edges = np.linspace(lims[0],lims[1],points)
+    H, xedges, yedges = np.histogram2d(sim.gs.pos3d[disk,0], 
+                                       sim.gs.pos3d[disk,1],
+                                       bins=(edges, edges),
+                                       weights=sim.gs.temp[disk])
+    result = H.T
+    return result, edges
+
 def face_on_gs(sim,lims,points,thikness=.9):
     disk = (np.abs(sim.gs.pos3d[:,2])<thikness)
     edges = np.linspace(lims[0],lims[1],points)
@@ -293,6 +303,14 @@ def edge_on_st(sim,lims,points):
     result = H.T
     return result, edges
     
+def edge_on_gs_temp(sim,lims,points):
+    edges = np.linspace(lims[0],lims[1],points)
+    H, xedges, yedges = np.histogram2d(sim.gs.pos3d[:,0], 
+                                       sim.gs.pos3d[:,2],
+                                       bins=(edges, edges),
+                                       weights=sim.gs.temp)
+    result = H.T
+    return result, edges
 def edge_on_gs(sim,lims,points):
     edges = np.linspace(lims[0],lims[1],points)
     H, xedges, yedges = np.histogram2d(sim.gs.pos3d[:,0], 

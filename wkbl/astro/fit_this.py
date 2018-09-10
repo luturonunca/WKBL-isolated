@@ -16,7 +16,7 @@ import glob
 import cmath
 import subprocess
 import numpy as np
-from py_unsio import *
+from unsio import *
 import scipy.special as sp
 from numpy import exp, sqrt
 from scipy.special import gamma

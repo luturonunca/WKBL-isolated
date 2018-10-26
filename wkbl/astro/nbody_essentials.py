@@ -33,18 +33,15 @@ class Info_sniffer:
         self.Z = -1. + (1./ self.aexp) # redshift 
         self.msuntokg = 1.99844e30   
         self.pctocm = 3.08567758e18
-        self.G = 6.67384e-11 * self.msuntokg / ((self.pctocm*10)**3)
-        self.rho_crit = (3 * (self.H0**2) / 3.08567758e19**2)/ (8*np.pi*self.G)
+        self.G = 6.67384e-11 * self.msuntokg / ((self.pctocm*10)**3)#kpc^3 Msun^-1 s^-2
+        #self.rho_crit = (3 * (self.H0**2) / 3.08567758e19**2)/ (8*np.pi*self.G)
+        # rho crit in terms of aexp
+        self.rho_crit = get_rho_crit(self.aexp, self.H0, _vars["omega_m"], _vars["omega_l"], self.G)
         self.cmtopc = 1./self.pctocm
         self.unitl=_vars["unit_l"]
         self.unitd=_vars["unit_d"]
         self.unitt=_vars["unit_t"]
         self.boxlen = self.unitl/self.pctocm/1e6 #Mpc
-        #if (newage):
-        #    self.boxlen = self.unitl * self.h/self.pctocm/1e6 #Mpc
-        #    self.unitl = self.aexp * self.boxlen * 3.08567758e24 
-        #    #self.unitd = self._vars["omega_m"] * self.rho_crit * (self.h**2) / self.aexp**3
-        #else:
         self.simutokpc = self.unitl/self.pctocm/1e3
         self.simutokms = self.unitl/1e5/self.unitt
         self.simutoMsun=(self.unitd*self.unitl**3)/1e3/self.msuntokg
@@ -71,6 +68,13 @@ def FIRE_st_mass(mass,r,r97):
     
 
 
+def a_dot(a,h0,omg_m, omg_l):
+    omg_k = 1- omg_m - omg_l
+    return h0 * a * np.sqrt((omg_m*a**(-3))+(omg_k*a**(-2))+omg_l)
+
+def get_rho_crit(a, h0, omg_m, omg_l, G):
+    H_z = a_dot(a,h0,omg_m, omg_l) / a
+    return 3. * H_z**2 /8. / np.pi / G
 
 
 def _get_center(output,clumps=False):

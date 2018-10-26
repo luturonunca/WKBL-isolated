@@ -73,6 +73,7 @@ class HALOCHydro:
         else:
             self.path = "/data/POL/HALOC_19/Hydro/output_00440"
         self.pot_max  = -21926.61  #pc km^2 M_sun s^-2
+        self.rmax = 1725.09 #kpc
         self.c_dm_com = np.array([ 9868.14825,  9745.19211,  9766.90090 ])# kpc
         self.q        = 0.057
         self.r200     = 182.23 #kpc
@@ -103,6 +104,7 @@ class HALOCdmo:
         else:
             self.path = "/data/POL/HALOC_19/DMO/output_00041"
         self.pot_max  = -20588.90  #pc km^2 M_sun s^-2
+        self.rmax = 1688.46 #kpc
         self.c_dm_com = np.array([ 9861.9777, 9776.37011, 9790.41548 ])# kpc
         self.q = -0.19327
         self.M200_dm =  6.248e+11 #Msun
@@ -130,6 +132,7 @@ class MochimaHydro:
         else:
             self.path = "/data/OWN/SF1test/SF0/mstar1_T3600/output_00041"
         self.pot_max  = -27342.01  #pc km^2 M_sun s^-2
+        self.rmax = 2908.43 #kpc
         self.c_dm_com = np.array([20418.88714, 17567.72033, 17124.40448 ])# kpc
         self.q = -0.003443
         self.M200_dm  = 8.21482749952e+11 #Msun
@@ -160,6 +163,7 @@ class Mochimadmo:
         else:
             self.path = "/data/OWN/DMO/mochima2_Z5/output_00041"
         self.pot_max  = -28806.34  #pc km^2 M_sun s^-2
+        self.rmax = 2792.98 #kpc
         self.c_dm_com = np.array([ 20438.06143, 17580.66710, 17120.75325])# kpc
         self.q = -0.16956
         self.M200_dm =  9.13551392768e+11 #Msun
@@ -185,8 +189,9 @@ class AdicoraHydro:
             self.path = " "
         else:
             self.path = "/data/OWN/Adicora/SF0/Stable/output_00041"
-        self.pot_max  = -24166.87  #pc km^2 M_sun s^-2
-        self.c_dm_com = np.array([20418.88714, 17567.72033, 17124.40448 ])# kpc
+        self.pot_max  = -24172.00 #pc km^2 M_sun s^-2
+        self.rmax =  1453.96 #kpc
+        self.c_dm_com = np.array([14313.79353149, 15227.11111001, 15695.32341304 ])# kpc
         self.q = -0.19522
         self.M200_dm  = 8.10753261568e+11 #Msun
         self.M200_st  = 1.10771314688e+11 #Msun
@@ -215,6 +220,7 @@ class Adicoradmo:
         else:
             self.path = "/data/OWN/DMO/Adicora/output_00041"
         self.pot_max  = -23323.76  #pc km^2 M_sun s^-2
+        self.rmax =  1447.53 #kpc
         self.c_dm_com = np.array([14308.07419, 15223.16481, 15686.17544]) #kpc
         self.q = -0.15649
         self.M200_dm = 9.16783366144e+11 #Msun

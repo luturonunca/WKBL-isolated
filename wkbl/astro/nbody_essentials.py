@@ -36,7 +36,8 @@ class Info_sniffer:
         self.G = 6.67384e-11 * self.msuntokg / ((self.pctocm*10)**3)#kpc^3 Msun^-1 s^-2
         #self.rho_crit = (3 * (self.H0**2) / 3.08567758e19**2)/ (8*np.pi*self.G)
         # rho crit in terms of aexp
-        self.rho_crit = get_rho_crit(self.aexp, self.H0, _vars["omega_m"], _vars["omega_l"], self.G)
+        rho_crit = get_rho_crit(self.aexp, self.H0, _vars["omega_m"], _vars["omega_l"], self.G)
+        self.rho_crit = rho_crit / 3.08567758e19**2 
         self.cmtopc = 1./self.pctocm
         self.unitl=_vars["unit_l"]
         self.unitd=_vars["unit_d"]

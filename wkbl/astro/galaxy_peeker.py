@@ -79,8 +79,10 @@ class Galaxy_Hound:
         vol_bin = (4./3.)*np.pi*(rhist[:-1]**3)
         r_bin = rhist[:-1]+ 0.5*(rhist[2]-rhist[1])
         rho_s = np.cumsum(mhist) / vol_bin
+        self.delta_crit = nbe.Delta_crit(self.p.aexp,self.p._vars["omega_m"],self.p._vars["omega_l"])
         self.r200 = r_bin[np.argmin(np.abs(rho_s - (200 * self.p.rho_crit)))]
         self.r97 = r_bin[np.argmin(np.abs(rho_s - (97 * self.p.rho_crit)))]
+        self.rBN = r_bin[np.argmin(np.abs(rho_s - (self.delta_crit * self.p.rho_crit)))]
         rnot = False
 
         if (rotate)and(self._sts):

@@ -68,14 +68,27 @@ def FIRE_st_mass(mass,r,r97):
     return mass[r < R_FIRE].sum(), R_FIRE
     
 
+def Delta_crit(a, omg_m, omg_l):
+    """
+    Delta crit a la Brian and Norman 1998
+    """
+    x = (omg_m/(omg_m+(a**3)*omg_l))-1
+    return (18.*np.pi**2) + (82.*x) - (39.* x**2)
 
 def a_dot(a,h0,omg_m, omg_l):
+    """
+    time derivative of the expantion paramiter
+    """
     omg_k = 1- omg_m - omg_l
     return h0 * a * np.sqrt((omg_m*a**(-3))+(omg_k*a**(-2))+omg_l)
 
 def get_rho_crit(a, h0, omg_m, omg_l, G):
+    """
+    time dependent critical density of the universe
+    """
     H_z = a_dot(a,h0,omg_m, omg_l) / a
-    return 3. * H_z**2 /8. / np.pi / G
+    return 3. * H_z**2 /8. / np.pi / G 
+
 
 
 def _get_center(output,clumps=False):

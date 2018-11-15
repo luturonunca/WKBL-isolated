@@ -172,7 +172,11 @@ def caprate_GOU(u, m , rms='s'):
     elif rms == 'm':
             v_r = D.v_mao
     else:
-            print "errror!!!!!!", rms
+        try:
+            v_r = np.float(rms)
+        except:
+            print "ERROR: rms velocity not properly defined"
+            print "           rms = ", rms, "\n\n"
     u_e = D.v_esc #+ v_Sun### check
     nuc = sun[0]
     # information from the nucleus

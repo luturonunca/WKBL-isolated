@@ -10,7 +10,9 @@ import scipy.special as sp
 from numpy import exp, sqrt
 import scipy.integrate as integrate
 from sklearn.neighbors import KDTree
+from _sf_info import SF_info
 
+############### unified #################
 
 class _stars:
     def __init__(self, file_path,p, **kwargs):
@@ -23,6 +25,12 @@ class _stars:
         comov = kwargs.get('comov',False)
         r_search = kwargs.get('r_search',200.)
         self.halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
+        try:
+            self.sf_info = SF_info(file_path,p,comov=comov)
+            self.gotsfInfo = True
+        except:
+            self.gotsfInfo = False
+
         if self.uns.isValid()!=True:
             sys.exit("\n\n\n\n\n\n\nERROR:"+file_path+" is not a valid file !!!!!\n\n\n\n\n")
         ok = self.uns.nextFrame("")
@@ -45,6 +53,10 @@ class _stars:
  
 
     def halo_Only(self, center, n, r200, r97,simple=False):
+        #### sf history ####
+        if (self.gotsfInfo):
+            self.sf_info.halo_Only(center, n, r200)
+        ### coordinates ####
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         in_halo ,in_r200 = np.where(self.r <= n*r200),np.where(self.r <= r200)
         average_v = np.array([np.mean(self.vel3d[in_r200,0]),np.mean(self.vel3d[in_r200,1]),np.mean(self.vel3d[in_r200,2])])

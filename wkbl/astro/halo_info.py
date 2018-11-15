@@ -197,7 +197,7 @@ class AdicoraHydro:
         else:
             self.path = "/data/OWN/Adicora/SF0/Stable/output_00041"
         self.pot_max  = -24172.00 #pc km^2 M_sun s^-2
-        self.rmax =  1453.96 #kpc
+        self.rmax = 1580# rmax +130, rmax_true = 1453.96 #kpc
         self.c_dm_com = np.array([14313.79353149, 15227.11111001, 15695.32341304 ])# kpc
         self.c_rho_st = np.array([14314.327, 15226.841, 15695.589])# kpc
         self.q = -0.19522
@@ -228,7 +228,7 @@ class Adicoradmo:
         else:
             self.path = "/data/OWN/DMO/Adicora/output_00041"
         self.pot_max  = -23323.76  #pc km^2 M_sun s^-2
-        self.rmax =  1447.53 #kpc
+        self.rmax =  1580# rmax + 130, rmax_true = 1447.53 #kpc
         self.c_dm_com = np.array([14308.07419, 15223.16481, 15686.17544]) #kpc
         self.c_dm_pot = np.array([14307.2343, 15221.832031, 15684.78808]) #kpc
         self.q = -0.15649

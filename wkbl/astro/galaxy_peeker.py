@@ -113,11 +113,11 @@ class Galaxy_Hound:
       
     def redefine(self,n,simple=False):
         if (self._dms):
-            self.dm.halo_Only(self.center, n, self.r200,simple=simple)
+            self.dm.halo_Only(self.center, n, self.rBN,simple=simple)
         if (self._sts):
-            self.st.halo_Only(self.center, n, self.r200, self.r97,simple=simple)
+            self.st.halo_Only(self.center, n, self.rBN, self.r97,simple=simple)
         if (self._gss):
-            self.gs.halo_Only(self.center, n, self.r200,simple=simple)
+            self.gs.halo_Only(self.center, n, self.rBN,simple=simple)
 
     def rotate_galaxy(self,rmin=3,rmax=10):
         r2 = (self.st.pos3d[:,0])**2 +(self.st.pos3d[:,1])**2 +(self.st.pos3d[:,2])**2

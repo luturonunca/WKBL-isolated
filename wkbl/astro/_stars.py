@@ -25,11 +25,11 @@ class _stars:
         comov = kwargs.get('comov',False)
         r_search = kwargs.get('r_search',200.)
         self.halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
-        try:
-            self.sf_info = SF_info(file_path,p,comov=comov)
-            self.gotsfInfo = True
-        except:
-            self.gotsfInfo = False
+        #try:
+        self.sf_info = SF_info(file_path,p,comov=comov)
+        self.gotsfInfo = True
+        #except:
+        #    self.gotsfInfo = False
 
         if self.uns.isValid()!=True:
             sys.exit("\n\n\n\n\n\n\nERROR:"+file_path+" is not a valid file !!!!!\n\n\n\n\n")

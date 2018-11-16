@@ -12,6 +12,8 @@ import scipy.integrate as integrate
 from sklearn.neighbors import KDTree
 import datetime
 
+#### unified ####
+
 class _gas:
     def __init__(self, file_path,p,dens=True, **kwargs):
         self._p = p
@@ -21,6 +23,7 @@ class _gas:
         dens = kwargs.get('dens',False)
         comov = kwargs.get('comov',False)
         self.halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
+        self.get_sigma = kwargs.get('virial',True)
 
         if self.uns.isValid()!=True:
             sys.exit("\n\n\n\n\n\n\nERROR:"+file_path+" is not a valid file !!!!!\n\n\n\n\n")
@@ -35,6 +38,9 @@ class _gas:
      
         self.rho =  rho * self._p.simutoMsun / (self._p.simutokpc**3)
         ok, hsml = self.uns.getArrayF("gas","hsml")
+        if (self.get_sigma):
+            ok, sigma = self.uns.getArrayF("hydro","7")
+            self.sigma2 = sigma*(self._p.simutokms**2) 
         ### coordinates ###
         pos = pos * self._p.simutokpc
         vel = vel * self._p.simutokms
@@ -48,7 +54,8 @@ class _gas:
         self.center_rho_max = self.pos3d[np.where(self.rho == self.rho.max())]
         tokelvin =  self._p.mu * (self._p.simutokms**2) * self._p.cmtopc * 1e4 / self._p.kB # the 1e4 is to have km/s into kpc/s
         tokelvin = 1.66e-27 / (1.3806200e-16) * (self._p.unitl / self._p.unitt)**2
-        self.temp = temp * tokelvin 
+        self.temp = temp * tokelvin
+
 
     def halo_Only(self, center, n, r200, simple=False):
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
@@ -61,6 +68,8 @@ class _gas:
         self.vel3d = self.vel3d[in_halo]- average_v
         self.id = self.id[in_halo]
         self.rho = self.rho[in_halo]
+        if (self.get_sigma):
+            self.sigma2 = self.sigma2[in_halo]
         if not simple:
             self.R = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2))
             self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))

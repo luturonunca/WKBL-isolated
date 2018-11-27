@@ -23,7 +23,7 @@ class _gas:
         dens = kwargs.get('dens',False)
         comov = kwargs.get('comov',False)
         self.halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
-        self.get_sigma = kwargs.get('virial',True)
+        self.get_sigma = kwargs.get('virial',p.nmlexist)
 
         if self.uns.isValid()!=True:
             sys.exit("\n\n\n\n\n\n\nERROR:"+file_path+" is not a valid file !!!!!\n\n\n\n\n")
@@ -35,12 +35,11 @@ class _gas:
         ok, temp = self.uns.getArrayF("gas","temp")
         ok, self.id = self.uns.getArrayI("all","id")
         ok, rho = self.uns.getArrayF("gas","rho")
-     
+        ok, self.pres = self.uns.getArrayF("hydro","4") 
+        temp2 = self.pres/rho
         self.rho =  rho * self._p.simutoMsun / (self._p.simutokpc**3)
+
         ok, hsml = self.uns.getArrayF("gas","hsml")
-        if (self.get_sigma):
-            ok, sigma = self.uns.getArrayF("hydro","7")
-            self.sigma2 = sigma*(self._p.simutokms**2) 
         ### coordinates ###
         pos = pos * self._p.simutokpc
         vel = vel * self._p.simutokms
@@ -52,9 +51,15 @@ class _gas:
         self.mass = mass * self._p.simutoMsun
         self.hsml = hsml * self._p.simutokpc
         self.center_rho_max = self.pos3d[np.where(self.rho == self.rho.max())]
-        tokelvin =  self._p.mu * (self._p.simutokms**2) * self._p.cmtopc * 1e4 / self._p.kB # the 1e4 is to have km/s into kpc/s
-        tokelvin = 1.66e-27 / (1.3806200e-16) * (self._p.unitl / self._p.unitt)**2
-        self.temp = temp * tokelvin
+        self.tokelvin = 1.66e-27 / (1.3806200e-19) * (self._p.unitl / self._p.unitt)**2 
+        self.temp = temp * self.tokelvin
+        if (self.get_sigma):
+            ok, sigma = self.uns.getArrayF("hydro",str(self._p.nener))
+            self.sigma2 = sigma*(self._p.simutokms**2) 
+            self.cs2 = (1.6667-1.) * temp * (self._p.simutokms**2)
+            g_star = 1.6
+            self.cs2_poly  = (self._p.nml['T2_star']/ self.tokelvin)
+            self.cs2_poly *= (rho*self._p.scale_nH/self._p.nml["n_star"])**(g_star-1.0)
 
 
     def halo_Only(self, center, n, r200, simple=False):
@@ -64,12 +69,14 @@ class _gas:
         self.pos3d = self.pos3d[in_halo]
         self.mass = self.mass[in_halo]
         self.temp = self.temp[in_halo]
+        self.pres = self.pres[in_halo]
         self.hsml = self.hsml[in_halo]
         self.vel3d = self.vel3d[in_halo]- average_v
         self.id = self.id[in_halo]
         self.rho = self.rho[in_halo]
         if (self.get_sigma):
             self.sigma2 = self.sigma2[in_halo]
+            self.cs2 = self.cs2[in_halo]
         if not simple:
             self.R = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2))
             self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))

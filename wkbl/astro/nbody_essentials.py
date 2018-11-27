@@ -1,4 +1,4 @@
-import sys
+import os,sys
 import math
 import glob
 import cmath
@@ -15,6 +15,7 @@ from sklearn.neighbors import KDTree
 class Info_sniffer:
     def __init__(self, file_path,newage=False):
         _vars=dict()
+        self.file_path = file_path
         file = glob.glob(file_path+"/info_?????.txt")[0]
         with open(file) as outinfo:
             for line in outinfo:
@@ -26,6 +27,36 @@ class Info_sniffer:
                 _vars[var_name] = number
                 if var_name == "unit_t":
                     break
+        self.nmlexist = os.path.isfile(file_path+"/namelist.txt")
+        if (self.nmlexist):
+            nml = dict()
+            with open(file_path+"/namelist.txt") as outinfo:
+                for line in outinfo:
+                    eq_index = line.find('=')
+                    end_index = line.find('!')
+                    if eq_index == -1:
+                        continue
+                    var_name = line[:eq_index].strip()
+                    try:
+                        val = float(line[eq_index + 1:end_index])
+                    except:
+                        if  line[eq_index+1:-1]=='.true.':
+                            val = True
+                        elif line[eq_index+1:-1]=='.false.':
+                            val = False
+                        else:
+                            val = line[eq_index+1:-1]
+                    nml[var_name] = val
+            nener=4
+            if "metal" in nml:
+                nener+= int(nml["metal"])
+            if "delayed_cooling" in nml:
+                nener += int(nml["delayed_cooling"])
+            if "sf_virial" in nml:
+                nener += int(nml["sf_virial"])
+            self.nener = nener
+            self.nml = nml
+        
         self.H0 = _vars["H0"]
         self._vars = _vars
         self.h = _vars["H0"]/1e2       # hubble expansion rate
@@ -49,11 +80,37 @@ class Info_sniffer:
         self.unitsimutoMsunkpc3=self.unitd*self.pctocm**3/1000/self.msuntokg
         self.kgtoGeV = 1/1.783e-27
         self.kpctocm = 3.086e21
+        self.simutocm=self.unitl*_vars["H0"]/1e2
         self.kpctokm = self.kpctocm / 1e5
         self.simutoGeVcm3 = (self.simutoMsun*self.msuntokg*self.kgtoGeV) / (self.simutokpc*self.kpctocm)**3
         self.kB = 1.3806503e-23 * (self.cmtopc/ 10)**2 / self.msuntokg # kpc**2 Msun /s**2 / K
         self.k_boltz = 1.3806488e-23 * 1e-6 / self.msuntokg # Msun * km**2 /s**2 / K
         self.mu = 1.67262158e-27 / self.msuntokg
+        self.mH = 1.6600000e-24 # grams
+        self.kB = 1.3806200e-16
+        self.scale_T2 =  self.mH/self.kB * (self.simutocm/self.unitt)**2 #simutokelvin
+        self.scale_d = self.simutoMsun * (self.simutokpc)**-3
+        self.scale_nH = 0.76 * self.scale_d / self.mH
+        self.omegaM = 0.0489
+        self.scale_d_gas = self.omegaM*self.rho_crit*((80./100)**2)/(self.aexp**3)
+        scale_nH = self.unitd / 1.66e-24 * 0.76 # scale_d * X / mh
+        """
+        f = open(self.file_path+"/namelist.txt")
+        for l in f:
+            row = l.split('=')
+            if row[0]=="sf_model":
+                SF0 = not bool(int(row[1]))
+            if row[0]=="n_star":
+                n_star=float(row[1])
+                self.n_star = n_star
+        """
+        try:
+            self.rhoc_SF = n_star * (self.mH * 1e-3)/(self.msuntokg) / ((self.cmtopc/1e3)**3) #Msun /kpc^3
+            self.DelayedCooling=True
+        except:
+            self.DelayedCooling=False
+
+
 
 def FIRE_st_mass(mass,r,r97):
     """
@@ -91,17 +148,25 @@ def get_rho_crit(a, h0, omg_m, omg_l, G):
 
 
 
-def _get_center(output,clumps=False):
+def _get_center(output,clumps=False,sf_hist=False):
         """
         gets center of more resolved halo
         taken from hast library witten by V.perret
         https://bitbucket.org/vperret/hast 
         """
         p = Info_sniffer(output)
-        list = glob.glob(output+'/clump_?????.txt?????')
+        data_all = np.array([])
+        if (sf_hist):
+            list = glob.glob(output+'/stars_?????.out?????')
+        else:
+            list = glob.glob(output+'/clump_?????.txt?????')
+
         i=0
         for file in list:
-                data = np.loadtxt(file,skiprows=1,dtype=None)
+                try:
+                    data = np.loadtxt(file,skiprows=1,dtype=None)
+                except:
+                    continue
                 if(np.size(data)==0):
                         continue
                 if(i>0):
@@ -109,10 +174,15 @@ def _get_center(output,clumps=False):
                 else:
                         data_all = data
                 i=i+1
+        if not bool(len(data_all)): 
+            print "no stars log"
+            return np.array([])
         array=(1e4*data_all[:,3]/np.max(data_all[:,3]))*(data_all[:,8]/np.max(data_all[:,8])).astype(int, copy=False)
         data_sorted = data_all[array.argsort()]
         data_sorted = data_sorted[::-1]
-        if not (clumps):
+        if (sf_hist):
+            return data_all
+        elif not (clumps):
             return data_sorted[0,4:7]
         else:
             return data_all[array.argsort()]

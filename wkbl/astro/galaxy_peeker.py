@@ -31,6 +31,7 @@ class Galaxy_Hound:
         else:
             newage = True
         gas = kwargs.get('gas',True)
+        rmax_rot = kwargs.get('rmax_rot',10)
         self.quiet = kwargs.get('quiet',False)
         self.p = nbe.Info_sniffer(file_path, newage=newage)
         hsml = kwargs.get('hsml',False)
@@ -61,7 +62,7 @@ class Galaxy_Hound:
             centro_com_st = nbe.real_center(po,ma,n=7000)
             self.center_shift(centro_com_st)
 
-    def r_virial(self, r_max,r_min=0,rotate=True,n=2.5,bins=512,quiet=False):
+    def r_virial(self,r_max,r_min=0,rotate=True,n=2.5,bins=512,quiet=False,rmax_rot=10):
         positions = np.array([], dtype=np.int64).reshape(0,3)
         masses = np.array([], dtype=np.int64)
         if (self._dms):
@@ -88,7 +89,7 @@ class Galaxy_Hound:
         if (rotate)and(self._sts):
             if (self.flush):self.redefine(n,simple=True)
             if self.p.Z>2:
-                self.rotate_galaxy(rmin=0.5)
+                self.rotate_galaxy(rmin=0.5,rmax=rmax_rot)
             else:
                 self.rotate_galaxy()
             self.redefine(n)

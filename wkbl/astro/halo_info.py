@@ -11,11 +11,14 @@ class HALOBHydro:
         else:    
             self.path = "/data/POL/HALOB/hydro/output_00417"
         self.c_dm_com = np.array([ 9667.68750, 9866.01957, 9801.56035])# kpc
+        self.c_pot = np.array([ 9666.93164062, 9864.46484376, 9799.147461])# kpc
         self.c_rho_st = np.array([ 9666.932  , 9864.464  , 9799.166])# kpc
-        self.rmax = 794.76 #kpc
+        self.rmax = 874.99 #kpc
+        self.rmax2 = 794.76 #kpc
         self.r200 = 177.54 #kpc
         self.dm_part_mass = 2.30812e5 #Msun
-        self.pot_max = -29559.54 #pc km^2 M_sun s^-2
+        self.pot_max = -36336.40 #pc km^2 M_sun s^-2
+        self.pot_max2 = -29559.54 #pc km^2 M_sun s^-2
         self.potfile = "/home/anunez/WKBL_candidates/Catalog/potentials/Psi_halo_B_DM_baryons_Rmax=805.0kpc_dimensionful.txt"
         self.q = -0.11878
         self.M200_dm =  5.00696645632e+11 #Msun
@@ -48,7 +51,7 @@ class HALOBdmo:
         self.c_dm_com = np.array([ 9693.93650, 9871.29969, 9805.710 ])# kpc
         self.c_dm_rho = np.array([9692.29980469, 9869.86230469, 9804.25097656])# kpc
         self.c_dm_pot = np.array([9692.24414062, 9869.58789062, 9804.03222656])# kpc
-        self.rmax = 787.79 #kpc
+        self.rmax = 766.50 #kpc
         self.r200 = 163.28 #kpc
         self.dm_part_mass = 2.75776e5 #Msun
         self.pot_max = -28066.64 #pc km^2 M_sun s^-2
@@ -75,9 +78,12 @@ class HALOCHydro:
             self.path = "/net/direct/backup/pol/Box20Mpc-Zoom-MWGalax-MUSIC-bis/Halo19/Zoom4-Halo19-refmap128-Hydro/output_00440"
         else:
             self.path = "/data/POL/HALOC_19/Hydro/output_00440"
-        self.pot_max  = -21926.61  #pc km^2 M_sun s^-2
-        self.rmax = 1725.09 #kpc
+        self.pot_max  = -29672.46  #pc km^2 M_sun s^-2
+        self.pot_max2  = -21926.61  #pc km^2 M_sun s^-2
+        self.rmax = 1727.32 #kpc
+        self.rmax2 = 1725.09 #kpc
         self.c_dm_com = np.array([ 9868.14825,  9745.19211,  9766.90090 ])# kpc
+        self.c_pot = np.array([ 9867.35644533, 9743.90332037, 9765.59277343 ])# kpc
         self.c_rho_st = np.array([ 9867.712,    9743.975,    9765.676 ])# kpc
         self.q        = 0.057
         self.r200     = 182.23 #kpc
@@ -137,8 +143,9 @@ class MochimaHydro:
         else:
             self.path = "/data/OWN/SF1test/SF0/mstar1_T3600/output_00041"
         self.pot_max  = -27342.01  #pc km^2 M_sun s^-2
-        self.rmax = 2908.43 #kpc
+        self.rmax = 1634.02 #kpc
         self.c_dm_com = np.array([20418.88714, 17567.72033, 17124.40448 ])# kpc
+        self.c_pot = np.array([20415.16406247,17564.56835937,17121.21679689 ])# kpc
         self.c_rho_st = np.array([20415.127, 17564.615, 17121.342])# kpc
         self.q = -0.003443
         self.M200_dm  = 8.21482749952e+11 #Msun
@@ -168,10 +175,10 @@ class Mochimadmo:
             self.path = " "
         else:
             self.path = "/data/OWN/DMO/mochima2_Z5/output_00041"
-        self.pot_max  = -28806.34  #pc km^2 M_sun s^-2
-        self.rmax = 2792.98 #kpc
+        self.pot_max  = -61825.09  #pc km^2 M_sun s^-2
+        self.rmax = 1696.01 #kpc
         self.c_dm_com = np.array([ 20438.06143, 17580.66710, 17120.75325])# kpc
-        self.c_dm_pot = np.array([20432.74609, 17575.785525, 17116.07815])# kpc
+        self.c_dm_pot = np.array([20422.0703125, 17575.73632812, 17117.75195312])# kpc
         self.q = -0.16956
         self.M200_dm =  9.13551392768e+11 #Msun
         self.dm_fit  = rho = [6.963,13.786,1,2.721,1.066]
@@ -196,9 +203,12 @@ class AdicoraHydro:
             self.path = " "
         else:
             self.path = "/data/OWN/Adicora/SF0/Stable/output_00041"
-        self.pot_max  = -24172.00 #pc km^2 M_sun s^-2
-        self.rmax = 1580# rmax +130, rmax_true = 1453.96 #kpc
+        self.pot_max  = -32881.11 #pc km^2 M_sun s^-2
+        self.pot_max2  = -24172.00 #pc km^2 M_sun s^-2
+        self.rmax = 1465.89 #kpc
+        self.rmax2 = 1580 #kpc
         self.c_dm_com = np.array([14313.79353149, 15227.11111001, 15695.32341304 ])# kpc
+        self.c_pot = np.array([14314.33300783, 15226.94140624, 15695.50683593 ])# kpc
         self.c_rho_st = np.array([14314.327, 15226.841, 15695.589])# kpc
         self.q = -0.19522
         self.M200_dm  = 8.10753261568e+11 #Msun
@@ -227,8 +237,8 @@ class Adicoradmo:
             self.path = " "
         else:
             self.path = "/data/OWN/DMO/Adicora/output_00041"
-        self.pot_max  = -23323.76  #pc km^2 M_sun s^-2
-        self.rmax =  1580# rmax + 130, rmax_true = 1447.53 #kpc
+        self.pot_max  = -2323.76  #pc km^2 M_sun s^-2
+        self.rmax = 1456.73# rmax + 130, rmax_true = 1447.53 #kpc
         self.c_dm_com = np.array([14308.07419, 15223.16481, 15686.17544]) #kpc
         self.c_dm_pot = np.array([14307.2343, 15221.832031, 15684.78808]) #kpc
         self.q = -0.15649

@@ -44,6 +44,7 @@ class SF_info:
         self.tokelvin = 1.66e-27 / (1.3806200e-19) * (self.p.unitl / self.p.unitt)**2
         self.temp = self.data[stars,14]/self.data[stars,10]* self.tokelvin
         self.met = self.data[stars,14] 
+        self.size = self.p.boxlen/2**self.data[stars,2] 
         self.sigma2 = self.data[stars,10+self.p.nener] * (self.p.simutokms**2)
         cs2 = 0.666* self.temp * (self.p.simutokms**2) / self.tokelvin
         cs2[np.where(cs2<=0)] = 0.00002
@@ -64,6 +65,7 @@ class SF_info:
         self.pos3d = self.pos3d[in_halo] - center
         self.id = self.id[in_halo]
         self.rho = self.rho[in_halo]
+        self.size = self.size[in_halo]
         self.rho_crit = self.rho_crit[in_halo]
         self.temp = self.temp[in_halo]
         self.met = self.met[in_halo]

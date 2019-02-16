@@ -141,12 +141,15 @@ class MochimaHydro:
         if where=="manu":
             self.path = " "
         else:
-            self.path = "/data/OWN/SF1test/SF0/mstar1_T3600/output_00041"
+            #self.path = "/data/OWN/SF1test/SF0/mstar1_T3600/output_00041"
+            self.path = "/data/MochimaMulti_SGP/Mo_SF0_Delayed_Iso/output_00419"
         self.pot_max  = -27342.01  #pc km^2 M_sun s^-2
         self.rmax = 1634.02 #kpc
         self.c_dm_com = np.array([20418.88714, 17567.72033, 17124.40448 ])# kpc
-        self.c_pot = np.array([20415.16406247,17564.56835937,17121.21679689 ])# kpc
-        self.c_rho_st = np.array([20415.127, 17564.615, 17121.342])# kpc
+        #self.c_pot = np.array([20415.16406247,17564.56835937,17121.21679689 ])# kpc
+        self.c_pot = np.array([20431.432, 17270.40071875, 17116.70103125 ])# kpc
+        #self.c_rho_st = np.array([20415.127, 17564.615, 17121.342])# kpc
+        self.c_rho_st = np.array([20431.432,17270.389,17116.744])# kpc
         self.q = -0.003443
         self.M200_dm  = 8.21482749952e+11 #Msun
         self.M200_st  = 1.17450924032e+11 #Msun

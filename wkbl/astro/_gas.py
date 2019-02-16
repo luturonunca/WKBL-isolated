@@ -56,10 +56,12 @@ class _gas:
         if (self.get_sigma):
             ok, sigma = self.uns.getArrayF("hydro",str(self._p.nener))
             self.sigma2 = sigma*(self._p.simutokms**2) 
-            self.cs2 = (1.6667-1.) * temp * (self._p.simutokms**2)
+            #self.cs2 = (1.6667-1.) * temp * (self._p.simutokms**2)
+            self.cs2 = (1.6667-1.) * self.pres * (self._p.simutokms**2)
             g_star = 1.6
-            self.cs2_poly  = (self._p.nml['T2_star']/ self.tokelvin)
-            self.cs2_poly *= (rho*self._p.scale_nH/self._p.nml["n_star"])**(g_star-1.0)
+            #self.cs2_poly  = (self._p.nml['T2_star']/ self.tokelvin)
+            #self.cs2_poly *= (rho*self._p.scale_nH/self._p.nml["n_star"])**(g_star-1.0)
+
 
 
     def halo_Only(self, center, n, r200, simple=False):

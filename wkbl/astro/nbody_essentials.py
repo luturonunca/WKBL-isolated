@@ -87,7 +87,7 @@ class Info_sniffer:
         self.k_boltz = 1.3806488e-23 * 1e-6 / self.msuntokg # Msun * km**2 /s**2 / K
         self.mu = 1.67262158e-27 / self.msuntokg
         self.mH = 1.6600000e-24 # grams
-        self.kB = 1.3806200e-16
+        self.kB = 1.3806200e-16 # cgs
         self.scale_T2 =  self.mH/self.kB * (self.simutocm/self.unitt)**2 #simutokelvin
         self.scale_d = self.simutoMsun * (self.simutokpc)**-3
         self.scale_nH = 0.76 * self.scale_d / self.mH

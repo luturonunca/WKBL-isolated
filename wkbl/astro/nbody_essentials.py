@@ -185,7 +185,7 @@ def _get_center(output,clumps=False,sf_hist=False):
         elif not (clumps):
             return data_sorted[0,4:7]
         else:
-            return data_all[array.argsort()]
+            return data_sorted
 
 def get_com(pos,m):
     return np.array([np.dot(pos[:,0],m),

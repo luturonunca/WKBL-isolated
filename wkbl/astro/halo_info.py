@@ -181,7 +181,8 @@ class Mochimadmo:
         self.pot_max  = -61825.09  #pc km^2 M_sun s^-2
         self.rmax = 1696.01 #kpc
         self.c_dm_com = np.array([ 20438.06143, 17580.66710, 17120.75325])# kpc
-        self.c_dm_pot = np.array([20422.0703125, 17575.73632812, 17117.75195312])# kpc
+        #self.c_dm_pot = np.array([20422.0703125, 17575.73632812, 17117.75195312])# kpc
+        self.c_dm_pot = np.array([20432.74609375, 17575.78515625, 17116.078125  ])# kpc
         self.q = -0.16956
         self.M200_dm =  9.13551392768e+11 #Msun
         self.dm_fit  = rho = [6.963,13.786,1,2.721,1.066]

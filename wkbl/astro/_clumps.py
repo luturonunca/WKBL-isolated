@@ -25,11 +25,20 @@ class Clumps:
             self.pos3d = self.data[:,4:7] * p.simutokpc
 
         self.mass = self.data[:,10] * p.simutoMsun
+        self.relevance = self.data[:,11] 
+        self.n_cell = self.data[:,3] 
+        self.level = self.data[:,1] 
 
-    def halo_Only(self, center, n, r):
-        in_halo = nbe.all_inside(self.pos3d, center, r)
-        self.pos3d = self.pos3d[in_halo] - center
+
+    def halo_Only(self, center, n, r200):
+        self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
+        in_halo = np.where(self.r <= n*r200)
+        self.pos3d = self.pos3d[in_halo]
         self.mass = self.mass[in_halo]
+        self.n_cell = self.n_cell[in_halo]
+        self.relevance = self.relevance[in_halo]
+        self.level = self.level[in_halo]
+        self.r = self.r[in_halo]
     
     def rotate(self,T):
         pos = self.pos3d

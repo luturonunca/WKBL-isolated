@@ -197,7 +197,6 @@ def caprate_GOU(u, m , rms='s'):
     # original form is
     # k2 =(3./2.) * ((u_e**2) / (v_r**2)) * (mu / (mu_m**2))
     # small a factor and small b factor eq A7 GOULD 87
-
     a = 1e13 * (2./9.) * m * m_i * ((v_r * D.r_h)**2)
     b = (mu * a) / (mu_p**2)
     # final expression eq A6 GOULD 87
@@ -209,7 +208,11 @@ def caprate_GOU(u, m , rms='s'):
     c_2_2 = exp(-b * m * (x**2))
     # --flag--
     # print "a =", a, " k =",k2, "m =", m, " m_p =", m_p," const", const
-    return const * (c_1 - (c_2_1 * c_2_2))
+    result = const * (c_1 - (c_2_1 * c_2_2))
+    if result>0:
+        return result
+    else:
+        return 0
 
 def caprate_GOUSI(u, m, index):
     """

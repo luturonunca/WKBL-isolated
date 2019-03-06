@@ -10,8 +10,7 @@ import scipy.special as sp
 from numpy import exp, sqrt
 import nbody_essentials as nbe
 import scipy.integrate as integrate
-#CF =cfalcon.CFalcon()
-#from _clumps import Clumps
+from _clumps import Clumps
 import datetime
 
 class _dark_matter:
@@ -24,7 +23,7 @@ class _dark_matter:
         hsml = kwargs.get('hsml',False)
         dens = kwargs.get('dens',False)
         comov = kwargs.get('comov',False)
-        #self.Clumps = Clumps(file_path,p,comov=comov) 
+        self.Clumps = Clumps(file_path,p,comov=comov) 
         self.halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
 
         if self.uns.isValid()!=True:
@@ -49,7 +48,7 @@ class _dark_matter:
          
     def halo_Only(self, center,n , r200,simple=False):
         #### clumps ###
-        #self.Clumps.halo_Only(center, n, r200)
+        self.Clumps.halo_Only(center, n, r200)
         ### dm particles ##
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         in_halo = np.where(self.r <= n*r200)
@@ -65,7 +64,7 @@ class _dark_matter:
             self.R = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2))
             self.r = self.r[in_halo]
             self.phi = np.arctan2(np.copy(self.pos3d[:,1]),np.copy(self.pos3d[:,0]))
-            self.theta = np.arccos(np.copy(self.pos3d[:,0]),np.copy(self.r))
+            self.theta = np.arccos(np.copy(self.pos3d[:,2]),np.copy(self.r))
             ### velocities ###
             vx,vy,vz = self.vel3d[:,0],self.vel3d[:,1],self.vel3d[:,2]
             self.v = np.sqrt((vx**2) + (vy**2) + (vz**2))
@@ -77,9 +76,8 @@ class _dark_matter:
             self.total_m =  np.sum(self.mass[self.r<r200]) 
 
     def rotate(self,T):
-        #self.Clumps.rotate(T)
-	pos = self.pos3d
-        self.pos3d = nbe.matrix_vs_vector(T,pos)
+        self.Clumps.rotate(T)
+        self.pos3d = nbe.matrix_vs_vector(T,self.pos3d)
         self.vel3d = nbe.matrix_vs_vector(T,self.vel3d)
         
     def get_shperical_coords(self):
@@ -97,7 +95,7 @@ class _dark_matter:
     def shift(self,center):
         self.pos3d = self.pos3d - center
         self._center_history = np.vstack((self._center_history,center))
-        #self.Clumps.shift(center)    
+        self.Clumps.shift(center)    
 
     def density_profile(self, bins, limit):
         r_p = np.logspace(-0.5, np.log10(limit),bins)

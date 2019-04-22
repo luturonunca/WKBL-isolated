@@ -67,13 +67,12 @@ class _gas:
     def halo_Only(self, center, n, r200, simple=False):
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         in_halo,in_r200 = np.where(self.r <= n*r200),np.where(self.r <= r200) 
-        average_v = np.array([np.mean(self.vel3d[in_r200,0]),np.mean(self.vel3d[in_r200,1]),np.mean(self.vel3d[in_r200,2])])
         self.pos3d = self.pos3d[in_halo]
         self.mass = self.mass[in_halo]
         self.temp = self.temp[in_halo]
         self.pres = self.pres[in_halo]
         self.hsml = self.hsml[in_halo]
-        self.vel3d = self.vel3d[in_halo]- average_v
+        self.vel3d = self.vel3d[in_halo]
         self.id = self.id[in_halo]
         self.rho = self.rho[in_halo]
         if (self.get_sigma):
@@ -99,6 +98,9 @@ class _gas:
         self.pos3d = nbe.matrix_vs_vector(T,pos)
         self.vel3d = nbe.matrix_vs_vector(T,self.vel3d)
 
+    def vel_frame(self,vx_av,vy_av,vz_av):
+        average_v = np.array([vx_av,vy_av,vz_av])
+        self.vel3d = self.vel3d - average_v
 
     def shift(self,center):
         self.pos3d = self.pos3d - center

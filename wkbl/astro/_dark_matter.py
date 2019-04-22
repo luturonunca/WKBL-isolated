@@ -23,7 +23,12 @@ class _dark_matter:
         hsml = kwargs.get('hsml',False)
         dens = kwargs.get('dens',False)
         comov = kwargs.get('comov',False)
-        self.Clumps = Clumps(file_path,p,comov=comov) 
+        try: 
+            self.Clumps = Clumps(file_path,p,comov=comov) 
+            self.subhalos = True
+        except:
+            self.subhalos = False
+        
         self.halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
 
         if self.uns.isValid()!=True:
@@ -48,16 +53,14 @@ class _dark_matter:
          
     def halo_Only(self, center,n , r200,simple=False):
         #### clumps ###
-        self.Clumps.halo_Only(center, n, r200)
+        if (self.subhalos):self.Clumps.halo_Only(center, n, r200)
         ### dm particles ##
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         in_halo = np.where(self.r <= n*r200)
         in_r200= np.where(self.r <= r200)
         self.pos3d = self.pos3d[in_halo]
         self.mass = self.mass[in_halo]
-        # substract average velocities
-        average_v = np.array([np.mean(self.vel3d[in_r200,0]),np.mean(self.vel3d[in_r200,1]),np.mean(self.vel3d[in_r200,2])])
-        self.vel3d = self.vel3d[in_halo]- average_v
+        self.vel3d = self.vel3d[in_halo]
         self.id = self.id[in_halo]
         if not simple:
             # spherical/cylindrical coordinates
@@ -76,9 +79,14 @@ class _dark_matter:
             self.total_m =  np.sum(self.mass[self.r<r200]) 
 
     def rotate(self,T):
-        self.Clumps.rotate(T)
+        if (self.subhalos):self.Clumps.rotate(T)
         self.pos3d = nbe.matrix_vs_vector(T,self.pos3d)
         self.vel3d = nbe.matrix_vs_vector(T,self.vel3d)
+
+    def vel_frame(self,vx_av,vy_av,vz_av):
+        average_v = np.array([vx_av,vy_av,vz_av])
+        self.vel3d = self.vel3d - average_v
+        
         
     def get_shperical_coords(self):
         """
@@ -95,7 +103,7 @@ class _dark_matter:
     def shift(self,center):
         self.pos3d = self.pos3d - center
         self._center_history = np.vstack((self._center_history,center))
-        self.Clumps.shift(center)    
+        if (self.subhalos):self.Clumps.shift(center)    
 
     def density_profile(self, bins, limit):
         r_p = np.logspace(-0.5, np.log10(limit),bins)

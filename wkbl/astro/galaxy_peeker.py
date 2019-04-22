@@ -74,7 +74,7 @@ class Galaxy_Hound:
         if (self._gss):
             positions = np.vstack([positions,self.gs.pos3d])
             masses = np.append(masses,self.gs.mass)
-        
+        # find virial radii 
         r = np.sqrt((positions[:,0])**2 +(positions[:,1])**2 +(positions[:,2])**2 )
         mhist, rhist = np.histogram(r,range=(0.0,r_max),bins=bins, weights=masses )
         vol_bin = (4./3.)*np.pi*(rhist[:-1]**3)
@@ -85,14 +85,14 @@ class Galaxy_Hound:
         self.r97 = r_bin[np.argmin(np.abs(rho_s - (97 * self.p.rho_crit)))]
         self.rBN = r_bin[np.argmin(np.abs(rho_s - (self.delta_crit * self.p.rho_crit)))]
         rnot = False
-
+        # changes to f.o.f of the center of mass
+        
         if (rotate)and(self._sts):
             if (self.flush):self.redefine(n,simple=True)
             if self.p.Z>2:
                 self.rotate_galaxy(rmin=0.5,rmax=rmax_rot)
             else:
                 self.rotate_galaxy()
-            self.redefine(n)
             D = np.dot(self.matrix_T,np.dot(self.matrix_P,np.transpose(self.matrix_T)))
             if not self.quiet:
                 print '| r_200 = {0:.2f}'.format(self.r200)
@@ -100,9 +100,10 @@ class Galaxy_Hound:
                 print '|    | {0}, {1}, {2}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2]))
                 print '| D =| {0}, {1}, {2}|'.format(int(D[1,0]),int(D[1,1]),int(D[1,2]))
                 print '|    | {0},  {1}, {2}|'.format(int(D[2,0]),int(D[2,1]),int(D[2,2]))
-        elif (self.dmo): 
-            self.redefine(n)
-    
+
+        self.frame_of_ref(r)
+        self.redefine(n)
+
     def center_shift(self,nucenter):
         self.center = np.zeros(3)
         if (self._dms):
@@ -126,8 +127,8 @@ class Galaxy_Hound:
         P = np.zeros((3,3))
         for i in range(3):
             for j in range(3):
-                first = np.average(pos_ring[:,i]*pos_ring[:,j])
-                second =(np.average(pos_ring[:,i])*np.average(pos_ring[:,j]))
+                first = np.mean(pos_ring[:,i]*pos_ring[:,j])
+                second =(np.mean(pos_ring[:,i])*np.mean(pos_ring[:,j]))
                 P[i][j] = first - second
         eigen_values,evecs = np.linalg.eig(P)
         order = np.argsort(abs(eigen_values))
@@ -141,7 +142,34 @@ class Galaxy_Hound:
             self.st.rotate(T)        
         if (self._gss):
             self.gs.rotate(T)
-                
+
+    def frame_of_ref(self,r):
+        ############################################################
+        # substract the average speed of the system
+        positions = vels = np.array([], dtype=np.int64).reshape(0,3)
+        mass = np.array([])
+        if (self._dms):
+            #r = np.append(r,self.dm.r)
+            mass = np.append(mass,self.dm.mass)
+            vels = np.vstack([vels,self.dm.vel3d])
+        
+        if (self._sts):
+            #r = np.append(r,self.st.r)
+            mass = np.append(mass,self.st.mass)
+            vels = np.vstack([vels,self.st.vel3d])
+        if (self._gss):
+            #r = np.append(r,self.gs.r)
+            mass = np.append(mass,self.gs.mass)
+            vels = np.vstack([vels,self.gs.vel3d])
+        # velocity of the center of mass 
+        sel = np.where(r<self.r200)
+        com_vx = np.sum(mass[sel]*vels[sel,0])/np.sum(mass[sel])
+        com_vy = np.sum(mass[sel]*vels[sel,1])/np.sum(mass[sel])
+        com_vz = np.sum(mass[sel]*vels[sel,2])/np.sum(mass[sel])
+        if (self._dms):self.dm.vel_frame(com_vx,com_vy,com_vz)
+        if (self._sts):self.st.vel_frame(com_vx,com_vy,com_vz)
+        if (self._gss):self.gs.vel_frame(com_vx,com_vy,com_vz)
+        ##########################################################
    
     def save_galaxy(self, name, fltype, component):
         unsout=CunsOut(name,fltype)

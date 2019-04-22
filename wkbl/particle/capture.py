@@ -156,7 +156,7 @@ def get_arg(num):
 
 
 
-def caprate_GOU(u, m , rms='s'):
+def caprate_GOU(u, m , rms='s',term=0 ):
     """
     this is the gould expression
     input
@@ -210,7 +210,12 @@ def caprate_GOU(u, m , rms='s'):
     # print "a =", a, " k =",k2, "m =", m, " m_p =", m_p," const", const
     result = const * (c_1 - (c_2_1 * c_2_2))
     if result>0:
-        return result
+        if term==0:
+            return result
+        if term==1:
+            return const * c_1 
+        if term==2:
+            return const * c_2_1 * c_2_2
     else:
         return 0
 

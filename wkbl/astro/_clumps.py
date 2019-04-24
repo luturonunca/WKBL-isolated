@@ -38,6 +38,7 @@ class Clumps:
         self.n_cell = self.n_cell[in_halo]
         self.relevance = self.relevance[in_halo]
         self.level = self.level[in_halo]
+        self.data = self.data[in_halo]
         self.r = self.r[in_halo]
     
     def rotate(self,T):

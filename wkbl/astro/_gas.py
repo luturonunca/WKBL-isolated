@@ -35,6 +35,7 @@ class _gas:
         ok, temp = self.uns.getArrayF("gas","temp")
         ok, self.id = self.uns.getArrayI("all","id")
         ok, rho = self.uns.getArrayF("gas","rho")
+        ok, self.pot = self.uns.getArrayF("gas","pot")
         ok, self.pres = self.uns.getArrayF("hydro","4") 
         temp2 = self.pres/rho
         self.rho =  rho * self._p.simutoMsun / (self._p.simutokpc**3)
@@ -42,11 +43,20 @@ class _gas:
         ok, hsml = self.uns.getArrayF("gas","hsml")
         ### coordinates ###
         pos = pos * self._p.simutokpc
+        shift1 = (np.random.rand(len(hsml))-0.5)*hsml
+        shift2 = (np.random.rand(len(hsml))-0.5)*hsml
+        shift3 = (np.random.rand(len(hsml))-0.5)*hsml
         vel = vel * self._p.simutokms
         if (comov):
             self.pos3d = pos.reshape(len(pos)/3,3) / self._p.aexp
+            self.pos3d[:,0]+=shift1
+            self.pos3d[:,1]+=shift2
+            self.pos3d[:,2]+=shift3
         else:
             self.pos3d = pos.reshape(len(pos)/3,3)
+            self.pos3d[:,0]+=shift1
+            self.pos3d[:,1]+=shift2
+            self.pos3d[:,2]+=shift3
         self.vel3d = vel.reshape(len(vel)/3,3)
         self.mass = mass * self._p.simutoMsun
         self.hsml = hsml * self._p.simutokpc
@@ -69,6 +79,7 @@ class _gas:
         in_halo,in_r200 = np.where(self.r <= n*r200),np.where(self.r <= r200) 
         self.pos3d = self.pos3d[in_halo]
         self.mass = self.mass[in_halo]
+        self.pot = self.pot[in_halo]
         self.temp = self.temp[in_halo]
         self.pres = self.pres[in_halo]
         self.hsml = self.hsml[in_halo]

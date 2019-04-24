@@ -35,6 +35,7 @@ class Galaxy_Hound:
         self.quiet = kwargs.get('quiet',False)
         self.p = nbe.Info_sniffer(file_path, newage=newage)
         hsml = kwargs.get('hsml',False)
+        self.dmo= kwargs.get('dmo',False)
         self.flush = kwargs.get('flush',False)
         dens = kwargs.get('dens',False)
         comov = kwargs.get('comov',True)
@@ -46,7 +47,7 @@ class Galaxy_Hound:
             if not self.quiet: print "loading Dark matter.."
             self.dm = _dark_matter(file_path, self.p,comov=comov)
             self._dms = True
-        if self.n_st > 0:
+        if self.n_st > 0 and self.dmo==False:
             if not self.quiet: print "loading Stars.."
             self.st = _stars(file_path, self.p, comov=comov)
             self._sts = True

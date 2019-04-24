@@ -43,9 +43,6 @@ class _gas:
         ok, hsml = self.uns.getArrayF("gas","hsml")
         ### coordinates ###
         pos = pos * self._p.simutokpc
-        shift1 = (np.random.rand(len(hsml))-0.5)*hsml
-        shift2 = (np.random.rand(len(hsml))-0.5)*hsml
-        shift3 = (np.random.rand(len(hsml))-0.5)*hsml
         vel = vel * self._p.simutokms
         if (comov):
             self.pos3d = pos.reshape(len(pos)/3,3) / self._p.aexp
@@ -54,12 +51,15 @@ class _gas:
             self.pos3d[:,2]+=shift3
         else:
             self.pos3d = pos.reshape(len(pos)/3,3)
-            self.pos3d[:,0]+=shift1
-            self.pos3d[:,1]+=shift2
-            self.pos3d[:,2]+=shift3
+        self.hsml = hsml * self._p.simutokpc
+        shift1 = (np.random.rand(len(hsml))-0.5)*self.hsml
+        shift2 = (np.random.rand(len(hsml))-0.5)*self.hsml
+        shift3 = (np.random.rand(len(hsml))-0.5)*self.hsml
+        self.pos3d[:,0]+=shift1
+        self.pos3d[:,1]+=shift2
+        self.pos3d[:,2]+=shift3
         self.vel3d = vel.reshape(len(vel)/3,3)
         self.mass = mass * self._p.simutoMsun
-        self.hsml = hsml * self._p.simutokpc
         self.center_rho_max = self.pos3d[np.where(self.rho == self.rho.max())]
         self.tokelvin = 1.66e-27 / (1.3806200e-19) * (self._p.unitl / self._p.unitt)**2 
         self.temp = temp * self.tokelvin

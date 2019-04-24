@@ -46,9 +46,6 @@ class _gas:
         vel = vel * self._p.simutokms
         if (comov):
             self.pos3d = pos.reshape(len(pos)/3,3) / self._p.aexp
-            self.pos3d[:,0]+=shift1
-            self.pos3d[:,1]+=shift2
-            self.pos3d[:,2]+=shift3
         else:
             self.pos3d = pos.reshape(len(pos)/3,3)
         self.hsml = hsml * self._p.simutokpc

@@ -1,8 +1,8 @@
-import ConfigParser
+import configparser
 
 class dm_input():
     def parse_input(self, input_file):
-        inputs = ConfigParser.SafeConfigParser()
+        inputs = configparser.SafeConfigParser()
         inputs.read(input_file)
         try:
             open(input_file,'r')

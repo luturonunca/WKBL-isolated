@@ -5,7 +5,7 @@ import cmath
 #import cfalcon
 import subprocess
 import numpy as np
-from py_unsio import *
+from unsio import *
 import scipy.special as sp
 from numpy import exp, sqrt
 import nbody_essentials as nbe

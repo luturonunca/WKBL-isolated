@@ -63,7 +63,7 @@ class Info_sniffer:
         self.aexp = _vars["aexp"]      # expantion parameter
         self.Z = -1. + (1./ self.aexp) # redshift 
         self.msuntokg = 1.99844e30   
-        self.pctocm = 3.08567758e18
+        self.pctocm = 3.08e18 # the true value is 3.08567758e18 but well
         self.G = 6.67384e-11 * self.msuntokg / ((self.pctocm*10)**3)#kpc^3 Msun^-1 s^-2
         #self.rho_crit = (3 * (self.H0**2) / 3.08567758e19**2)/ (8*np.pi*self.G)
         # rho crit in terms of aexp

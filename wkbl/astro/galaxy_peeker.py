@@ -164,12 +164,12 @@ class Galaxy_Hound:
             vels = np.vstack([vels,self.gs.vel3d])
         # velocity of the center of mass 
         sel = np.where(r<self.r200)
-        com_vx = np.sum(mass[sel]*vels[sel,0])/np.sum(mass[sel])
-        com_vy = np.sum(mass[sel]*vels[sel,1])/np.sum(mass[sel])
-        com_vz = np.sum(mass[sel]*vels[sel,2])/np.sum(mass[sel])
-        if (self._dms):self.dm.vel_frame(com_vx,com_vy,com_vz)
-        if (self._sts):self.st.vel_frame(com_vx,com_vy,com_vz)
-        if (self._gss):self.gs.vel_frame(com_vx,com_vy,com_vz)
+        self.com_vx = np.sum(mass[sel]*vels[sel,0])/np.sum(mass[sel])
+        self.com_vy = np.sum(mass[sel]*vels[sel,1])/np.sum(mass[sel])
+        self.com_vz = np.sum(mass[sel]*vels[sel,2])/np.sum(mass[sel])
+        if (self._dms):self.dm.vel_frame(self.com_vx,self.com_vy,self.com_vz)
+        if (self._sts):self.st.vel_frame(self.com_vx,self.com_vy,self.com_vz)
+        if (self._gss):self.gs.vel_frame(self.com_vx,self.com_vy,self.com_vz)
         ##########################################################
    
     def save_galaxy(self, name, fltype, component):

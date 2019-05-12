@@ -74,7 +74,7 @@ class Info_sniffer:
         self.unitd=_vars["unit_d"]
         self.unitt=_vars["unit_t"]
         self.boxlen = self.unitl/self.pctocm/1e6 #Mpc
-        self.simutokpc = self.aexp*self.unitl/self.pctocm/1e3
+        self.simutokpc = self.unitl/self.pctocm/1e3
         self.simutokms = self.unitl/1e5/self.unitt
         self.simutoMsun=(self.unitd*self.unitl**3)/1e3/self.msuntokg
         self.unitsimutoMsunkpc3=self.unitd*self.pctocm**3/1000/self.msuntokg

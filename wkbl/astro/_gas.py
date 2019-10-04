@@ -37,6 +37,7 @@ class _gas:
         ok, rho = self.uns.getArrayF("gas","rho")
         ok, self.pot = self.uns.getArrayF("gas","pot")
         ok, self.pres = self.uns.getArrayF("hydro","4") 
+        ok, self.met = self.uns.getArrayF("hydro","5") 
         temp2 = self.pres/rho
         self.rho =  rho * self._p.simutoMsun / (self._p.simutokpc**3)
 
@@ -58,7 +59,7 @@ class _gas:
         self.vel3d = vel.reshape(len(vel)/3,3)
         self.mass = mass * self._p.simutoMsun
         self.center_rho_max = self.pos3d[np.where(self.rho == self.rho.max())]
-        self.tokelvin = 1.66e-27 / (1.3806200e-19) * (self._p.unitl / self._p.unitt)**2 
+        self.tokelvin = self._p.mH / (1.3806200e-16) * (self._p.unitl / self._p.unitt)**2 
         self.temp = temp * self.tokelvin
         if (self.get_sigma):
             ok, sigma = self.uns.getArrayF("hydro",str(self._p.nener))
@@ -76,6 +77,7 @@ class _gas:
         in_halo,in_r200 = np.where(self.r <= n*r200),np.where(self.r <= r200) 
         self.pos3d = self.pos3d[in_halo]
         self.mass = self.mass[in_halo]
+        self.met = self.met[in_halo]
         self.pot = self.pot[in_halo]
         self.temp = self.temp[in_halo]
         self.pres = self.pres[in_halo]

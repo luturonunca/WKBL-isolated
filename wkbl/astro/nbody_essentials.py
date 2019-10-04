@@ -111,6 +111,136 @@ class Info_sniffer:
             self.DelayedCooling=False
 
 
+class Profile:
+    def __init__(self,simu,hsml,powerR =False,stars=False,salve=False,fixgama=False,**kwargs):
+        try:
+            mmm = np.min(simu.dm.rho)
+        except ValueError: 
+            print("the density field is ill defined!")
+        self.hsml = hsml
+        transition = kwargs.get('transition',3)
+        fit = kwargs.get('fit',False)
+        fixalpha = kwargs.get('fixalpha',False)
+        alpha = kwargs.get('alpha',1)
+        Mdm = simu.dm.mass.min()
+        myradiuses = simu.dm.r[np.argsort(simu.dm.r)]
+        tabN = np.cumsum(np.ones(len(myradiuses)))[1:]
+        myradiuses = myradiuses[1:]
+        Pcrit = simu.dm._p.rho_crit
+        Rp03 = np.sqrt(200/64.) * np.sqrt(4 * np.pi * Pcrit * tabN / 3. / Mdm ) * (myradiuses**1.5)/ np.log(tabN) 
+        val =0.6
+        self.R_P03 = myradiuses[ np.where(Rp03 > val) ][0]
+        
+        # R array logarithmic Bining
+        r_p = np.logspace(np.log10(0.035),np.log10(transition*self.hsml),25)
+        if (powerR): 
+            self.hsml=self.R_P03
+            r_p = np.logspace(np.log10(0.15),np.log10(self.R_P03),25)
+            if  (stars):
+                r_p = np.logspace(np.log10(0.035),np.log10(self.R_P03),25)
+
+        # histogram of dm particles per logarithmic bin
+        n_dm,r = np.histogram(simu.dm.r,bins=r_p)
+        # edges of bins
+        r1,r2 =r[:-1],r[1:]
+        # shell's volume
+        vol = 4.* np.pi * ((r2**3)-(r1**3)) / 3.
+        r_size = r_p[1:]-r_p[:-1]
+        # density per shell
+        self.profile_in = n_dm*simu.dm.mass.min()/vol
+        self.cummass_in = np.cumsum(n_dm)*simu.dm.mass.min()
+        # center of bins
+        self.r_in = 10**((np.log10(r_p[:-1])+np.log10(r_p[1:]))/2.)
+
+
+        # R array logarithmic Bining
+        r_p = np.logspace(np.log10(self.R_P03),np.log10(2.5*simu.r200),150)
+        if not (powerR):r_p = np.logspace(np.log10(transition*self.hsml),np.log10(2.5*simu.r200),150)
+            
+        # histogram of dm particles per logarithmic bin
+        n_dm,r = np.histogram(simu.dm.r,bins=r_p)
+        # edges of bins
+        r1,r2 =r[:-1],r[1:]
+        # shell's volume
+        vol = 4.* np.pi * ((r2**3)-(r1**3)) / 3.
+        r_size = r_p[1:]-r_p[:-1]
+        # density per shell
+        self.profile = n_dm*simu.dm.mass.min()/vol
+        self.cummass = np.cumsum(n_dm)*simu.dm.mass.min()
+        # center of bins
+        self.r = 10**((np.log10(r_p[:-1])+np.log10(r_p[1:]))/2.)
+        bin_size= (r_p[:-1]-r_p[1:])/2.
+        
+        if (stars):
+            r_p_st = np.logspace(np.log10(self.hsml),np.log10(2.5*simu.r200),150)
+            # histogram of dm particles per logarithmic bin
+            n_st,r = np.histogram(simu.st.r,bins=r_p_st)
+            mass_st,r = np.histogram(simu.st.r,bins=r_p_st,weights=simu.st.mass)
+
+            # edges of bins
+            r1,r2 =r[:-1],r[1:]
+            # shell's volume
+            vol = 4.* np.pi * ((r2**3)-(r1**3)) / 3.
+            r_size = r_p_st[1:]-r_p_st[:-1]
+            # density per shell
+            self.profile_st = mass_st/vol
+            self.cummass_st = np.cumsum(mass_st)
+            # center of bins
+            self.r_st = 10**((np.log10(r_p_st[:-1])+np.log10(r_p_st[1:]))/2.)
+            bin_size= (r_p_st[:-1]-r_p_st[1:])/2.    
+
+        # extra estatistics from Cfalcon density
+        mean = std = n = stdlog = np.array([])
+        mean_st = std_st = n_st = np.array([])
+        for i in range(len(r_p)-1):
+            shell = np.where((simu.dm.r > r_p[i])&(simu.dm.r < r_p[i+1])&(simu.dm.r > hsml))
+            n = np.append(n,len(shell[0]))
+            mean = np.append(mean,np.mean(simu.dm.rho[shell]))
+            std = np.append(std,np.std(simu.dm.rho[shell]))
+            stdlog = np.append(stdlog,np.std(np.log10(simu.dm.rho[shell])))
+            if (stars) and (salve):
+                # stupid fix due to Cfalcon crash
+                shell_st = np.where((simu.st.r[res_attempt] > r_p_st[i])&(simu.st.r[res_attempt] < r_p_st[i+1]))
+                mean_st = np.append(mean_st,np.mean(simu.st.rho[shell_st]))
+                std_st = np.append(std_st,np.std(simu.st.rho[shell_st]))
+                n_st = np.append(n_st,len(shell_st[0]))
+            elif (stars):
+                shell_st = np.where((simu.st.r > r_p_st[i])&(simu.st.r < r_p_st[i+1]))
+                
+                mean_st = np.append(mean_st,np.mean(simu.st.rho[shell_st]))
+                std_st = np.append(std_st,np.std(simu.st.rho[shell_st]))
+                n_st = np.append(n_st,len(shell_st[0]))
+
+        self.mean = mean
+        self.std = std
+        self.stdlog = stdlog
+        self.n_dm_bin = n
+        if (stars):
+            self.mean_st = mean_st
+            self.std_st = std_st
+            self.n_dm_bin_st = n_st
+        n = np.array([len(simu.dm.mass[simu.dm.r<i]) for i in r]) 
+        if (fit):
+            self.m_rho = Minuit(self.chi2_rho_log,
+                           ga=1., fix_ga=fixgama,fix_al=fixalpha,
+                           po=7.0,    error_po=0.1,  limit_po =(2.,11.),
+                           r_s=7.3,  error_r_s=0.1,   limit_r_s=(5.,80),
+                           be=3.,     error_be=0.1,   limit_be =(2.5,3.5),
+                           al=alpha,     error_al=0.1,   limit_al =(.5,1.5))
+            self.m_rho.migrad();        
+        
+    def chi2_rho_log(self,po,r_s,al,be,ga):
+        """
+        logarithmic Chi-square
+        using mean of rho per shell
+        """
+        rho_obs = self.profile
+        rho_the = np.array([abg_profile(i,po,r_s,al,be,ga) for i in self.r])
+        c = (np.log10(rho_the) - np.log10(rho_obs))/ self.stdlog
+        c = c**2
+        return np.sum(c)
+
+
 
 def FIRE_st_mass(mass,r,r97):
     """

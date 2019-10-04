@@ -10,7 +10,9 @@ class HALOBHydro:
             self.path = "/net/direct/backup/pol/Box20Mpc-Zoom-MWGalax-MUSIC-bis/Halo24/Zoom4-Halo24-refmap128-HydroRun/output_00417"
         else:    
             self.path = "/data/POL/HALOB/hydro/output_00417"
-        self.c_dm_com = np.array([ 9667.68750, 9866.01957, 9801.56035])# kpc
+        #self.c_dm_com = np.array([ 9667.68750, 9866.01957, 9801.56035])# kpc
+        self.c_dm_com = np.array([9666.95485757, 9863.63954887,9798.09858347])# kpc
+        self.c_dm_pot = np.array([ 9666.93164062, 9864.46484376, 9799.147461])# kpc
         self.c_pot = np.array([ 9666.93164062, 9864.46484376, 9799.147461])# kpc
         self.c_rho_st = np.array([ 9666.932  , 9864.464  , 9799.166])# kpc
         self.rmax = 874.99 #kpc
@@ -48,7 +50,7 @@ class HALOBdmo:
             self.path = "/net/direct/backup/pol/Box20Mpc-Zoom-MWGalax-MUSIC-bis/Halo24/Zoom4-Halo24-refmap128-HydroRun/output_00417"
         else:    
             self.path = '/data/POL/HALOB/DMO/output_00041'
-        self.c_dm_com = np.array([ 9693.93650, 9871.29969, 9805.710 ])# kpc
+        self.c_dm_com = np.array([ 9692.26261074, 9869.59913235, 9804.02227724 ])# kpc
         self.c_dm_rho = np.array([9692.29980469, 9869.86230469, 9804.25097656])# kpc
         self.c_dm_pot = np.array([9692.24414062, 9869.58789062, 9804.03222656])# kpc
         self.rmax = 766.50 #kpc
@@ -82,8 +84,9 @@ class HALOCHydro:
         self.pot_max2  = -21926.61  #pc km^2 M_sun s^-2
         self.rmax = 1727.32 #kpc
         self.rmax2 = 1725.09 #kpc
-        self.c_dm_com = np.array([ 9868.14825,  9745.19211,  9766.90090 ])# kpc
+        self.c_dm_com = np.array([ 9867.324901,9743.90542915, 9765.58673492 ])# kpc
         self.c_pot = np.array([ 9867.35644533, 9743.90332037, 9765.59277343 ])# kpc
+        self.c_dm_pot = np.array([ 9867.35644533, 9743.90332037, 9765.59277343 ])# kpc
         self.c_rho_st = np.array([ 9867.712,    9743.975,    9765.676 ])# kpc
         self.q        = 0.057
         self.r200     = 182.23 #kpc
@@ -115,7 +118,7 @@ class HALOCdmo:
             self.path = "/data/POL/HALOC_19/DMO/output_00041"
         self.pot_max  = -20588.90  #pc km^2 M_sun s^-2
         self.rmax = 1688.46 #kpc
-        self.c_dm_com = np.array([ 9861.9777, 9776.37011, 9790.41548 ])# kpc
+        self.c_dm_com = np.array([ 9861.15406696, 9775.56193548, 9789.60771843 ])# kpc
         self.c_dm_pot= np.array([9860.93359375, 9775.50292969, 9789.64746094])# kpc
         self.q = -0.19327
         self.M200_dm =  6.248e+11 #Msun
@@ -145,9 +148,10 @@ class MochimaHydro:
             self.path = "/data/MochimaMulti_SGP/Mo_SF0_Delayed_Iso/output_00419"
         self.pot_max  = -27342.01  #pc km^2 M_sun s^-2
         self.rmax = 1634.02 #kpc
-        self.c_dm_com = np.array([20418.88714, 17567.72033, 17124.40448 ])# kpc
+        self.c_dm_com = np.array([20431.36856066, 17270.40420933, 17116.71155135 ])# kpc
         #self.c_pot = np.array([20415.16406247,17564.56835937,17121.21679689 ])# kpc
         self.c_pot = np.array([20431.432, 17270.40071875, 17116.70103125 ])# kpc
+        self.c_dm_pot = np.array([20431.432, 17270.40071875, 17116.70103125 ])# kpc
         #self.c_rho_st = np.array([20415.127, 17564.615, 17121.342])# kpc
         self.c_rho_st = np.array([20431.432,17270.389,17116.744])# kpc
         self.q = -0.003443
@@ -177,12 +181,13 @@ class Mochimadmo:
         if where=="manu":
             self.path = " "
         else:
-            self.path = "/data/OWN/DMO/mochima2_Z5/output_00041"
+            self.path = "/data/MochimaMulti_SGP/Mo_DMO/output_00400"
         self.pot_max  = -61825.09  #pc km^2 M_sun s^-2
         self.rmax = 1696.01 #kpc
         self.c_dm_com = np.array([ 20438.06143, 17580.66710, 17120.75325])# kpc
-        #self.c_dm_pot = np.array([20422.0703125, 17575.73632812, 17117.75195312])# kpc
-        self.c_dm_pot = np.array([20432.74609375, 17575.78515625, 17116.078125  ])# kpc
+        self.c_dm_com = np.array([ 20432.81425369, 17576.12134086, 17116.04963294])# kpc
+        #self.c_dm_pot = np.array([20432.74609375, 17575.78515625, 17116.078125  ])# kpc
+        self.c_dm_pot = np.array([20432.94140625, 17576.1015625,  17116.06445312 ])# kpc
         self.q = -0.16956
         self.M200_dm =  9.13551392768e+11 #Msun
         self.dm_fit  = rho = [6.963,13.786,1,2.721,1.066]

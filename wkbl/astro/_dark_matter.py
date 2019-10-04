@@ -53,7 +53,7 @@ class _dark_matter:
          
     def halo_Only(self, center,n , r200,simple=False):
         #### clumps ###
-        if (self.subhalos):self.Clumps.halo_Only(center, n, r200)
+        #if (self.subhalos):self.Clumps.halo_Only(center, n, r200)
         ### dm particles ##
         self.r = np.sqrt((self.pos3d[:,0]**2)+(self.pos3d[:,1]**2)+(self.pos3d[:,2]**2))
         in_halo = np.where(self.r <= n*r200)

@@ -101,7 +101,18 @@ class Galaxy_Hound:
                 print '|    | {0}, {1}, {2}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2]))
                 print '| D =| {0}, {1}, {2}|'.format(int(D[1,0]),int(D[1,1]),int(D[1,2]))
                 print '|    | {0},  {1}, {2}|'.format(int(D[2,0]),int(D[2,1]),int(D[2,2]))
-
+        if (rotate)and(self.dmo):
+            if self.p.Z>2:
+                self.rotate_galaxy(rmin=0.5,rmax=rmax_rot)
+            else:
+                self.rotate_galaxy(rmin=3,rmax=20,comp='dm')
+            D = np.dot(self.matrix_T,np.dot(self.matrix_P,np.transpose(self.matrix_T)))
+            if not self.quiet:
+                print '| r_200 = {0:.2f}'.format(self.r200)
+                print '| Diagonal matrix computed '
+                print '|    | {0}, {1}, {2}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2]))
+                print '| D =| {0}, {1}, {2}|'.format(int(D[1,0]),int(D[1,1]),int(D[1,2]))
+                print '|    | {0},  {1}, {2}|'.format(int(D[2,0]),int(D[2,1]),int(D[2,2]))
         self.frame_of_ref(r)
         self.redefine(n)
 
@@ -122,9 +133,14 @@ class Galaxy_Hound:
         if (self._gss):
             self.gs.halo_Only(self.center, n, self.rBN,simple=simple)
 
-    def rotate_galaxy(self,rmin=3,rmax=10):
-        r2 = (self.st.pos3d[:,0])**2 +(self.st.pos3d[:,1])**2 +(self.st.pos3d[:,2])**2
-        pos_ring = self.st.pos3d[(r2<rmax**2)&(r2>rmin**2)]
+    def rotate_galaxy(self,rmin=3,rmax=10,comp='st',affect=True):
+        if comp == 'st':
+            r2 = (self.st.pos3d[:,0])**2 +(self.st.pos3d[:,1])**2 +(self.st.pos3d[:,2])**2
+            pos_ring = self.st.pos3d[(r2<rmax**2)&(r2>rmin**2)]
+        elif comp== 'dm':
+            r2 = (self.dm.pos3d[:,0])**2 +(self.dm.pos3d[:,1])**2 +(self.dm.pos3d[:,2])**2
+            pos_ring = self.dm.pos3d[(r2<rmax**2)&(r2>rmin**2)]
+
         P = np.zeros((3,3))
         for i in range(3):
             for j in range(3):
@@ -137,11 +153,11 @@ class Galaxy_Hound:
         T[0],T[1],T[2] = evecs[:,order[2]],evecs[:,order[1]],evecs[:,order[0]]
         self.matrix_T = T
         self.matrix_P = P
-        if (self._dms):
+        if (self._dms) and (affect):
             self.dm.rotate(T)
-        if (self._sts):        
+        if (self._sts) and (affect):        
             self.st.rotate(T)        
-        if (self._gss):
+        if (self._gss) and (affect):
             self.gs.rotate(T)
 
     def frame_of_ref(self,r):

@@ -121,7 +121,7 @@ class Profile:
         self.hsml = hsml
         transition = kwargs.get('transition',3)
         fit = kwargs.get('fit',False)
-        quiet = kwargs.get('quiet',False)
+        quiet = kwargs.get('quiet',0)
         fixalpha = kwargs.get('fixalpha',False)
         alpha = kwargs.get('alpha',1)
         Mdm = simu.dm.mass.min()
@@ -223,7 +223,7 @@ class Profile:
             self.n_dm_bin_st = n_st
         n = np.array([len(simu.dm.mass[simu.dm.r<i]) for i in r]) 
         if (fit):
-            self.m_rho = Minuit(self.chi2_rho_log,quiet=quiet,
+            self.m_rho = Minuit(self.chi2_rho_log,print_level=quiet,
                            ga=1., fix_ga=fixgama,fix_al=fixalpha,
                            po=7.0,    error_po=0.1,  limit_po =(2.,11.),
                            r_s=7.3,  error_r_s=0.1,   limit_r_s=(5.,80),

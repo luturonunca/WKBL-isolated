@@ -2,6 +2,7 @@ import os,sys
 import math
 import glob
 import cmath
+from iminuit import Minuit, describe, Struct
 #import emcee
 import subprocess
 import numpy as np
@@ -239,6 +240,40 @@ class Profile:
         c = (np.log10(rho_the) - np.log10(rho_obs))/ self.stdlog
         c = c**2
         return np.sum(c)
+
+
+def abg_profile(x,po,r_s,al,be,ga):
+    power =  (be - ga) / al
+    denominator = ((x/r_s)**ga) * ((1 + (x / r_s)**al)**power)
+    return (10**po) / denominator
+
+
+class Clumps:
+    def __init__(self, file_path,nucenter):
+        h = 0.677400
+        files = glob.glob(file_path+"/halos*.ascii")
+        x = y = z = vx = vy = vz = rvir = m = np.array([])
+        for catalog in files:
+            data = np.loadtxt(catalog)
+            x = np.append(x,data[:,8]*1e3/h-nucenter[0])
+            y = np.append(y,data[:,9]*1e3/h-nucenter[1])
+            z = np.append(z,data[:,10]*1e3/h-nucenter[2])
+            vx = np.append(vx,data[:,11]/h)
+            vy = np.append(vy,data[:,12]/h)
+            vz = np.append(vz,data[:,13]/h)
+            m = np.append(m,data[:,2]/h**2)
+            rvir = np.append(rvir,data[:,4])
+        self.r = np.sqrt(x**2+y**2+z**2)
+        self.pos3d = np.zeros((len(x),3))
+        self.vel3d = np.zeros((len(x),3))
+        self.pos3d[:,0] = x
+        self.pos3d[:,1] = y
+        self.pos3d[:,2] = z
+        self.vel3d[:,0] = vx
+        self.vel3d[:,1] = vy
+        self.vel3d[:,2] = vz
+        self.m = m
+        self.rvir = rvir/h 
 
 
 

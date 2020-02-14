@@ -2,7 +2,7 @@ import os,sys
 import math
 import glob
 import cmath
-from iminuit import Minuit, describe, Struct
+from iminuit import Minuit
 #import emcee
 import subprocess
 import numpy as np

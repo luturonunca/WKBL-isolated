@@ -341,7 +341,7 @@ def _get_center(output,clumps=False,sf_hist=False):
                         data_all = data
                 i=i+1
         if not bool(len(data_all)): 
-            print "no stars log"
+            print("no stars log")
             return np.array([])
         array=(1e4*data_all[:,3]/np.max(data_all[:,3]))*(data_all[:,8]/np.max(data_all[:,8])).astype(int, copy=False)
         data_sorted = data_all[array.argsort()]

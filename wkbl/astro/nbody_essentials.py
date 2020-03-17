@@ -11,8 +11,6 @@ import scipy.special as sp
 from numpy import exp, sqrt
 import scipy.integrate as integrate
 from sklearn.neighbors import KDTree
-import warnings
-warnings.filterwarnings('ignore')
 
 
 class Info_sniffer:
@@ -30,20 +28,6 @@ class Info_sniffer:
                 _vars[var_name] = number
                 if var_name == "unit_t":
                     break
-<<<<<<< HEAD
-        self.H0=_vars["H0"]
-        self.aexp=_vars["aexp"]
-        self.msuntokg = 1.99844e30
-        self.pctocm = 3.08567758e18
-        self.cmtopc = 1/self.pctocm
-        
-        self.unitl=_vars["unit_l"]#/(3.08e18)*self.pctocm
-        self.unitd=_vars["unit_d"]/(self.pctocm/(3.08*10**18))**3
-        self.unitt=_vars["unit_t"]
-        self.simutokpc=self.unitl*_vars["H0"]/self.pctocm/1e5
-        self.simutocm=self.unitl*_vars["H0"]/1e2
-        self.simutoMsun=(self.unitd*self.unitl**3)/1000/self.msuntokg
-=======
         self.nmlexist = os.path.isfile(file_path+"/namelist.txt")
         if (self.nmlexist):
             nml = dict()
@@ -94,21 +78,9 @@ class Info_sniffer:
         self.simutokpc = self.unitl/self.pctocm/1e3
         self.simutokms = self.unitl/1e5/self.unitt
         self.simutoMsun=(self.unitd*self.unitl**3)/1e3/self.msuntokg
->>>>>>> python3Ver
         self.unitsimutoMsunkpc3=self.unitd*self.pctocm**3/1000/self.msuntokg
         self.kgtoGeV = 1/1.783e-27
         self.kpctocm = 3.086e21
-<<<<<<< HEAD
-        self.k_boltz = 1.3806488e-23 * 1e-6 / self.msuntokg # Msun * km**2 / s**2
-        self.m_p = 1.67262177e-27/ self.msuntokg # Msun
-        self.Z = (1./self.aexp) - 1.
-        self.kpctokm = self.kpctocm / 1e5
-        self.G = 6.67384e-11 * self.msuntokg / (3.08567758e19**3)
-        self.rho_crit = (3 * (self.H0**2) / 3.08567758e19**2)/ (8*np.pi*self.G)
-        self.simutoGeVcm3 = (self.simutoMsun*self.msuntokg*self.kgtoGeV) / (self.simutokpc*self.kpctocm)**3
-        self.mH = 1.6600000e-24
-        self.kB = 1.3806200e-16
-=======
         self.simutocm=self.unitl*_vars["H0"]/1e2
         self.kpctokm = self.kpctocm / 1e5
         self.simutoGeVcm3 = (self.simutoMsun*self.msuntokg*self.kgtoGeV) / (self.simutokpc*self.kpctocm)**3
@@ -117,19 +89,11 @@ class Info_sniffer:
         self.mu = 1.67262158e-27 / self.msuntokg
         self.mH = 1.6600000e-24 # grams
         self.kB = 1.3806200e-16 # cgs
->>>>>>> python3Ver
         self.scale_T2 =  self.mH/self.kB * (self.simutocm/self.unitt)**2 #simutokelvin
         self.scale_d = self.simutoMsun * (self.simutokpc)**-3
         self.scale_nH = 0.76 * self.scale_d / self.mH
         self.omegaM = 0.0489
         self.scale_d_gas = self.omegaM*self.rho_crit*((80./100)**2)/(self.aexp**3)
-<<<<<<< HEAD
-    def rho_crit_SF(self, n_star):
-        self.rhoc_SF = n_star * (self.mH * 1e-3)/(self.msuntokg) / ((self.cmtopc/1e3)**3) #Msun /kpc^3
-
-
-def _get_center(output,clumps=False, sf_hist=False):
-=======
         scale_nH = self.unitd / 1.66e-24 * 0.76 # scale_d * X / mh
         self.reslim = self.boxlen*1e3/2**(self.nml["levelmax"])
         """
@@ -352,25 +316,18 @@ def get_rho_crit(a, h0, omg_m, omg_l, G):
 
 
 def _get_center(output,clumps=False,sf_hist=False):
->>>>>>> python3Ver
         """
         gets center of more resolved halo
         taken from hast library witten by V.perret
         https://bitbucket.org/vperret/hast 
         """
         p = Info_sniffer(output)
-<<<<<<< HEAD
-=======
         data_all = np.array([])
->>>>>>> python3Ver
         if (sf_hist):
             list = glob.glob(output+'/stars_?????.out?????')
         else:
             list = glob.glob(output+'/clump_?????.txt?????')
-<<<<<<< HEAD
-=======
 
->>>>>>> python3Ver
         i=0
         for file in list:
                 try:
@@ -486,23 +443,6 @@ def half_mass(mass,r):
         aux += m_sort[counter]
     return r[counter]
 
-<<<<<<< HEAD
-
-def FIRE_st_mass(mass,r,r97):
-    """
-    from arxiv:1702.06148v1 footnote 9
-    returns the mass defined there as M_st
-    and the radius they define
-    to plot on top of the Moster band
-    """
-    R15 = 0.15*r97
-    R_half = half_mass(mass[r< R15],r[r< R15])
-    R_FIRE = half_mass(mass[r< 3*R_half],r[r< 3*R_half])
-    return mass[r < R_FIRE].sum(), R_FIRE
-    
-
-=======
->>>>>>> python3Ver
 def check_particles(path):
     """
     this routine check the particle number in  the simulation
@@ -516,10 +456,6 @@ def check_particles(path):
         fi = np.append(fi,f)
         n+=1
     myfi = open(fi[0])
-<<<<<<< HEAD
-
-=======
->>>>>>> python3Ver
     for l in myfi:
         linum += 1
         if linum%2==0 and linum<=8:
@@ -545,10 +481,7 @@ def check_particles(path):
 
 
 
-<<<<<<< HEAD
-=======
 
->>>>>>> python3Ver
 def mass_distribution_tensor(mass,pos):
         """
         calculates the mass distibrution tensor as in 
@@ -563,11 +496,7 @@ def mass_distribution_tensor(mass,pos):
         T = np.zeros((3,3))
         T[0],T[1],T[2] = evecs[:,order[2]],evecs[:,order[1]],evecs[:,order[0]]
         D = np.dot(T,np.dot(P,np.transpose(T)))
-<<<<<<< HEAD
-        return D
-=======
         return D,T
->>>>>>> python3Ver
 
 
 
@@ -584,8 +513,6 @@ def m_matrix_for_r(halo,comp,r):
         D = mass_distribution_tensor(mass_selection,pos_selection)
         return D
 
-<<<<<<< HEAD
-=======
 
 def read_arguments():
     for i in range(len(sys.argv)):
@@ -667,4 +594,3 @@ def edge_on_gs(sim,lims,points):
                                        weights=sim.gs.mass)
     result = H.T
     return result, edges
->>>>>>> python3Ver

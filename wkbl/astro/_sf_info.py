@@ -1,19 +1,11 @@
-<<<<<<< HEAD
-import sys
-=======
 import sys,os
->>>>>>> python3Ver
 import math
 import glob
 import cmath
 #import cfalcon
 import subprocess
 import numpy as np
-<<<<<<< HEAD
-from py_unsio import *
-=======
 from unsio import *
->>>>>>> python3Ver
 import scipy.special as sp
 from numpy import exp, sqrt
 import nbody_essentials as nbe
@@ -24,13 +16,6 @@ from sklearn.neighbors import KDTree
 class SF_info: 
     def __init__(self, file_path,p, **kwargs):
         # load st_info where the current stars where formed
-<<<<<<< HEAD
-        num = float(file_path[-5:])
-        if num<100:
-            file_path = file_path[:-2]+str(int(file_path[-2:])-1)
-        else:
-            file_path = file_path[:-3]+str(int(file_path[-3:])-1)
-=======
         star_files = glob.glob(file_path+"/star*")
         if len(star_files)==0:
             # if there is no star files in the output directory
@@ -43,7 +28,6 @@ class SF_info:
                 file_path = file_path[:-2]+str(int(file_path[-2:])-1)
             else:
                 file_path = file_path[:-3]+str(int(file_path[-3:])-1)
->>>>>>> python3Ver
         self.p = p 
         comov= kwargs.get('comov',False)
         self._center_history = np.array([[0,0,0]])
@@ -57,14 +41,6 @@ class SF_info:
         self.id = self.data[stars,1]
         self.hsml = 25000./(2.**(self.data[stars,2]))
         self.rho = self.data[stars,10]*self.p.scale_d / self.p.scale_d_gas
-<<<<<<< HEAD
-        self.temp2 = self.data[stars,15]* self.p.scale_T2
-        self.met = self.data[stars,16] 
-        self.sigma2 = self.data[stars,17] * (self.p.simutokms**2)
-        cs2 = 0.666*self.data[stars,15] * (self.p.simutokms**2)
-        cs2[np.where(cs2<=0)] = 0.002
-        self.cs2 = cs2
-=======
         self.tokelvin = 1.66e-27 / (1.3806200e-19) * (self.p.unitl / self.p.unitt)**2
         self.temp = self.data[stars,14]/self.data[stars,10]* self.tokelvin
         self.met = self.data[stars,14] 
@@ -78,7 +54,6 @@ class SF_info:
         self.cs2_poly  = (self.p.nml['T2_star']/ self.tokelvin)
         self.cs2_poly *= (self.data[stars,10]*self.p.scale_nH/self.p.nml["n_star"])**(g_star-1.0)
         #self.cs2 = cs2 - (cs2_poly * self.p.simutokms**2)
->>>>>>> python3Ver
         self.M2 = self.sigma2 / self.cs2
         factG = 3. / 4. / 2. / np.pi * 0.3089 * self.p.aexp 
         self.alpha0 = 0.5 * self.sigma2 / np.pi / factG / self.rho / (self.hsml)**2
@@ -91,24 +66,16 @@ class SF_info:
         self.pos3d = self.pos3d[in_halo] - center
         self.id = self.id[in_halo]
         self.rho = self.rho[in_halo]
-<<<<<<< HEAD
-        self.rho_crit = self.rho_crit[in_halo]
-        self.temp2 = self.temp2[in_halo]
-=======
         self.size = self.size[in_halo]
         self.level = self.level[in_halo]
         self.rho_crit = self.rho_crit[in_halo]
         self.temp = self.temp[in_halo]
->>>>>>> python3Ver
         self.met = self.met[in_halo]
         self.alpha0= self.alpha0[in_halo]
         self.sigma2 = self.sigma2[in_halo]
         self.cs2 = self.cs2[in_halo]
         self.M2 = self.M2[in_halo]
-<<<<<<< HEAD
-=======
         self.data = self.data[in_halo]
->>>>>>> python3Ver
         self.r = self.r[in_halo]
 
     

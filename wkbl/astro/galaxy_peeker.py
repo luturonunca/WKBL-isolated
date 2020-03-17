@@ -1,9 +1,9 @@
 import numpy as np
-from . import _dark_matter
-from . import _stars
-from . import _gas
+from . import  _dark_matter as d
+from . import _stars as s
+from . import _gas as g
 import glob
-import nbody_essentials as nbe
+from . import nbody_essentials as nbe
 
 
 ################################################################################
@@ -43,17 +43,17 @@ class Galaxy_Hound:
         # dark matter
         if self.n_dm > 0:
             if not self.quiet: print("loading Dark matter..")
-            self.dm = _dark_matter(file_path, self.p,comov=comov)
+            self.dm = d._dark_matter(file_path,self.p,comov=comov)
             self._dms = True
         # stars
         if self.n_st > 0 and self.dmo==False:
             if not self.quiet: print("loading Stars..")
-            self.st = _stars(file_path, self.p, comov=comov)
+            self.st = s._stars(file_path,self.p, comov=comov)
             self._sts = True
             # where there is stars there is gas
             if  gas==True:
                 if not self.quiet: print("loading Gas..")
-                self.gs = _gas(file_path, self.p,comov=comov)
+                self.gs = g._gas(file_path, self.p,comov=comov)
                 self._gss = True
         else:
             self.dmo = True
@@ -84,7 +84,7 @@ class Galaxy_Hound:
             masses = np.append(masses,self.gs.mass)
         # find virial radii 
         r = np.sqrt((positions[:,0])**2 +(positions[:,1])**2 +(positions[:,2])**2 )
-        a,b,c,d = nbe.get_radii(r,masses,self.p,r_max)
+        a,b,c,d = nbe.get_radii(r,masses,self.p,r_max,bins=bins)
         self.delta_crit, self.r200,self.r97,self.rBN = a,b,c,d
         rnot = False
         

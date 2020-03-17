@@ -1,7 +1,7 @@
-from . import Component
+from . import component as comp
 import numpy as np
 
-class _stars(Component):
+class _stars(comp.Component):
     def __init__(self, file_path,p, **kwargs):
         dens = kwargs.get('dens',False)
         comov = kwargs.get('comov',False)
@@ -12,9 +12,9 @@ class _stars(Component):
         except:
             self.gotsfInfo = False
         super().__init__(file_path,"stars",p)
-        ok, age = self.uns.getArrayF("stars","age")
-        ok, self.metal = self.uns.getArrayF("stars","metal")
-        ok, self.id = self.uns.getArrayI("all","id")
+        ok, age = self.uns.getData("stars","age")
+        ok, self.metal = self.uns.getData("stars","metal")
+        ok, self.id = self.uns.getData("all","id")
         self.age = age *self._p.unitt / (3600.*24.*365*1e9) / self._p.aexp**2 # stars age to Gyrs
         
     def halo_Only(self, center, n, r200, simple=False):

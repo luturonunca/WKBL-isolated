@@ -1,19 +1,19 @@
-from . import Component
+from . import component as comp
 import numpy as np
 
-class _gas(Component):
+class _gas(comp.Component):
     def __init__(self, file_path,p,dens=True, **kwargs):
         self.get_sigma = kwargs.get('virial',p.nmlexist)
         super().__init__(file_path,"gas",p)
-        ok, temp = self.uns.getArrayF("gas","temp")
-        ok, rho = self.uns.getArrayF("gas","rho")
-        ok, self.pot = self.uns.getArrayF("gas","pot")
-        ok, self.pres = self.uns.getArrayF("hydro","4")
-        ok, self.met = self.uns.getArrayF("hydro","5")
+        ok, temp = self.uns.getData("gas","temp")
+        ok, rho = self.uns.getData("gas","rho")
+        ok, self.pot = self.uns.getData("gas","pot")
+        ok, self.pres = self.uns.getData("hydro","4")
+        ok, self.met = self.uns.getData("hydro","5")
         temp2 = self.pres/rho
         self.rho =  rho * self._p.simutoMsun / (self._p.simutokpc**3)
 
-        ok, hsml = self.uns.getArrayF("gas","hsml")
+        ok, hsml = self.uns.getData("gas","hsml")
         self.hsml = hsml * self._p.simutokpc
         shift1 = (np.random.rand(len(hsml))-0.5)*self.hsml
         shift2 = (np.random.rand(len(hsml))-0.5)*self.hsml
@@ -24,7 +24,7 @@ class _gas(Component):
         self.tokelvin = self._p.mH / (1.3806200e-16) * (self._p.unitl / self._p.unitt)**2
         self.temp = temp * self.tokelvin
         if (self.get_sigma):
-            ok, sigma = self.uns.getArrayF("hydro",str(self._p.nener))
+            ok, sigma = self.uns.getData("hydro",str(self._p.nener))
             self.sigma2 = sigma*(self._p.simutokms**2)
             self.cs2 = (1.6667-1.) * self.pres * (self._p.simutokms**2)
             g_star = 1.6

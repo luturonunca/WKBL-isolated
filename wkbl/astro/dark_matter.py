@@ -1,19 +1,17 @@
-from . import component as comp
+from Component import *
 import numpy as np
 
 
-class _dark_matter(comp.Component):
-    def __init__(self, file_path,p, **kwargs):
+class _dark_matter(Component):
+    def __init__(self, file_path,comp,p, **kwargs):
         self.file = file_path
         hsml = kwargs.get('hsml',False)
-        comov = kwargs.get('comov',False)
         try:
             self.Clumps = Clumps(file_path,p,comov=comov)
             self.subhalos = True
         except:
             self.subhalos = False
-        super().__init__(file_path,"halo",p,comov=comov)
-        #super().__init__()
+        super().__init__(file_path,"halo",p)
     
     def halo_Only(self, center,n , r200,simple=False):
         #### clumps ###

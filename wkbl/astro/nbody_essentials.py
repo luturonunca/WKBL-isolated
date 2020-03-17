@@ -95,6 +95,7 @@ class Info_sniffer:
         self.omegaM = 0.0489
         self.scale_d_gas = self.omegaM*self.rho_crit*((80./100)**2)/(self.aexp**3)
         scale_nH = self.unitd / 1.66e-24 * 0.76 # scale_d * X / mh
+        self.reslim = self.boxlen*1e3/2**(self.nml["levelmax"])
         """
         f = open(self.file_path+"/namelist.txt")
         for l in f:
@@ -359,6 +360,26 @@ def get_com(pos,m):
                      np.dot(pos[:,2],m)])/ np.sum(m)
 def get_r(pos):
     return np.sqrt(pos[:,1]**2 + pos[:,1]**2 + pos[:,2]**2)
+
+def get_radii(r,masses,p,r_max,bins=512):
+        r_min = p.reslim # resolution-limit in kpc
+        mhist, rhist = np.histogram(r,range=(r_min,r_max),bins=bins, weights=masses )
+        vol_bin = (4./3.)*np.pi*(rhist[1:]**3)
+        r_bin = rhist[:-1]+ 0.5*(rhist[2]-rhist[1])
+        rho_s = np.cumsum(mhist) / vol_bin
+        delta_crit = Delta_crit(p.aexp,p._vars["omega_m"],p._vars["omega_l"])
+        r200 = r_bin[np.argmin(np.abs(rho_s - (200 * p.rho_crit)))]
+        r97 = r_bin[np.argmin(np.abs(rho_s - (97 * p.rho_crit)))]
+        rBN = r_bin[np.argmin(np.abs(rho_s - (delta_crit * p.rho_crit)))]
+        return delta_crit, r200,r97,rBN
+
+
+def print_matrix(D):
+    print('| Diagonal matrix computed ')
+    print('|    | {0}, {1}, {2}|'.format(int(D[0,0]),int(D[0,1]),int(D[0,2])))
+    print('| D =| {0}, {1}, {2}|'.format(int(D[1,0]),int(D[1,1]),int(D[1,2])))
+    print('|    | {0},  {1}, {2}|'.format(int(D[2,0]),int(D[2,1]),int(D[2,2])))
+
 
 
 def real_center(pos, mass, n=7000):

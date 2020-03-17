@@ -1,4 +1,2 @@
-from astro.galaxy_peeker import Galaxy_Hound
-from astro.fit_this import Fit
-#from particle.capture import *
+from wkbl.astro.galaxy_peeker import Galaxy_Hound
 __all__ = ['astro', 'particles']

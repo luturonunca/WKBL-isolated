@@ -14,10 +14,13 @@ import sys
 import math
 import glob
 import cmath
+<<<<<<< HEAD
 #import emcee
+=======
+>>>>>>> python3Ver
 import subprocess
 import numpy as np
-from py_unsio import *
+from unsio import *
 import scipy.special as sp
 from numpy import exp, sqrt
 import scipy.integrate as integrate

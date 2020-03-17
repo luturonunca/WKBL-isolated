@@ -1,9 +1,6 @@
-import sys
-import math
-import glob
-import cmath
-import subprocess
+from . import component as comp
 import numpy as np
+<<<<<<< HEAD
 from py_unsio import *
 import nbody_essentials as nbe
 import scipy.special as sp
@@ -22,11 +19,20 @@ class _stars:
         comov = kwargs.get('comov',False)
         r_search = kwargs.get('r_search',200.)
         self.halo_vel = kwargs.get('halo_vel',[0.,0.,0.])    ##########
+=======
+
+class _stars(comp.Component):
+    def __init__(self, file_path,p, **kwargs):
+        dens = kwargs.get('dens',False)
+        comov = kwargs.get('comov',False)
+        r_search = kwargs.get('r_search',200.)
+>>>>>>> python3Ver
         try:
             self.sf_info = SF_info(file_path,p,comov=comov)
             self.gotsfInfo = True
         except:
             self.gotsfInfo = False
+<<<<<<< HEAD
  
         if self.uns.isValid()!=True:
             sys.exit("\n\n\n\n\n\n\nERROR:"+file_path+" is not a valid file !!!!!\n\n\n\n\n")
@@ -133,3 +139,25 @@ class _stars:
         self.M_F2 = np.sum(self.mass[(self.r<self.r_F2)]) 
 
        
+=======
+        super().__init__(file_path,"stars",p)
+        ok, age = self.uns.getData("stars","age")
+        ok, self.metal = self.uns.getData("stars","metal")
+        ok, self.id = self.uns.getData("all","id")
+        self.age = age *self._p.unitt / (3600.*24.*365*1e9) / self._p.aexp**2 # stars age to Gyrs
+        
+    def halo_Only(self, center, n, r200, simple=False):
+        #### sf history ####
+        if (self.gotsfInfo):
+            self.sf_info.halo_Only(center, n, r200)
+        super().halo_Only(center,n , r200, simple=simple)
+        in_halo = np.where(self.r <= n*r200)
+        self.age = self.age[in_halo]
+        self.metal = self.metal[in_halo]
+        self.r = self.r[in_halo]
+ 
+    def shift(self,center):
+        if (self.gotsfInfo):self.sf_info.shift(center)
+        super().shift(center)
+        
+>>>>>>> python3Ver

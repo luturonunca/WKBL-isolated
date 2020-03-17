@@ -7,14 +7,13 @@ f(u)/u
 for dark halos
 author : arturonunez25@gmail.com
 """
-import sys
+import sys,os
 import math
 import glob
 import cmath
-import emcee
 import subprocess
 import numpy as np
-from py_unsio import *
+from unsio import *
 import scipy.special as sp
 from numpy import exp, sqrt
 import scipy.integrate as integrate
@@ -30,7 +29,7 @@ D.parse_input(os.getcwd()+"/input.dm")
 ############################################################
 ############################################################
 
-
+v_esc = D.v_esc
 ############################################################################
 ############################################################################
 ################# Velocity Distributio Functions ###########################
@@ -40,8 +39,8 @@ D.parse_input(os.getcwd()+"/input.dm")
 # shm
 f = lambda v: (v**2)*(1/(D.v_shm**3))*exp((-3.*(v**2))/(2. * D.v_shm**2 ))  
 n_shm = 1./quad(f, 0., D.v_esc)[0]
-n_shm1 = 1./quad(f, 0., D.v_esc2)[0]
-n_shm2 = 1./quad(f, 0., D.v_esc3)[0]
+n_shm1 = 1./quad(f, 0., D.v_esc)[0]
+n_shm2 = 1./quad(f, 0., D.v_esc)[0]
 
 p= 0.78 # mao fitting parameter
 # mao
@@ -59,8 +58,8 @@ def f (v):
     else:
             return 0
 n_lin = 1/quad(f, 0., D.v_esc)[0]
-n_lin1 = 1/quad(f, 0., D.v_esc1)[0]
-n_lin2 = 1/quad(f, 0., D.v_esc2)[0]
+n_lin1 = 1/quad(f, 0., D.v_esc)[0]
+n_lin2 = 1/quad(f, 0., D.v_esc)[0]
 ###########################################################################
 
 
@@ -162,8 +161,11 @@ def gal_to_sun(u, f, esc_sun=[D.v_esc, D.v_Sun]):
         esc = esc_sun[0]
         sun = esc_sun[1]
         #n = integrate.quad(f, 0, v_e,args=(v_r,v_e))[0]
+        xloc = np.linspace(0,esc_sun[0]+esc_sun[1])
+        n = np.trapz(f(xloc),xloc)
         result = integrate.quad(transform, -1, 1, args =(u, f, esc, sun))[0]
-        return  u * result
+        #return  u * result/n
+        return  u**2 * result
 
 def get_n(f):
     def intern(u):

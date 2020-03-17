@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """
 Dark Matter object
 """
@@ -17,18 +18,26 @@ import scipy.integrate as integrate
 from sklearn.neighbors import KDTree
 #CF =cfalcon.CFalcon()
 from _clumps import Clumps
+=======
+from . import component as comp
+import numpy as np
+>>>>>>> python3Ver
 
 
-class _dark_matter:
+class _dark_matter(comp.Component):
     def __init__(self, file_path,p, **kwargs):
+<<<<<<< HEAD
         self._p = p
         self._dens = False
         self.file = file_path
         self.uns = CunsIn(file_path,"halo","all",False)
+=======
+        self.file = file_path
+>>>>>>> python3Ver
         hsml = kwargs.get('hsml',False)
-        dens = kwargs.get('dens',False)
         comov = kwargs.get('comov',False)
         try:
+<<<<<<< HEAD
             self.Clumps = Clumps(file_path,p,comov=comov) 
             self.gotclumps = True
              
@@ -132,3 +141,42 @@ class _dark_matter:
         # total mass inside r97
         print " M_{r_97}.."
         sielf.M97 = np.sum(self.mass[(self.r<=r97)])
+=======
+            self.Clumps = Clumps(file_path,p,comov=comov)
+            self.subhalos = True
+        except:
+            self.subhalos = False
+        super().__init__(file_path,"halo",p,comov=comov)
+        #super().__init__()
+    
+    def halo_Only(self, center,n , r200,simple=False):
+        #### clumps ###
+        if (self.subhalos):self.Clumps.halo_Only(center, n, r200)
+        super().halo_Only(center, n, r200, simple=simple)
+        in_halo = np.where(self.r <= n*r200)
+        self.r = self.r[in_halo]
+    
+    def rotate(self,T):
+        if (self.subhalos):self.Clumps.rotate(T)
+        super().rotate(T)
+        
+    def shift(self,center):
+        if (self.subhalos):self.Clumps.shift(center)
+        super().shift(center)
+        
+    
+    def density_profile(self, bins, limit):
+        r_p = np.logspace(-0.5, np.log10(limit),bins)
+        def sph_dens(r):
+            """
+            spherical density profile
+            """
+            total_mass = np.sum(self.mass[(self.r < r)])
+            dens = 4 * total_mass / 3. / np.pi / r**3
+            return dens
+
+        get_shp_dens = np.vectorize(sph_dens)
+        return r_p , get_shp_dens(r_p)
+
+        
+>>>>>>> python3Ver

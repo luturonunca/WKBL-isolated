@@ -510,8 +510,8 @@ def m_matrix_for_r(halo,comp,r):
         sim.r = np.sqrt((sim.pos3d[:,0])**2 +(sim.pos3d[:,1])**2 +(sim.pos3d[:,2])**2 )
         pos_selection = sim.pos3d[(sim.r<r)]
         mass_selection = sim.mass[(sim.r<r)]
-        D = mass_distribution_tensor(mass_selection,pos_selection)
-        return D
+        D,T = mass_distribution_tensor(mass_selection,pos_selection)
+        return D,T
 
 
 def read_arguments():

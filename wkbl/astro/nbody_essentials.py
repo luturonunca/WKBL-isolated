@@ -3,7 +3,6 @@ import math
 import glob
 import cmath
 from iminuit import Minuit
-#import emcee
 import subprocess
 import numpy as np
 from unsio import *
@@ -315,8 +314,9 @@ def get_rho_crit(a, h0, omg_m, omg_l, G):
 
 
 
-def _get_center(output,clumps=False,sf_hist=False):
+def _read_extra(output,path="",clumps=False,rockstar=False,sf_hist=False):
         """
+        previously named _get_center()
         gets center of more resolved halo
         taken from hast library witten by V.perret
         https://bitbucket.org/vperret/hast 
@@ -325,34 +325,46 @@ def _get_center(output,clumps=False,sf_hist=False):
         data_all = np.array([])
         if (sf_hist):
             list = glob.glob(output+'/stars_?????.out?????')
-        else:
+        elif (clumps):
             list = glob.glob(output+'/clump_?????.txt?????')
-
-        i=0
-        for file in list:
-                try:
-                    data = np.loadtxt(file,skiprows=1,dtype=None)
-                except:
-                    continue
-                if(np.size(data)==0):
-                        continue
-                if(i>0):
-                        data_all = np.vstack((data_all,data))
+        if (clumps)and(rockstar):
+            h = p.h
+            files = glob.glob(path+"/halos*.ascii")
+            i=0
+            for catalog in files:
+                if i==0:
+                    data_all = np.loadtxt(catalog)
                 else:
-                        data_all = data
-                i=i+1
-        if not bool(len(data_all)): 
-            print("no stars log")
-            return np.array([])
-        array=(1e4*data_all[:,3]/np.max(data_all[:,3]))*(data_all[:,8]/np.max(data_all[:,8])).astype(int, copy=False)
-        data_sorted = data_all[array.argsort()]
-        data_sorted = data_sorted[::-1]
-        if (sf_hist):
+                    data_all = np.vstack((data_all,np.loadtxt(catalog)))
+                i+=1
             return data_all
-        elif not (clumps):
-            return data_sorted[0,4:7]
         else:
-            return data_sorted
+            i=0
+            for file in list:
+                    if os.path.getsize(file)==183:continue
+                    try:
+                        data = np.loadtxt(file,skiprows=1,dtype=None)
+                    except:
+                        continue
+                    if(np.size(data)==0):
+                            continue
+                    if(i>0):
+                            data_all = np.vstack((data_all,data))
+                    else:
+                            data_all = data
+                    i=i+1
+            if not bool(len(data_all)): 
+                print("no stars log")
+                return np.array([])
+            array=(1e4*data_all[:,3]/np.max(data_all[:,3]))*(data_all[:,8]/np.max(data_all[:,8])).astype(int, copy=False)
+            data_sorted = data_all[array.argsort()]
+            data_sorted = data_sorted[::-1]
+            if (sf_hist):
+                return data_all
+            elif not (clumps):
+                return data_sorted[0,4:7]
+            else:
+                return data_sorted
 
 def get_com(pos,m):
     return np.array([np.dot(pos[:,0],m),

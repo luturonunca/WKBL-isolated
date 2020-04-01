@@ -24,14 +24,15 @@ class Galaxy_Hound:
         # dicern on ramses versions
 
         ############################### ARGUMENTS ##############################
-        gas             = kwargs.get('gas'     ,True ) # Load gas
-        self.rmax_rot   = kwargs.get('rmax_rot',10   ) # rmax for rotation
-        self.quiet      = kwargs.get('quiet'   ,False) # avoid printing
-        hsml            = kwargs.get('hsml'    ,False) # force a res level
-        self.dmo        = kwargs.get('dmo'     ,False) # dark matter only
-        self.flush      = kwargs.get('flush'   ,False) # !!!!!!!!!!!!!!!! Check
-        dens            = kwargs.get('dens'    ,False) # compute densities
-        comov           = kwargs.get('comov'   ,True ) # comoving coordinates
+        gas             = kwargs.get('gas'             ,True ) # Load gas
+        self.rmax_rot   = kwargs.get('rmax_rot'        ,10   ) # rmax for rotation
+        self.quiet      = kwargs.get('quiet'           ,False) # avoid printing
+        hsml            = kwargs.get('hsml'            ,False) # force a res level
+        self.dmo        = kwargs.get('dmo'             ,False) # dark matter only
+        self.flush      = kwargs.get('flush'           ,False) # !!!!!!!!! Check
+        dens            = kwargs.get('dens'            ,False) # compute densities
+        comov           = kwargs.get('comov'           ,True ) # comoving coordinates
+        rockstar_path   = kwargs.get('rockstar_path'   ,"" )   #
         ########################################################################
         # flags for components
         self._dms, self._sts, self._gss  = False, False, False
@@ -43,7 +44,7 @@ class Galaxy_Hound:
         # dark matter
         if self.n_dm > 0:
             if not self.quiet: print("loading Dark matter..")
-            self.dm = d._dark_matter(file_path,self.p,comov=comov)
+            self.dm = d._dark_matter(file_path,self.p,comov=comov,rs=rockstar_path)
             self._dms = True
         # stars
         if self.n_st > 0 and self.dmo==False:

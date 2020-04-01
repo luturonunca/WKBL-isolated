@@ -1,4 +1,5 @@
 from . import component as comp
+from . import _clumps as clumps 
 import numpy as np
 
 
@@ -7,11 +8,13 @@ class _dark_matter(comp.Component):
         self.file = file_path
         hsml = kwargs.get('hsml',False)
         comov = kwargs.get('comov',False)
-        try:
-            self.Clumps = Clumps(file_path,p,comov=comov)
-            self.subhalos = True
-        except:
-            self.subhalos = False
+        rs = kwargs.get('rs',"")
+        #try:
+        self.Clumps = clumps.Clumps(file_path,p,comov=comov,
+                      rs=rs)
+        self.subhalos = True
+        #except:
+        #    self.subhalos = False
         super().__init__(file_path,"halo",p,comov=comov)
         #super().__init__()
     

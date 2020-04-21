@@ -494,7 +494,7 @@ def check_particles(path):
 
 
 
-def mass_distribution_tensor(mass,pos):
+def mass_distribution_tensor(mass,pos,return_vec=False):
         """
         calculates the mass distibrution tensor as in 
         equations 2 of arXiv:1207.4555v2
@@ -508,7 +508,10 @@ def mass_distribution_tensor(mass,pos):
         T = np.zeros((3,3))
         T[0],T[1],T[2] = evecs[:,order[2]],evecs[:,order[1]],evecs[:,order[0]]
         D = np.dot(T,np.dot(P,np.transpose(T)))
-        return D,T
+        if (return_vec):
+            return D,T,evecs,eigen_values
+        else:
+            return D,T
 
 
 

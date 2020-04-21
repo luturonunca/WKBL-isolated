@@ -88,7 +88,6 @@ class Galaxy_Hound:
         a,b,c,d = nbe.get_radii(r,masses,self.p,r_max,bins=bins)
         self.delta_crit, self.r200,self.r97,self.rBN = a,b,c,d
         rnot = False
-        
         if (rotate)and(self._sts):
             if (self.flush):self.redefine(n,simple=True)
             if self.p.Z>2:

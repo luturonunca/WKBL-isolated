@@ -8,6 +8,7 @@ class Clumps:
         comov= kwargs.get('comov',False)
         rs= kwargs.get('rs',"")
         if len(rs)>1:self.ROCKSTAR=True
+        else:self.ROCKSTAR=False
         self._center_history = np.array([[0,0,0]])
         self.data = nbe._read_extra(file_path,path=rs, clumps=True,rockstar=self.ROCKSTAR)
         if (self.ROCKSTAR):

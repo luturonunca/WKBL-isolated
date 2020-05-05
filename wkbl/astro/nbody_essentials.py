@@ -94,7 +94,8 @@ class Info_sniffer:
         self.omegaM = 0.0489
         self.scale_d_gas = self.omegaM*self.rho_crit*((80./100)**2)/(self.aexp**3)
         scale_nH = self.unitd / 1.66e-24 * 0.76 # scale_d * X / mh
-        self.reslim = self.boxlen*1e3/2**(self.nml["levelmax"])
+        if (self.nmlexist):
+            self.reslim = self.boxlen*1e3/2**(self.nml["levelmax"])
         """
         f = open(self.file_path+"/namelist.txt")
         for l in f:

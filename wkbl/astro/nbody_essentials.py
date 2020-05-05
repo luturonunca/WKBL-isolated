@@ -375,7 +375,10 @@ def get_r(pos):
     return np.sqrt(pos[:,1]**2 + pos[:,1]**2 + pos[:,2]**2)
 
 def get_radii(r,masses,p,r_max,bins=512):
-        r_min = p.reslim # resolution-limit in kpc
+        try:
+            r_min = p.reslim # resolution-limit in kpc
+        except:
+            r_min = 0.5 
         mhist, rhist = np.histogram(r,range=(r_min,r_max),bins=bins, weights=masses )
         vol_bin = (4./3.)*np.pi*(rhist[1:]**3)
         r_bin = rhist[:-1]+ 0.5*(rhist[2]-rhist[1])

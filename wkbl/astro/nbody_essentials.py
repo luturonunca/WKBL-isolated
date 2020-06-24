@@ -94,7 +94,8 @@ class Info_sniffer:
         self.omegaM = 0.0489
         self.scale_d_gas = self.omegaM*self.rho_crit*((80./100)**2)/(self.aexp**3)
         scale_nH = self.unitd / 1.66e-24 * 0.76 # scale_d * X / mh
-        self.reslim = self.boxlen*1e3/2**(self.nml["levelmax"])
+        if (self.nmlexist):
+            self.reslim = self.boxlen*1e3/2**(self.nml["levelmax"])
         """
         f = open(self.file_path+"/namelist.txt")
         for l in f:
@@ -374,7 +375,10 @@ def get_r(pos):
     return np.sqrt(pos[:,1]**2 + pos[:,1]**2 + pos[:,2]**2)
 
 def get_radii(r,masses,p,r_max,bins=512):
-        r_min = p.reslim # resolution-limit in kpc
+        try:
+            r_min = p.reslim # resolution-limit in kpc
+        except:
+            r_min = 0.5 
         mhist, rhist = np.histogram(r,range=(r_min,r_max),bins=bins, weights=masses )
         vol_bin = (4./3.)*np.pi*(rhist[1:]**3)
         r_bin = rhist[:-1]+ 0.5*(rhist[2]-rhist[1])

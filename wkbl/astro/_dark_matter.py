@@ -9,12 +9,12 @@ class _dark_matter(comp.Component):
         hsml = kwargs.get('hsml',False)
         comov = kwargs.get('comov',False)
         rs = kwargs.get('rs',"")
-        #try:
-        self.Clumps = clumps.Clumps(file_path,p,comov=comov,
+        try:
+            self.Clumps = clumps.Clumps(file_path,p,comov=comov,
                       rs=rs)
-        self.subhalos = True
-        #except:
-        #    self.subhalos = False
+            self.subhalos = True
+        except:
+            self.subhalos = False
         super().__init__(file_path,"halo",p,comov=comov)
         #super().__init__()
     

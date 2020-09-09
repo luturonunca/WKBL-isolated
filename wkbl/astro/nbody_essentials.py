@@ -11,6 +11,8 @@ from numpy import exp, sqrt
 import scipy.integrate as integrate
 from sklearn.neighbors import KDTree
 
+import warnings
+warnings.filterwarnings("ignore")
 
 class Info_sniffer:
     def __init__(self, file_path,newage=False):

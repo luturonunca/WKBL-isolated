@@ -33,6 +33,7 @@ class Galaxy_Hound:
         dens            = kwargs.get('dens'            ,False) # compute densities
         comov           = kwargs.get('comov'           ,True ) # comoving coordinates
         rockstar_path   = kwargs.get('rockstar_path'   ,"" )   #
+        self.isolated        = kwargs.get('isolated'        ,False )   #
         ########################################################################
         # flags for components
         self._dms, self._sts, self._gss  = False, False, False
@@ -58,6 +59,12 @@ class Galaxy_Hound:
                 self._gss = True
         else:
             self.dmo = True
+        if (self.isolated):
+            #compute center
+            center = nbe.real_center(self.dm.pos3d,self.dm.mass)
+            self.center_shift(center)
+            self.rBN = self.dm.pos3d.max() 
+            self.redefine(2,simple=False)
 
     def r_virial(self,r_max=600,r_min=0,rotate=True,n=2.5,bins=512):
         """
@@ -118,9 +125,9 @@ class Galaxy_Hound:
         if (self._gss):
             self.gs.shift(nucenter)
 
-    def redefine(self,n,simple=False):
+    def redefine(self,n,simple=False,isolated=False):
         if (self._dms):
-            self.dm.halo_Only(self.center, n, self.rBN,simple=simple)
+            self.dm.halo_Only(self.center, n,self.rBN,simple=simple)
         if (self._sts):
             self.st.halo_Only(self.center, n, self.rBN,simple=simple)
         if (self._gss):

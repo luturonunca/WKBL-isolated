@@ -8,8 +8,14 @@ class _gas(comp.Component):
         ok, temp = self.uns.getData("gas","temp")
         ok, rho = self.uns.getData("gas","rho")
         ok, self.pot = self.uns.getData("gas","pot")
-        ok, self.pres = self.uns.getData("hydro","4")
-        ok, self.met = self.uns.getData("hydro","5")
+        ok, self.B_left_x  = self.uns.getData("hydro","4")
+        ok, self.B_left_y  = self.uns.getData("hydro","5")
+        ok, self.B_left_z  = self.uns.getData("hydro","6")
+        ok, self.B_right_x = self.uns.getData("hydro","7")
+        ok, self.B_right_y = self.uns.getData("hydro","8")
+        ok, self.B_right_z = self.uns.getData("hydro","9")
+        ok, self.non_th_pres = self.uns.getData("hydro","10")
+        ok, self.pres = self.uns.getData("hydro","11")
         temp2 = self.pres/rho
         self.rho =  rho * self._p.simutoMsun / (self._p.simutokpc**3)
 
@@ -32,13 +38,20 @@ class _gas(comp.Component):
     def halo_Only(self, center,n , r200,simple=False):
         super().halo_Only(center,n , r200,simple=simple)
         in_halo = np.where(self.r <= n*r200)
-        self.met = self.met[in_halo]
         self.pot = self.pot[in_halo]
         self.temp = self.temp[in_halo]
         self.pres = self.pres[in_halo]
+        self.non_th_pres = self.non_th_pres[in_halo]
         self.hsml = self.hsml[in_halo]
         self.rho = self.rho[in_halo]
+        self.B_left_x = self.B_left_x[in_halo]
+        self.B_left_y = self.B_left_y[in_halo]
+        self.B_left_z = self.B_left_z[in_halo]
+        self.B_right_x = self.B_right_x[in_halo]
+        self.B_right_y = self.B_right_y[in_halo]
+        self.B_right_z = self.B_right_z[in_halo]
         if (self.get_sigma):
+            self.met = self.met[in_halo]
             self.sigma2 = self.sigma2[in_halo]
             self.cs2 = self.cs2[in_halo]
         self.r = self.r[in_halo]

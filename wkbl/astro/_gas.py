@@ -14,6 +14,11 @@ class _gas(comp.Component):
         ok, self.B_right_x = self.uns.getData("hydro","7")
         ok, self.B_right_y = self.uns.getData("hydro","8")
         ok, self.B_right_z = self.uns.getData("hydro","9")
+        bx = 0.5*(self.B_left_x+self.B_right_x)
+        by = 0.5*(self.B_left_y+self.B_right_y)
+        bz = 0.5*(self.B_left_z+self.B_right_z)
+        self.bnorm = np.sqrt(bx**2 + by**2 + bz**2)
+        self.va  = self.bnorm/np.sqrt(4*np.pi*rho)*self._p.simutokms
         ok, self.non_th_pres = self.uns.getData("hydro","10")
         ok, self.pres = self.uns.getData("hydro","11")
         temp2 = self.pres/rho

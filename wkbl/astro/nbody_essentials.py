@@ -9,7 +9,7 @@ from unsio import *
 import scipy.special as sp
 from numpy import exp, sqrt
 import scipy.integrate as integrate
-from sklearn.neighbors import KDTree
+#from sklearn.neighbors import KDTree
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -437,13 +437,13 @@ def matrix_vs_vector(mat,vec):
     return res
 
 
-def all_inside(pos3d, center, r_search):
-    try:
-        tree = KDTree(np.squeeze(pos3d))
-        in_halo = tree.query_radius(center,r_search)[0]
-    except:
-        sys.exit("Nope")
-    return in_halo
+#def all_inside(pos3d, center, r_search):
+#    try:
+#        tree = KDTree(np.squeeze(pos3d))
+#        in_halo = tree.query_radius(center,r_search)[0]
+#    except:
+#        sys.exit("Nope")
+#    return in_halo
 
 def half_mass(mass,r):
     """

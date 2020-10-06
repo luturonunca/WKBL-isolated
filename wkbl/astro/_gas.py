@@ -14,10 +14,10 @@ class _gas(comp.Component):
         ok, self.B_right_x = self.uns.getData("hydro","7")
         ok, self.B_right_y = self.uns.getData("hydro","8")
         ok, self.B_right_z = self.uns.getData("hydro","9")
-        bx = 0.5*(self.B_left_x+self.B_right_x)
-        by = 0.5*(self.B_left_y+self.B_right_y)
-        bz = 0.5*(self.B_left_z+self.B_right_z)
-        self.bnorm = np.sqrt(bx**2 + by**2 + bz**2)
+        self.bx = 0.5*(self.B_left_x+self.B_right_x)
+        self.by = 0.5*(self.B_left_y+self.B_right_y)
+        self.bz = 0.5*(self.B_left_z+self.B_right_z)
+        self.bnorm = np.sqrt(self.bx**2 + self.by**2 + self.bz**2)
         self.va  = self.bnorm/rho*self._p.simutokms
         ok, self.non_th_pres = self.uns.getData("hydro","10")
         ok, self.pres = self.uns.getData("hydro","11")
@@ -55,6 +55,11 @@ class _gas(comp.Component):
         self.B_right_x = self.B_right_x[in_halo]
         self.B_right_y = self.B_right_y[in_halo]
         self.B_right_z = self.B_right_z[in_halo]
+        self.bx = self.bx[in_halo]
+        self.by = self.by[in_halo]
+        self.bz = self.bz[in_halo]
+        self.bR = (self.bx*self.pos3d[:,0] + self.by*self.pos3d[:,1])/ self.R
+        self.bphi = (-self.bx*self.pos3d[:,1] + self.by*self.pos3d[:,0] )/ self.R
         if (self.get_sigma):
             self.met = self.met[in_halo]
             self.sigma2 = self.sigma2[in_halo]

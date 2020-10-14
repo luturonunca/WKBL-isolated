@@ -344,11 +344,11 @@ def _read_extra(output,path="",clumps=False,rockstar=False,sf_hist=False):
         else:
             i=0
             for file in list:
-                    if os.path.getsize(file)==183:continue
-                    try:
-                        data = np.loadtxt(file,skiprows=1,dtype=None)
-                    except:
-                        continue
+                    if os.path.getsize(file)==183:continue # weird
+                    #try:
+                    data = np.loadtxt(file,skiprows=1,dtype=None)
+                    #except:
+                    #    continue
                     if(np.size(data)==0):
                             continue
                     if(i>0):

@@ -8,20 +8,23 @@ class _gas(comp.Component):
         ok, temp = self.uns.getData("gas","temp")
         ok, rho = self.uns.getData("gas","rho")
         ok, self.pot = self.uns.getData("gas","pot")
-        ok, self.B_left_x  = self.uns.getData("hydro","4")
-        ok, self.B_left_y  = self.uns.getData("hydro","5")
-        ok, self.B_left_z  = self.uns.getData("hydro","6")
-        ok, self.B_right_x = self.uns.getData("hydro","7")
-        ok, self.B_right_y = self.uns.getData("hydro","8")
-        ok, self.B_right_z = self.uns.getData("hydro","9")
-        self.bx = 0.5*(self.B_left_x+self.B_right_x)
-        self.by = 0.5*(self.B_left_y+self.B_right_y)
-        self.bz = 0.5*(self.B_left_z+self.B_right_z)
-        self.bnorm = np.sqrt(self.bx**2 + self.by**2 + self.bz**2)
-        self.va  = self.bnorm/rho*self._p.simutokms
-        ok, self.non_th_pres = self.uns.getData("hydro","10")
-        ok, self.pres = self.uns.getData("hydro","11")
-        temp2 = self.pres/rho
+        try:
+            ok, self.B_left_x  = self.uns.getData("hydro","4")
+            ok, self.B_left_y  = self.uns.getData("hydro","5")
+            ok, self.B_left_z  = self.uns.getData("hydro","6")
+            ok, self.B_right_x = self.uns.getData("hydro","7")
+            ok, self.B_right_y = self.uns.getData("hydro","8")
+            ok, self.B_right_z = self.uns.getData("hydro","9")
+            self.bx = 0.5*(self.B_left_x+self.B_right_x)
+            self.by = 0.5*(self.B_left_y+self.B_right_y)
+            self.bz = 0.5*(self.B_left_z+self.B_right_z)
+            self.bnorm = np.sqrt(self.bx**2 + self.by**2 + self.bz**2)
+            self.va  = self.bnorm/rho*self._p.simutokms
+            ok, self.non_th_pres = self.uns.getData("hydro","10")
+            ok, self.pres = self.uns.getData("hydro","11")
+            temp2 = self.pres/rho
+        except:
+            flag=1
         self.rho =  rho * self._p.simutoMsun / (self._p.simutokpc**3)
 
         ok, hsml = self.uns.getData("gas","hsml")
@@ -37,7 +40,7 @@ class _gas(comp.Component):
         if (self.get_sigma):
             ok, sigma = self.uns.getData("hydro",str(self._p.nener))
             self.sigma2 = sigma*(self._p.simutokms**2)
-            self.cs2 = (1.6667-1.) * self.pres * (self._p.simutokms**2)
+            #self.cs2 = (1.6667-1.) * self.pres * (self._p.simutokms**2)
             g_star = 1.6
             
     def halo_Only(self, center,n , r200,simple=False):

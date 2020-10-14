@@ -1,6 +1,7 @@
 import numpy as np
 from . import  _dark_matter as d
 from . import _stars as s
+from . import _clumps as clumps 
 from . import _gas as g
 import glob
 from . import nbody_essentials as nbe
@@ -60,7 +61,12 @@ class Galaxy_Hound:
         else:
             self.dmo = True
         if (self.isolated):
-            #compute center
+            try:
+                self.clumps = clumps.Clumps(file_path,self.p,comov=comov)
+                self._clmps = True
+            except:
+                self._clmp = False
+            # compute center
             center = nbe.real_center(self.dm.pos3d,self.dm.mass)
             self.center_shift(center)
             self.rBN = self.dm.pos3d.max() 
@@ -124,6 +130,8 @@ class Galaxy_Hound:
             self.st.shift(nucenter)
         if (self._gss):
             self.gs.shift(nucenter)
+        if (self._clmps):
+            self.clumps.shift(nucenter)
 
     def redefine(self,n,simple=False,isolated=False):
         if (self._dms):
@@ -132,6 +140,8 @@ class Galaxy_Hound:
             self.st.halo_Only(self.center, n, self.rBN,simple=simple)
         if (self._gss):
             self.gs.halo_Only(self.center, n, self.rBN,simple=simple)
+        if (self._clmps):
+            self.clumps.halo_Only(self.center, n, self.rBN)
 
     def rotate_galaxy(self,rmin=3,rmax=10,comp='st',affect=True):
         if comp == 'st':

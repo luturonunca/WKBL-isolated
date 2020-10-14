@@ -65,7 +65,7 @@ class Galaxy_Hound:
                 self.clumps = clumps.Clumps(file_path,self.p,comov=comov)
                 self._clmps = True
             except:
-                self._clmp = False
+                self._clmps = False
             # compute center
             center = nbe.real_center(self.dm.pos3d,self.dm.mass)
             self.center_shift(center)

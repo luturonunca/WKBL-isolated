@@ -4,7 +4,8 @@ import numpy as np
 class _gas(comp.Component):
     def __init__(self, file_path,p,dens=True, **kwargs):
         self.get_sigma = kwargs.get('virial',p.nmlexist)
-        super().__init__(file_path,"gas",p)
+        comov = kwargs.get('comov',False)
+        super().__init__(file_path,"gas",p,comov=comov)
         ok, temp = self.uns.getData("gas","temp")
         ok, rho = self.uns.getData("gas","rho")
         ok, self.pot = self.uns.getData("gas","pot")

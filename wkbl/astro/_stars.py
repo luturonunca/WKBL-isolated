@@ -11,7 +11,7 @@ class _stars(comp.Component):
             self.gotsfInfo = True
         except:
             self.gotsfInfo = False
-        super().__init__(file_path,"stars",p)
+        super().__init__(file_path,"stars",p,comov=comov)
         ok, age = self.uns.getData("stars","age")
         ok, self.metal = self.uns.getData("stars","metal")
         ok, self.id = self.uns.getData("all","id")

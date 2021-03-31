@@ -1,0 +1,3 @@
+[console_scripts]
+wkbl = wkbl.cli:cli
+

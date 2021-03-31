@@ -9,6 +9,8 @@ from unsio import *
 import scipy.special as sp
 from numpy import exp, sqrt
 import scipy.integrate as integrate
+import astropy.units as u
+from astropy.io import fits
 #from sklearn.neighbors import KDTree
 
 import warnings
@@ -58,14 +60,20 @@ class Info_sniffer:
                 nener += int(nml["sf_virial"])
             self.nener = nener
             self.nml = nml
-        
+            try:
+                aa = self.nml['levelmax']+1
+            except:
+                self.nmlexist =False
+                    
         self.H0 = _vars["H0"]
         self._vars = _vars
         self.h = _vars["H0"]/1e2       # hubble expansion rate
         self.aexp = _vars["aexp"]      # expantion parameter
         self.Z = -1. + (1./ self.aexp) # redshift 
         self.msuntokg = 1.99844e30   
-        self.pctocm = 3.08567758e18 #but well
+        self.pctocm  = 3.08567758e18 #but well
+        self.kpctocm = 3.08567758e21
+        self.kpctokm = self.kpctocm / 1e5
         self.G = 6.67384e-11 * self.msuntokg / ((self.pctocm*10)**3)#kpc^3 Msun^-1 s^-2
         #self.rho_crit = (3 * (self.H0**2) / 3.08567758e19**2)/ (8*np.pi*self.G)
         # rho crit in terms of aexp
@@ -75,15 +83,15 @@ class Info_sniffer:
         self.unitl=_vars["unit_l"]
         self.unitd=_vars["unit_d"]
         self.unitt=_vars["unit_t"]
+        self.unitm=self.unitd * (self.unitl**3)
         self.boxlen = self.unitl/self.pctocm/1e6 #Mpc
-        self.simutokpc = self.unitl/self.pctocm/1e3
+        self.simutokpc = self.unitl/self.kpctocm
         self.simutokms = self.unitl/1e5/self.unitt
-        self.simutoMsun=(self.unitd*self.unitl**3)/1e3/self.msuntokg
+        self.simutoMsun=self.unitm/1e3/self.msuntokg
+        self.simutoErgscm3 = self.unitm/self.unitl/(self.unitt**2)
         self.unitsimutoMsunkpc3=self.unitd*self.pctocm**3/1000/self.msuntokg
         self.kgtoGeV = 1/1.783e-27
-        self.kpctocm = 3.086e21
         self.simutocm=self.unitl*_vars["H0"]/1e2
-        self.kpctokm = self.kpctocm / 1e5
         self.simutoGeVcm3 = (self.simutoMsun*self.msuntokg*self.kgtoGeV) / (self.simutokpc*self.kpctocm)**3
         self.kB = 1.3806503e-23 * (self.cmtopc/ 10)**2 / self.msuntokg # kpc**2 Msun /s**2 / K
         self.k_boltz = 1.3806488e-23 * 1e-6 / self.msuntokg # Msun * km**2 /s**2 / K
@@ -444,6 +452,54 @@ def matrix_vs_vector(mat,vec):
 #    except:
 #        sys.exit("Nope")
 #    return in_halo
+
+def create_image_header(pixel_scale, beamfwhm, imshape,
+                        restfreq, bunit):
+    '''
+    Create a basic FITS header for an image.
+
+    Adapted from: https://github.com/radio-astro-tools/uvcombine/blob/master/uvcombine/tests/utils.py
+
+    Parameters
+    ----------
+    pixel_scale : `~astropy.units.Quantity`
+        Angular scale of one pixel
+    beamfwhm : `~astropy.units.Quantity`
+        Angular size for a circular Gaussian beam.
+    imshape : tuple
+        Shape of the data array.
+    restfreq : `~astropy.units.Quantity`
+        Rest frequency of the spectral line.
+    bunit : `~astropy.units.Unit`
+        Unit of intensity.
+
+    Returns
+    -------
+    header : fits.Header
+        FITS Header.
+    '''
+
+    header = {'CDELT1': -(pixel_scale).to(u.deg).value,
+              'CDELT2': (pixel_scale).to(u.deg).value,
+              'BMAJ': beamfwhm.to(u.deg).value,
+              'BMIN': beamfwhm.to(u.deg).value,
+              'BPA': 0.0,
+              'CRPIX1': imshape[0] / 2.,
+              'CRPIX2': imshape[1] / 2.,
+              'CRVAL1': 0.0,
+              'CRVAL2': 0.0,
+              'CTYPE1': 'GLON-CAR',
+              'CTYPE2': 'GLAT-CAR',
+              'CUNIT1': 'deg',
+              'CUNIT2': 'deg',
+              'CRPIX3': 1,
+              'RESTFRQ': restfreq.to(u.Hz).value,
+              'BUNIT': bunit.to_string(),
+              }
+
+    return fits.Header(header)
+
+
 
 def half_mass(mass,r):
     """

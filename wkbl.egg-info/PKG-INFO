@@ -1,0 +1,14 @@
+Metadata-Version: 1.1
+Name: wkbl
+Version: Isolated-0.g3f3da56.dirty
+Summary: something
+Home-page: https://github.com/as/wkbl
+Author: ANC
+Author-email: ksnfkanf
+License: MIT
+Description: UNKNOWN
+Keywords: wkbl
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7

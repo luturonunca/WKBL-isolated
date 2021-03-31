@@ -7,6 +7,7 @@ class _gas(comp.Component):
         super().__init__(file_path,"gas",p)
         ok, temp = self.uns.getData("gas","temp")
         ok, rho = self.uns.getData("gas","rho")
+        ok, self.rho1 = self.uns.getData("gas","rho")
         ok, self.pot = self.uns.getData("gas","pot")
         try:
             ok, self.B_left_x  = self.uns.getData("hydro","4")
@@ -20,13 +21,14 @@ class _gas(comp.Component):
             self.bz = 0.5*(self.B_left_z+self.B_right_z)
             self.bnorm = np.sqrt(self.bx**2 + self.by**2 + self.bz**2)
             self.va  = self.bnorm/rho*self._p.simutokms
-            ok, self.non_th_pres = self.uns.getData("hydro","10")
-            ok, self.pres = self.uns.getData("hydro","11")
+            ok, self.non_th_pres = self.uns.getData("hydro","10")#*self._p.simutoErgscm3
+            ok, self.pres = self.uns.getData("hydro","11")#*self._p.simutoErgscm3
             temp2 = self.pres/rho
         except:
             flag=1
-        self.rho =  rho * self._p.simutoMsun / (self._p.simutokpc**3)
-
+        self.rho =  rho * self._p.unitd*(self._p.kpctocm**3)/1e3/self._p.msuntokg
+        self.non_th_pres *= self._p.simutoErgscm3
+        self.pres *= self._p.simutoErgscm3
         ok, hsml = self.uns.getData("gas","hsml")
         self.hsml = hsml * self._p.simutokpc
         shift1 = (np.random.rand(len(hsml))-0.5)*self.hsml
